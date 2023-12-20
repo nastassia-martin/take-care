@@ -5,14 +5,13 @@ Thanks to https://andy-bell.co.uk/a-more-modern-css-reset/
 @import "bootstrap/scss/bootstrap";
 
 :root {
-  font-family: "Merriweather", serif;
   --white: #fff;
   --black: #000;
   --primary-blue: #5e9fc2;
   --primary-yellow: rgba(241, 219, 20, 0.44);
   --primary-pink: #faebd9;
   --primary-purple: #8989ff;
-  --primary-font: "Merriweather ", serif;
+  --primary-font: "Merriweather", serif;
 }
 
 /* Box sizing rules */

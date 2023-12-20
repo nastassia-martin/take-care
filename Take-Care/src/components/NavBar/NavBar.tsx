@@ -16,10 +16,18 @@ const Navigation = () => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className={styles.NavItems}>
             {/* user is signed in? show the profile, menu, etc */}
-            <Nav.Link className={styles.NavItem}>Profile</Nav.Link>
-            <Nav.Link className={styles.NavItem}>Menu</Nav.Link>
-            <Nav.Link className={styles.NavItem}>Activity Feed</Nav.Link>
-            <Nav.Link className={styles.NavItem}>FAQ</Nav.Link>
+            <Nav.Link as={NavLink} to="/" className={styles.NavItem}>
+              Profile
+            </Nav.Link>
+            <Nav.Link as={NavLink} to="/" className={styles.NavItem}>
+              Menu
+            </Nav.Link>
+            <Nav.Link as={NavLink} to="/" className={styles.NavItem}>
+              Activity Feed
+            </Nav.Link>
+            <Nav.Link as={NavLink} to="/" className={styles.NavItem}>
+              FAQ
+            </Nav.Link>
             {/* user is NOT signed in? only show logo */}
           </Nav>
         </Navbar.Collapse>

@@ -1,0 +1,71 @@
+.MainWrapper {
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  margin-top: 3rem;
+  height: 100vh;
+  max-width: 1200px;
+  margin: auto;
+
+  @media screen and (min-width: 750px) {
+    flex-direction: row-reverse;
+  }
+
+  .Tagline {
+    font-family: var(--primary-font);
+    font-weight: 400;
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+    min-height: 50vh;
+    justify-content: space-between;
+
+    @media screen and (min-width: 750px) {
+      justify-content: center;
+    }
+
+    h4 {
+      font-style: italic;
+      padding: 1em;
+    }
+  }
+}
+.ButtonWrapper {
+  display: flex;
+  justify-content: space-around;
+
+  @media screen and (min-width: 750px) {
+    justify-content: space-evenly;
+  }
+
+  button {
+    min-width: 100px;
+    background-color: var(--primary-blue);
+    color: var(--primary-black);
+    border-radius: 50px;
+    border: none;
+    margin: 1em;
+    border: solid 1px var(--primary-blue);
+    text-transform: uppercase;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+
+    &:hover {
+      background-color: var(--primary-white);
+      color: var(--primary-black);
+      border-color: var(--primary-blue);
+      border: solid 1px var(--primary-blue);
+    }
+  }
+}
+
+.ImageWrapper {
+  max-height: 300px;
+  max-width: 100%;
+  display: flex;
+
+  .Image {
+    max-width: 100%;
+    margin: auto;
+  }
+}
