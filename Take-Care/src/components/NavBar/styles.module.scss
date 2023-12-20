@@ -1,0 +1,33 @@
+.NavWrapper {
+  padding: 1em;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+
+  .Logo {
+    max-width: 6.25em;
+    border-radius: 50%;
+    background-color: var(--primary-blue);
+  }
+
+  .NavItems {
+    margin-left: auto;
+    font-family: "Merriweather", serif;
+    color: var(--primary-black);
+  }
+
+  &.NavItems:hover {
+    color: var(--primary-blue);
+  }
+}
+
+.NavItem {
+  padding: 0 1em;
+  color: var(--primary-black);
+  text-transform: uppercase;
+
+  &.NavItem:hover {
+    color: var(--primary-blue);
+  }
+}
