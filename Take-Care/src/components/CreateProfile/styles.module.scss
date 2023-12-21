@@ -1,0 +1,28 @@
+.MainNewProfileWrapper {
+  padding: 1em;
+  font-family: var(--primary-font);
+  background-color: var(--primary-pink);
+
+  .CardWrapper {
+    padding: 1em;
+  }
+
+  .Header {
+    margin-bottom: 2em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+}
+.Button {
+  display: inline-flex;
+  border-radius: 12px;
+  padding: 0.375rem 0.75rem;
+  border: none;
+  background-color: var(--primary-blue);
+  color: var(--white);
+  transition: 0.2s ease-in-out 0s;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
