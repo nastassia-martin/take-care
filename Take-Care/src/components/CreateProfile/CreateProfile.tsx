@@ -7,28 +7,27 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Button from "../Button/Button";
 import {
-  NewChildProfileSchemaType,
-  NewChildProfileSchema,
+  NewProfileSchema,
+  NewProfileSchemaType,
 } from "../../schemas/NewChildProfile";
-import { ChildProfile } from "../../types/CreateProfile.types";
+import { FamilyProfile } from "../../types/CreateProfile.types";
 
 const CreateProfile = () => {
   const {
     handleSubmit,
     register,
     formState: { errors },
-  } = useForm<NewChildProfileSchemaType>({
-    resolver: zodResolver(NewChildProfileSchema),
+  } = useForm<NewProfileSchemaType>({
+    resolver: zodResolver(NewProfileSchema),
   });
 
-  const onCreateChildProfile: SubmitHandler<ChildProfile> = (data) => {
+  const onCreateChildProfile: SubmitHandler<FamilyProfile> = (data) => {
     console.log("here is the data: ", data);
   };
 
   /**
    * @todo map department for child depnding on auth of teacher
    * @todo on create the account is created for parent and child
-   * @todo validation for for parent
    * @todo on success show a toast
    * @todo on success generate an email to the parent that their account has been set up
    * @todo on error show a toast
@@ -49,11 +48,11 @@ const CreateProfile = () => {
                   <Form.Control
                     placeholder="Astrid"
                     type="text"
-                    {...register("firstName")}
+                    {...register("child.firstName")}
                   />
-                  {errors.firstName && (
+                  {errors.child?.firstName && (
                     <p className={styles.Error}>
-                      {errors.firstName.message || "Invalid input"}
+                      {errors.child.firstName.message || "Invalid input"}
                     </p>
                   )}
                 </Form.Group>
@@ -62,11 +61,11 @@ const CreateProfile = () => {
                   <Form.Control
                     placeholder="Lindegren"
                     type="text"
-                    {...register("lastName")}
+                    {...register("child.lastName")}
                   />
-                  {errors.lastName && (
+                  {errors.child?.lastName && (
                     <p className={styles.Error}>
-                      {errors.lastName.message || "Invalid input"}
+                      {errors.child.lastName.message || "Invalid input"}
                     </p>
                   )}
                 </Form.Group>
@@ -75,13 +74,13 @@ const CreateProfile = () => {
                   <Form.Control
                     placeholder="01-08-2021"
                     type="date"
-                    {...register("dob", {
+                    {...register("child.dob", {
                       valueAsDate: true,
                     })}
                   />
-                  {errors.dob && (
+                  {errors.child?.dob && (
                     <p className={styles.Error}>
-                      {errors.dob.message || "Invalid input"}
+                      {errors.child.dob.message || "Invalid input"}
                     </p>
                   )}
                 </Form.Group>
@@ -90,48 +89,58 @@ const CreateProfile = () => {
                   <Form.Label>Department</Form.Label>
                   <Form.Select
                     aria-label="Select department"
-                    {...register("department")}
+                    {...register("child.department")}
                   >
                     <option>Please select a department</option>
                     <option>Apple</option>
                   </Form.Select>
-                  {errors.department && (
+                  {errors.child?.department && (
                     <p className={styles.Error}>
-                      {errors.department.message || "Invalid input"}
+                      {errors.child.department.message || "Invalid input"}
                     </p>
                   )}
                 </Form.Group>
 
                 {/* information about parent */}
-                {/* <Form.Group controlId="parent-first-name" className="mb-3">
+                <Form.Group controlId="parent-first-name" className="mb-3">
                   <Form.Label>Parent's First Name</Form.Label>
                   <Form.Control
                     placeholder="Ziggy"
                     type="text"
-                    {...register("parent-first-name")}
+                    {...register("parent.firstName")}
                   />
+                  {errors.parent?.firstName && (
+                    <p className={styles.Error}>
+                      {errors.parent.firstName.message || "Invalid input"}
+                    </p>
+                  )}
                 </Form.Group>
                 <Form.Group controlId="parent-last-name" className="mb-3">
                   <Form.Label>Parent's Last Name</Form.Label>
                   <Form.Control
                     placeholder="Stardust"
                     type="text"
-                    {...register("parent-last-name")}
+                    {...register("parent.lastName")}
                   />
+                  {errors.parent?.lastName && (
+                    <p className={styles.Error}>
+                      {errors.parent.lastName.message || "Invalid input"}
+                    </p>
+                  )}
                 </Form.Group>
                 <Form.Group controlId="email" className="mb-3">
                   <Form.Label>Email</Form.Label>
                   <Form.Control
                     placeholder="example@example.com"
                     type="email"
-                    {...register("email")}
+                    {...register("parent.email")}
                   />
-                  {errors.email && (
-                    <p className="invalid">
-                      {errors.email.message ?? "Invalid value"}
+                  {errors.parent?.email && (
+                    <p className={styles.Error}>
+                      {errors.parent.email.message ?? "Invalid value"}
                     </p>
                   )}
-                </Form.Group> */}
+                </Form.Group>
                 <Button
                   text="Create new account"
                   ariaLabel="Create new account for child"

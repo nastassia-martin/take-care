@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-// validation schema generic will reuse for parents
+// generic validation schema
 const genericName = z.object({
   firstName: z
     .string()
@@ -19,5 +19,16 @@ export const NewChildProfileSchema = genericName.extend({
   department: z.string().min(1, { message: "please select a department" }),
 });
 
-// extract New child Profile Schema type from schema
-export type NewChildProfileSchemaType = z.infer<typeof NewChildProfileSchema>;
+// validation schema for Parent
+const NewParentProfileSchema = genericName.extend({
+  email: z.string().email({ message: "please use a valid email" }),
+});
+
+// combined Validation schemas to be used when creating a new Child profile
+export const NewProfileSchema = z.object({
+  child: NewChildProfileSchema,
+  parent: NewParentProfileSchema,
+});
+
+// extract New Profile Schema type from NewProfileSchema
+export type NewProfileSchemaType = z.infer<typeof NewProfileSchema>;
