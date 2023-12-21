@@ -1,0 +1,15 @@
+.Button {
+  display: inline-block;
+  border-radius: 12px;
+  padding: 0.5rem 0.75rem;
+  border: none;
+  background-color: var(--primary-blue);
+  color: var(--white);
+  transition: 0.2s ease-in-out 0s;
+  text-transform: uppercase;
+  min-width: 100px;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
