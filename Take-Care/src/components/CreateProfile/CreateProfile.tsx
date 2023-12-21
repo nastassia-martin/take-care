@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import styles from "./styles.module.scss";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
@@ -7,17 +7,23 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Button from "../Button/Button";
 import {
-  NewChildProfileSchema,
   NewChildProfileSchemaType,
+  NewChildProfileSchema,
 } from "../../schemas/NewChildProfile";
+import { ChildProfile } from "../../types/CreateProfile.types";
 
 const CreateProfile = () => {
   const {
+    handleSubmit,
     register,
     formState: { errors },
   } = useForm<NewChildProfileSchemaType>({
     resolver: zodResolver(NewChildProfileSchema),
   });
+
+  const onCreateChildProfile: SubmitHandler<ChildProfile> = (data) => {
+    console.log("here is the data: ", data);
+  };
 
   /**
    * @todo map department for child depnding on auth of teacher
@@ -36,49 +42,68 @@ const CreateProfile = () => {
             <div className={styles.CardWrapper}>
               <h5 className={styles.Header}>New child account</h5>
 
-              {/* {errorMessage && <Alert variant="danger">{errorMessage}</Alert>} */}
               {/* information about child */}
-              <Form>
-                <Form.Group controlId="child_first_name" className="mb-3">
+              <Form onSubmit={handleSubmit(onCreateChildProfile)}>
+                <Form.Group controlId="childFirstName" className="mb-3">
                   <Form.Label>Child's First Name</Form.Label>
                   <Form.Control
                     placeholder="Astrid"
                     type="text"
-                    {...register("child-first-name")}
+                    {...register("firstName")}
                   />
+                  {errors.firstName && (
+                    <p className={styles.Error}>
+                      {errors.firstName.message || "Invalid input"}
+                    </p>
+                  )}
                 </Form.Group>
-                <Form.Group controlId="child_last_name" className="mb-3">
+                <Form.Group controlId="childLastName" className="mb-3">
                   <Form.Label>Child's Last Name</Form.Label>
                   <Form.Control
                     placeholder="Lindegren"
                     type="text"
-                    {...register("child-last-name")}
+                    {...register("lastName")}
                   />
+                  {errors.lastName && (
+                    <p className={styles.Error}>
+                      {errors.lastName.message || "Invalid input"}
+                    </p>
+                  )}
                 </Form.Group>
                 <Form.Group controlId="child_dob" className="mb-3">
                   <Form.Label>Child's Date of Birth</Form.Label>
                   <Form.Control
                     placeholder="01-08-2021"
                     type="date"
-                    {...register("child_dob", {
+                    {...register("dob", {
                       valueAsDate: true,
                     })}
                   />
+                  {errors.dob && (
+                    <p className={styles.Error}>
+                      {errors.dob.message || "Invalid input"}
+                    </p>
+                  )}
                 </Form.Group>
                 {/* map over the departments available to that teacher */}
                 <Form.Group controlId="department" className="mb-3">
                   <Form.Label>Department</Form.Label>
                   <Form.Select
                     aria-label="Select department"
-                    {...register("department-id")}
+                    {...register("department")}
                   >
                     <option>Please select a department</option>
                     <option>Apple</option>
                   </Form.Select>
+                  {errors.department && (
+                    <p className={styles.Error}>
+                      {errors.department.message || "Invalid input"}
+                    </p>
+                  )}
                 </Form.Group>
 
                 {/* information about parent */}
-                <Form.Group controlId="parent-first-name" className="mb-3">
+                {/* <Form.Group controlId="parent-first-name" className="mb-3">
                   <Form.Label>Parent's First Name</Form.Label>
                   <Form.Control
                     placeholder="Ziggy"
@@ -103,10 +128,10 @@ const CreateProfile = () => {
                   />
                   {errors.email && (
                     <p className="invalid">
-                      {/* {errors.email.message ?? "Invalid value"} */}
+                      {errors.email.message ?? "Invalid value"}
                     </p>
                   )}
-                </Form.Group>
+                </Form.Group> */}
                 <Button
                   text="Create new account"
                   ariaLabel="Create new account for child"
