@@ -16,5 +16,3 @@ const app = initializeApp(firebaseConfig);
 
 // Get firestore instance
 export const db = getFirestore(app);
-
-console.log(db);

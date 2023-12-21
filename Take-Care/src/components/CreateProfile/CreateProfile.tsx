@@ -1,22 +1,28 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import styles from "./styles.module.scss";
-//import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
-import { useForm } from "react-hook-form";
 import Button from "../Button/Button";
+import {
+  NewChildProfileSchema,
+  NewChildProfileSchemaType,
+} from "../../schemas/NewChildProfile";
 
 const CreateProfile = () => {
   const {
     register,
     formState: { errors },
-  } = useForm();
+  } = useForm<NewChildProfileSchemaType>({
+    resolver: zodResolver(NewChildProfileSchema),
+  });
 
   /**
    * @todo map department for child depnding on auth of teacher
    * @todo on create the account is created for parent and child
-   * @todo validation for forms
+   * @todo validation for for parent
    * @todo on success show a toast
    * @todo on success generate an email to the parent that their account has been set up
    * @todo on error show a toast
@@ -33,34 +39,29 @@ const CreateProfile = () => {
               {/* {errorMessage && <Alert variant="danger">{errorMessage}</Alert>} */}
               {/* information about child */}
               <Form>
-                <Form.Group controlId="child-first-name" className="mb-3">
+                <Form.Group controlId="child_first_name" className="mb-3">
                   <Form.Label>Child's First Name</Form.Label>
                   <Form.Control
                     placeholder="Astrid"
                     type="text"
-                    {...register("child-first-name", {
-                      required: "You have to enter a first name",
-                    })}
+                    {...register("child-first-name")}
                   />
                 </Form.Group>
-                <Form.Group controlId="child-last-name" className="mb-3">
+                <Form.Group controlId="child_last_name" className="mb-3">
                   <Form.Label>Child's Last Name</Form.Label>
                   <Form.Control
                     placeholder="Lindegren"
                     type="text"
-                    {...register("child-last-name", {
-                      required: "You have to enter a last name",
-                    })}
+                    {...register("child-last-name")}
                   />
                 </Form.Group>
-                <Form.Group controlId="child-dob" className="mb-3">
+                <Form.Group controlId="child_dob" className="mb-3">
                   <Form.Label>Child's Date of Birth</Form.Label>
                   <Form.Control
                     placeholder="01-08-2021"
                     type="date"
-                    {...register("child-dob", {
+                    {...register("child_dob", {
                       valueAsDate: true,
-                      required: "You have to enter a last name",
                     })}
                   />
                 </Form.Group>
@@ -69,9 +70,7 @@ const CreateProfile = () => {
                   <Form.Label>Department</Form.Label>
                   <Form.Select
                     aria-label="Select department"
-                    {...register("department-id", {
-                      required: true,
-                    })}
+                    {...register("department-id")}
                   >
                     <option>Please select a department</option>
                     <option>Apple</option>
@@ -84,9 +83,7 @@ const CreateProfile = () => {
                   <Form.Control
                     placeholder="Ziggy"
                     type="text"
-                    {...register("parent-first-name", {
-                      required: "You have to enter a first name",
-                    })}
+                    {...register("parent-first-name")}
                   />
                 </Form.Group>
                 <Form.Group controlId="parent-last-name" className="mb-3">
@@ -94,9 +91,7 @@ const CreateProfile = () => {
                   <Form.Control
                     placeholder="Stardust"
                     type="text"
-                    {...register("parent-last-name", {
-                      required: "You have to enter a last name",
-                    })}
+                    {...register("parent-last-name")}
                   />
                 </Form.Group>
                 <Form.Group controlId="email" className="mb-3">
@@ -104,9 +99,7 @@ const CreateProfile = () => {
                   <Form.Control
                     placeholder="example@example.com"
                     type="email"
-                    {...register("email", {
-                      required: "You have to enter an email",
-                    })}
+                    {...register("email")}
                   />
                   {errors.email && (
                     <p className="invalid">
