@@ -16,12 +16,14 @@
     font-weight: 400;
     display: flex;
     flex-direction: column;
-    row-gap: 1rem;
-    min-height: 50vh;
+    row-gap: 4rem;
+
     justify-content: space-between;
 
     @media screen and (min-width: 750px) {
+      min-height: 50vh;
       justify-content: center;
+      row-gap: 1rem;
     }
 
     h4 {
@@ -37,35 +39,18 @@
   @media screen and (min-width: 750px) {
     justify-content: space-evenly;
   }
-
-  button {
-    min-width: 100px;
-    background-color: var(--primary-blue);
-    color: var(--primary-black);
-    border-radius: 50px;
-    border: none;
-    margin: 1em;
-    border: solid 1px var(--primary-blue);
-    text-transform: uppercase;
-    font-weight: bold;
-    padding: 0.5rem 1rem;
-
-    &:hover {
-      background-color: var(--primary-white);
-      color: var(--primary-black);
-      border-color: var(--primary-blue);
-      border: solid 1px var(--primary-blue);
-    }
-  }
 }
-
+.Image {
+  max-width: 100%;
+  margin: 0 auto;
+}
 .ImageWrapper {
-  max-height: 300px;
+  //max-height: 300px;
   max-width: 100%;
   display: flex;
 
   .Image {
     max-width: 100%;
-    margin: auto;
+    margin: 0 auto;
   }
 }

@@ -1,22 +1,22 @@
 import styles from "./styles.module.scss";
 import Image from "react-bootstrap/Image";
 import HomePageImage from "../../assets/images/HomePage.png";
-import Button from "react-bootstrap/Button";
+import Button from "../Button/Button";
 
 const HomePage = () => {
   return (
-    <main className={styles.MainWrapper}>
-      <div className={styles.Tagline}>
-        <h4>Tagline Lorem, vero sint omnis alias ut ratione hic fugit.</h4>
-        <div className={styles.ButtonWrapper}>
-          <Button>Log in</Button>
-          <Button>Sign up</Button>
+    <>
+      <main className={styles.MainWrapper}>
+        <div className={styles.Tagline}>
+          <h4>Tagline Lorem, vero sint omnis alias ut ratione hic fugit.</h4>
+          <div className={styles.ButtonWrapper}>
+            <Button text="Log in" ariaLabel="Log in" type="button" />
+            <Button text="Sign up" ariaLabel="Sign up" type="button" />
+          </div>
         </div>
-      </div>
-      <div className={styles.ImageWrapper}>
         <Image src={HomePageImage} fluid className={styles.Image} />
-      </div>
-    </main>
+      </main>
+    </>
   );
 };
 export default HomePage;
