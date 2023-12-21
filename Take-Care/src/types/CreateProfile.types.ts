@@ -1,11 +1,11 @@
 import { GenericName } from "./GenericTypes.types";
 
-export interface ChildProfile extends GenericName {
+export interface ChildProfile extends Omit<GenericName, "_id"> {
   dob: Date;
   department: string;
 }
 
-export interface ParentProfile extends GenericName {
+export interface ParentProfile extends Omit<GenericName, "_id"> {
   email: string;
 }
 

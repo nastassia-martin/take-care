@@ -11,8 +11,21 @@ import {
   NewProfileSchemaType,
 } from "../../schemas/NewChildProfile";
 import { FamilyProfile } from "../../types/CreateProfile.types";
+import {
+  CollectionReference,
+  collection,
+  doc,
+  setDoc,
+} from "firebase/firestore";
+import { db } from "../../services/firebase";
 
 const CreateProfile = () => {
+  const createCollection = (collectionName: string) => {
+    return collection(db, collectionName) as CollectionReference;
+  };
+  const children = createCollection("children");
+  const parents = createCollection("parents");
+
   const {
     handleSubmit,
     register,
@@ -21,7 +34,13 @@ const CreateProfile = () => {
     resolver: zodResolver(NewProfileSchema),
   });
 
-  const onCreateChildProfile: SubmitHandler<FamilyProfile> = (data) => {
+  const onCreateChildProfile: SubmitHandler<FamilyProfile> = async (data) => {
+    const childdocRef = doc(children);
+    const parentdocRef = doc(parents);
+
+    await setDoc(childdocRef, { ...data });
+    await setDoc(parentdocRef, { ...data.parent });
+
     console.log("here is the data: ", data);
   };
 
@@ -32,6 +51,7 @@ const CreateProfile = () => {
    * @todo on success generate an email to the parent that their account has been set up
    * @todo on error show a toast
    * @todo what happens if the email already exists?
+   * @todo empty form on submit
    */
   return (
     <main className={styles.MainNewProfileWrapper}>
