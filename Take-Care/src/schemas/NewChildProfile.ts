@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { Role } from "../types/GenericTypes.types";
 
 // generic validation schema
 const genericName = z.object({
@@ -15,13 +16,14 @@ const genericName = z.object({
 
 // validation schema for Child
 export const NewChildProfileSchema = genericName.extend({
-  dob: z.date(),
+  date_of_birth: z.date(),
   department: z.string().min(1, { message: "please select a department" }),
 });
 
 // validation schema for Parent
 const NewParentProfileSchema = genericName.extend({
   email: z.string().email({ message: "please use a valid email" }),
+  role: z.literal(Role.User),
 });
 
 // combined Validation schemas to be used when creating a new Child profile

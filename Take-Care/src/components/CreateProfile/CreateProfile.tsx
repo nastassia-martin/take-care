@@ -19,6 +19,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../../services/firebase";
 import { useEffect } from "react";
+import { Role } from "../../types/GenericTypes.types";
 
 const CreateProfile = () => {
   const createCollection = (collectionName: string) => {
@@ -109,18 +110,18 @@ const CreateProfile = () => {
                     </p>
                   )}
                 </Form.Group>
-                <Form.Group controlId="child_dob" className="mb-3">
+                <Form.Group controlId="child_date_of_birth" className="mb-3">
                   <Form.Label>Child's Date of Birth</Form.Label>
                   <Form.Control
                     placeholder="01-08-2021"
                     type="date"
-                    {...register("child.dob", {
+                    {...register("child.date_of_birth", {
                       valueAsDate: true,
                     })}
                   />
-                  {errors.child?.dob && (
+                  {errors.child?.date_of_birth && (
                     <p className={styles.Error}>
-                      {errors.child.dob.message || "Invalid input"}
+                      {errors.child.date_of_birth.message || "Invalid input"}
                     </p>
                   )}
                 </Form.Group>
@@ -167,6 +168,16 @@ const CreateProfile = () => {
                       {errors.parent.lastName.message || "Invalid input"}
                     </p>
                   )}
+                </Form.Group>
+                <Form.Group controlId="role" className="mb-3">
+                  <Form.Label>Role</Form.Label>
+                  <Form.Select
+                    aria-label="Please select role"
+                    {...register("parent.role")}
+                  >
+                    <option>Please select the parents' role</option>
+                    <option>{Role.User}</option>
+                  </Form.Select>
                 </Form.Group>
                 <Form.Group controlId="email" className="mb-3">
                   <Form.Label>Email</Form.Label>
