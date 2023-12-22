@@ -18,6 +18,7 @@ import {
   setDoc,
 } from "firebase/firestore";
 import { db } from "../../services/firebase";
+import { useEffect } from "react";
 
 const CreateProfile = () => {
   const createCollection = (collectionName: string) => {
@@ -29,29 +30,48 @@ const CreateProfile = () => {
   const {
     handleSubmit,
     register,
-    formState: { errors },
+    formState: { errors, isSubmitSuccessful },
+    reset,
   } = useForm<NewProfileSchemaType>({
     resolver: zodResolver(NewProfileSchema),
+    // default values will be empty string
+    defaultValues: {
+      child: {
+        firstName: "",
+        lastName: "",
+        department: "",
+      },
+      parent: {
+        firstName: "",
+        lastName: "",
+        email: "",
+      },
+    },
   });
 
   const onCreateChildProfile: SubmitHandler<FamilyProfile> = async (data) => {
     const childdocRef = doc(children);
     const parentdocRef = doc(parents);
+    const parentID = parentdocRef.id;
+    const childID = childdocRef.id;
 
-    await setDoc(childdocRef, { ...data });
-    await setDoc(parentdocRef, { ...data.parent });
+    await setDoc(childdocRef, { ...data.child, parentsID: [parentID] });
+    await setDoc(parentdocRef, { ...data.parent, childrenID: [childID] });
 
     console.log("here is the data: ", data);
   };
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset();
+    }
+  }, [isSubmitSuccessful]);
 
   /**
    * @todo map department for child depnding on auth of teacher
-   * @todo on create the account is created for parent and child
-   * @todo on success show a toast
+   * @todo on create the account is created for parent and child (toast)
    * @todo on success generate an email to the parent that their account has been set up
    * @todo on error show a toast
    * @todo what happens if the email already exists?
-   * @todo empty form on submit
    */
   return (
     <main className={styles.MainNewProfileWrapper}>
