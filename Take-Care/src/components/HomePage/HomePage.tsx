@@ -2,8 +2,13 @@ import styles from "./styles.module.scss";
 import Image from "react-bootstrap/Image";
 import HomePageImage from "../../assets/images/HomePage.png";
 import Button from "../Button/Button";
+import ProfileDetails from "../Profile/ProfileDetails";
+import useGetChildren from "../../hooks/useGetChildren";
+import ParentProfilePage from "../../pages/ParentProfile/ParentProfilePage";
 
 const HomePage = () => {
+  const { data } = useGetChildren();
+
   return (
     <>
       <main className={styles.MainWrapper}>
@@ -16,6 +21,18 @@ const HomePage = () => {
         </div>
         <Image src={HomePageImage} fluid className={styles.Image} />
       </main>
+      <div>
+        {data?.map((d) => (
+          <>
+            <ProfileDetails
+              key={d._id}
+              src={d.contact.photoURL}
+              firstName={d.contact.firstName}
+              lastName={d.contact.lastName}
+            />
+          </>
+        ))}
+      </div>
     </>
   );
 };

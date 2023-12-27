@@ -55,6 +55,12 @@ ol[role="list"] {
 body {
   min-height: 100vh;
   line-height: 1.5;
+  /*
+  * Created with https://www.css-gradient.com
+  * Gradient link: https://www.css-gradient.com/?c1=79aa82&c2=bacbda&gt=l&gd=dbr
+  */
+  background: #79aa82;
+  background: linear-gradient(315deg, #79aa82, #bacbda);
 }
 
 /* Set shorter line heights on headings and interactive elements */
