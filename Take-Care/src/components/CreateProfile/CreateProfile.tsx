@@ -10,7 +10,11 @@ import {
   NewProfileSchema,
   NewProfileSchemaType,
 } from "../../schemas/NewChildProfile";
-import { FamilyProfile } from "../../types/CreateProfile.types";
+import {
+  ChildProfile,
+  FamilyProfile,
+  ParentProfile,
+} from "../../types/CreateProfile.types";
 import {
   CollectionReference,
   collection,
@@ -56,8 +60,35 @@ const CreateProfile = () => {
     const parentID = parentdocRef.id;
     const childID = childdocRef.id;
 
-    await setDoc(childdocRef, { ...data.child, parentsID: [parentID] });
-    await setDoc(parentdocRef, { ...data.parent, childrenID: [childID] });
+    const newChildProfile: ChildProfile = {
+      _id: childID,
+      contact: {
+        firstName: data.child.firstName,
+        lastName: data.child.lastName,
+        photoURL: "https://via.placeholder.com/100",
+      },
+      department: data.child.department,
+      allergies: "",
+      date_of_birth: data.child.date_of_birth,
+      keyTeacher: "",
+      parents: [parentID], // this creates a collection Ref ie parents/abc
+    };
+
+    const newParentProfile: ParentProfile = {
+      _id: parentID,
+      contact: {
+        firstName: data.parent.firstName,
+        lastName: data.parent.lastName,
+        email: data.parent.email,
+        photoURL: "https://via.placeholder.com/100",
+      },
+      children: [childID], // this creates a collection Ref ie children/abc
+      isAuthorizedForPickUp: true,
+      role: data.parent.role,
+    };
+
+    await setDoc(childdocRef, newChildProfile);
+    await setDoc(parentdocRef, newParentProfile);
 
     console.log("here is the data: ", data);
   };

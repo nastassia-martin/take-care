@@ -4,7 +4,7 @@ export interface NewUser {
 }
 
 export interface Department {
-  _id: string;
+  // _id: string;
   departmentName: string;
 }
 

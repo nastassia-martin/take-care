@@ -1,5 +1,17 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import {
+  CollectionReference,
+  DocumentData,
+  collection,
+  getFirestore,
+} from "firebase/firestore";
+import {
+  ChildProfile,
+  NewChildProfile,
+  NewParentProfile,
+  ParentProfile,
+  TeacherProfile,
+} from "../types/CreateProfile.types";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -16,3 +28,19 @@ const app = initializeApp(firebaseConfig);
 
 // Get firestore instance
 export const db = getFirestore(app);
+
+// Helper function to add type to db responses
+const createCollection = <T = DocumentData>(collectionName: string) => {
+  return collection(db, collectionName) as CollectionReference<T>;
+};
+
+// Export collection references
+
+// Current collections - READ
+export const parentsCol = createCollection<ParentProfile>("parents");
+export const childrenCol = createCollection<ChildProfile>("children");
+export const teachersCol = createCollection<TeacherProfile>("teachers");
+
+// New collections - CREATE
+export const newChildCol = createCollection<NewChildProfile>("children");
+export const newParentCol = createCollection<NewParentProfile>("parents");

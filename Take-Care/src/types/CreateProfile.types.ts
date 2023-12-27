@@ -32,19 +32,19 @@ export interface TeacherProfile {
 export interface ChildProfile {
   _id: string;
   contact: Omit<Contact, "email">;
-  department: Department;
-  gender: Gender;
+  department: string;
+  //gender: Gender;
   date_of_birth: Date;
   keyTeacher: string;
   allergies: string;
-  parents: Contact[];
+  parents: string[];
 }
 
 export interface ParentProfile {
   _id: string;
   contact: Contact;
-  children: ChildProfile[];
-  keyTeacher: Pick<NewTeacherProfile, "contact">;
+  children: string[];
+  //keyTeacher: Pick<NewTeacherProfile, "contact">;
   isAuthorizedForPickUp: boolean;
   role: Role.User;
 }
