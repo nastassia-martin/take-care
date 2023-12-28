@@ -35,7 +35,7 @@ const CreateFamilyProfile = () => {
   const {
     handleSubmit,
     register,
-    formState: { errors, isSubmitSuccessful },
+    formState: { errors, isSubmitSuccessful, isDirty, isValid },
     reset,
   } = useForm<NewProfileSchemaType>({
     resolver: zodResolver(NewProfileSchema),
@@ -227,6 +227,7 @@ const CreateFamilyProfile = () => {
                   text="Create new account"
                   ariaLabel="Create new account for child"
                   type="submit"
+                  disabled={!isDirty || !isValid}
                 />
               </Form>
             </div>

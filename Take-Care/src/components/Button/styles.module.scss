@@ -12,4 +12,9 @@
   &:hover {
     transform: scale(1.1);
   }
+
+  &:disabled {
+    background-color: var(--secondary-blue);
+    transform: none;
+  }
 }

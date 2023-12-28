@@ -19,7 +19,7 @@ const CreateTeacherProfile = () => {
   const {
     handleSubmit,
     register,
-    formState: { errors, isSubmitSuccessful },
+    formState: { isDirty, errors, isSubmitSuccessful, isValid },
     reset,
   } = useForm<NewProfileSchemaType>({
     resolver: zodResolver(NewTeacherProfileSchema),
@@ -67,63 +67,65 @@ const CreateTeacherProfile = () => {
           <Card>
             <div className={styles.CardWrapper}>
               <h3 className={styles.Header}>New teacher account</h3>
+
+              <Form onSubmit={handleSubmit(onCreateTeacherProfile)}>
+                <Form.Group controlId="teacherFirstName" className="mb-3">
+                  <Form.Label>Teacher's Fist Name</Form.Label>
+                  <Form.Control
+                    placeholder="Jane"
+                    type="text"
+                    {...register("contact.firstName")}
+                  />
+                  {errors.contact?.firstName && (
+                    <p className={styles.Error}>
+                      {errors.contact.firstName.message || "Invalid input"}
+                    </p>
+                  )}
+                </Form.Group>
+                <Form.Group controlId="teacherLastName" className="mb-3">
+                  <Form.Label>Teacher's Last Name</Form.Label>
+                  <Form.Control
+                    placeholder="Honey"
+                    type="text"
+                    {...register("contact.lastName")}
+                  />
+                  {errors.contact?.lastName && (
+                    <p className={styles.Error}>
+                      {errors.contact.lastName.message || "Invalid input"}
+                    </p>
+                  )}
+                </Form.Group>
+                <Form.Group controlId="role" className="mb-3">
+                  <Form.Label>Role</Form.Label>
+                  <Form.Select
+                    aria-label="Please select role"
+                    {...register("role")}
+                  >
+                    <option>Please select the teacher's role</option>
+                    <option>{Role.Admin}</option>
+                  </Form.Select>
+                </Form.Group>
+                <Form.Group controlId="email" className="mb-3">
+                  <Form.Label>Teacher's email</Form.Label>
+                  <Form.Control
+                    placeholder="example@example.com"
+                    type="email"
+                    {...register("contact.email")}
+                  />
+                  {errors.contact?.email && (
+                    <p className={styles.Error}>
+                      {errors.contact.email.message ?? "Invalid value"}
+                    </p>
+                  )}
+                </Form.Group>
+                <Button
+                  text="Create new account"
+                  ariaLabel="Create new account for child"
+                  type="submit"
+                  disabled={!isDirty || !isValid}
+                />
+              </Form>
             </div>
-            <Form onSubmit={handleSubmit(onCreateTeacherProfile)}>
-              <Form.Group controlId="teacherFirstName" className="mb-3">
-                <Form.Label>Teacher's Fist Name</Form.Label>
-                <Form.Control
-                  placeholder="Jane"
-                  type="text"
-                  {...register("contact.firstName")}
-                />
-                {errors.contact?.firstName && (
-                  <p className={styles.Error}>
-                    {errors.contact.firstName.message || "Invalid input"}
-                  </p>
-                )}
-              </Form.Group>
-              <Form.Group controlId="teacherLastName" className="mb-3">
-                <Form.Label>Teacher's Last Name</Form.Label>
-                <Form.Control
-                  placeholder="Honey"
-                  type="text"
-                  {...register("contact.lastName")}
-                />
-                {errors.contact?.lastName && (
-                  <p className={styles.Error}>
-                    {errors.contact.lastName.message || "Invalid input"}
-                  </p>
-                )}
-              </Form.Group>
-              <Form.Group controlId="role" className="mb-3">
-                <Form.Label>Role</Form.Label>
-                <Form.Select
-                  aria-label="Please select role"
-                  {...register("role")}
-                >
-                  <option>Please select the teacher's role</option>
-                  <option>{Role.Admin}</option>
-                </Form.Select>
-              </Form.Group>
-              <Form.Group controlId="email" className="mb-3">
-                <Form.Label>Teacher's email</Form.Label>
-                <Form.Control
-                  placeholder="example@example.com"
-                  type="email"
-                  {...register("contact.email")}
-                />
-                {errors.contact?.email && (
-                  <p className={styles.Error}>
-                    {errors.contact.email.message ?? "Invalid value"}
-                  </p>
-                )}
-              </Form.Group>
-              <Button
-                text="Create new account"
-                ariaLabel="Create new account for child"
-                type="submit"
-              />
-            </Form>
           </Card>
         </Col>
       </Row>
