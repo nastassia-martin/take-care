@@ -15,10 +15,9 @@ const ParentProfilePage = () => {
     error: parentError,
   } = useGetParent(
     // "DxLDkPxTBKGh39lMZ8ZO" // another example
-    "Rn27OrYiZYBSawOsoryE"
+    "POL3GGZm2fx5VbCaivwa"
   );
   const [childId, setChildId] = useState<string | null>(null);
-
   // Whenever the parent data changes, update the childId state.
   useEffect(() => {
     if (!parent) {

@@ -25,7 +25,7 @@ import { db } from "../../services/firebase";
 import { useEffect } from "react";
 import { Role } from "../../types/GenericTypes.types";
 
-const CreateProfile = () => {
+const CreateFamilyProfile = () => {
   const createCollection = (collectionName: string) => {
     return collection(db, collectionName) as CollectionReference;
   };
@@ -111,7 +111,7 @@ const CreateProfile = () => {
         <Col md={{ span: 6, offset: 3 }}>
           <Card>
             <div className={styles.CardWrapper}>
-              <h5 className={styles.Header}>New child account</h5>
+              <h3 className={styles.Header}>New child account</h3>
 
               {/* information about child */}
               <Form onSubmit={handleSubmit(onCreateChildProfile)}>
@@ -237,4 +237,4 @@ const CreateProfile = () => {
   );
 };
 
-export default CreateProfile;
+export default CreateFamilyProfile;

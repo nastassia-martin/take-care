@@ -3,7 +3,8 @@ import { Routes, Route } from "react-router-dom";
 import Navigation from "./components/NavBar/NavBar";
 import HomePage from "./components/HomePage/HomePage";
 import ParentProfilePage from "./pages/ParentProfile/ParentProfilePage";
-//import CreateProfile from "./components/CreateProfile/CreateProfile";
+import CreateTeacherProfile from "./components/Forms/CreateTeacherProfile";
+//import CreateFamilyProfile from "./components/Forms/CreateFamilyProfile";
 
 /**
  * @todo - set up routing for dashboard (teacher)
@@ -17,7 +18,9 @@ const App = () => {
         {/* Guest Routes */}
         <Route />
         <Route path="/" element={<HomePage />} />
-        {/* <Route path="/newProfile" element={<CreateProfile />} /> */}
+        {/* <Route path="/newFamilyProfile" element={<CreateFamilyProfile />} /> */}
+        <Route path="/newTeacherProfile" element={<CreateTeacherProfile />} />
+
         <Route path="/profile" element={<ParentProfilePage />} />
 
         {/* <Route path="/" element={<FAQ />} /> */}

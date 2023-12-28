@@ -9,6 +9,7 @@ import {
   ChildProfile,
   NewChildProfile,
   NewParentProfile,
+  NewTeacherProfile,
   ParentProfile,
   TeacherProfile,
 } from "../types/CreateProfile.types";
@@ -44,3 +45,4 @@ export const teachersCol = createCollection<TeacherProfile>("teachers");
 // New collections - CREATE
 export const newChildCol = createCollection<NewChildProfile>("children");
 export const newParentCol = createCollection<NewParentProfile>("parents");
+export const newTeacherCol = createCollection<NewTeacherProfile>("teachers");

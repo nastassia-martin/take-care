@@ -17,8 +17,7 @@ export interface NewParentProfile extends NewUser {
 }
 
 export interface NewTeacherProfile {
-  _id: string;
-  contact: NewUser;
+  contact: Contact;
   role: Role.Admin;
 }
 
@@ -27,7 +26,7 @@ export interface TeacherProfile {
   contact: Contact;
   department: Department;
   role: Role.Admin;
-  responsibileForChildren: Omit<Contact, "email">[];
+  responsibileForChildren: string[];
 }
 export interface ChildProfile {
   _id: string;

@@ -11,15 +11,15 @@ export interface Department {
 export interface Contact {
   firstName: string;
   lastName: string;
-  photoURL: string;
+  photoURL?: string;
   email: string;
 }
 export enum Role {
-  User = "user",
-  Admin = "admin",
+  User = "User",
+  Admin = "Admin",
 }
 
 export enum Gender {
-  Male = "male",
-  Female = "female",
+  Male = "Male",
+  Female = "Female",
 }
