@@ -24,6 +24,7 @@ export const NewChildProfileSchema = genericName.extend({
 const NewParentProfileSchema = genericName.extend({
   email: z.string().email({ message: "please use a valid email" }),
   role: z.literal(Role.User),
+  password: z.string(),
 });
 
 // combined Validation schemas to be used when creating a new Child profile

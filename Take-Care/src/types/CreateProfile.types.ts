@@ -14,6 +14,7 @@ export interface NewChildProfile extends NewUser {
 export interface NewParentProfile extends NewUser {
   email: string;
   role: Role.User;
+  password?: string;
 }
 
 export interface NewTeacherProfile {

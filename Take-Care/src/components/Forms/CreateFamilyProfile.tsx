@@ -24,7 +24,11 @@ import {
 import { auth, db } from "../../services/firebase";
 import { useEffect } from "react";
 import { Role } from "../../types/GenericTypes.types";
-import { sendSignInLinkToEmail } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
+  signOut,
+} from "firebase/auth";
 
 const CreateFamilyProfile = () => {
   const createCollection = (collectionName: string) => {
@@ -55,10 +59,21 @@ const CreateFamilyProfile = () => {
     },
   });
 
+  const signup = (email: string, password: string) => {
+    return createUserWithEmailAndPassword(auth, email, password);
+  };
+
   const onCreateChildProfile: SubmitHandler<FamilyProfile> = async (data) => {
+    // create parent in auth
+
+    const userCredential = await signup(
+      data.parent.email,
+      data.parent.password!
+    );
+    const parentUID = userCredential.user.uid;
+
     const childdocRef = doc(children);
-    const parentdocRef = doc(parents);
-    const parentID = parentdocRef.id;
+    const parentdocRef = doc(parents, parentUID);
     const childID = childdocRef.id;
 
     const newChildProfile: ChildProfile = {
@@ -72,11 +87,11 @@ const CreateFamilyProfile = () => {
       allergies: "",
       date_of_birth: data.child.date_of_birth,
       keyTeacher: "",
-      parents: [parentID], // this creates a collection Ref ie parents/abc
+      parents: [parentUID], // this creates a collection Ref ie parents/abc
     };
 
     const newParentProfile: ParentProfile = {
-      _id: parentID,
+      _id: parentUID,
       contact: {
         firstName: data.parent.firstName,
         lastName: data.parent.lastName,
@@ -91,18 +106,7 @@ const CreateFamilyProfile = () => {
     await setDoc(childdocRef, newChildProfile);
     await setDoc(parentdocRef, newParentProfile);
 
-    // send email notification to User for them to complete their user registration.
-    try {
-      await sendSignInLinkToEmail(auth, data.parent.email, {
-        url: "http://localhost:5173/", // change to website URL when live
-        handleCodeInApp: true,
-      });
-      localStorage.setItem("email", data.parent.email);
-    } catch (error) {
-      console.log(error);
-    }
-
-    console.log("here is the data: ", data);
+    sendPasswordResetEmail(auth, data.parent.email);
   };
   useEffect(() => {
     if (isSubmitSuccessful) {
@@ -235,7 +239,7 @@ const CreateFamilyProfile = () => {
                     </p>
                   )}
                 </Form.Group>
-                {/* <Form.Group controlId="password" className="mb-3">
+                <Form.Group controlId="password" className="mb-3">
                   <Form.Label>password</Form.Label>
                   <Form.Control
                     autoComplete="new-password"
@@ -247,7 +251,7 @@ const CreateFamilyProfile = () => {
                       {errors.parent.email.message ?? "Invalid value"}
                     </p>
                   )}
-                </Form.Group> */}
+                </Form.Group>
                 <Button
                   text="Create new account"
                   ariaLabel="Create new account for child"
