@@ -21,9 +21,10 @@ import {
   doc,
   setDoc,
 } from "firebase/firestore";
-import { db } from "../../services/firebase";
+import { auth, db } from "../../services/firebase";
 import { useEffect } from "react";
 import { Role } from "../../types/GenericTypes.types";
+import { sendSignInLinkToEmail } from "firebase/auth";
 
 const CreateFamilyProfile = () => {
   const createCollection = (collectionName: string) => {
@@ -89,6 +90,17 @@ const CreateFamilyProfile = () => {
 
     await setDoc(childdocRef, newChildProfile);
     await setDoc(parentdocRef, newParentProfile);
+
+    // send email notification to User for them to complete their user registration.
+    try {
+      await sendSignInLinkToEmail(auth, data.parent.email, {
+        url: "http://localhost:5173/", // change to website URL when live
+        handleCodeInApp: true,
+      });
+      localStorage.setItem("email", data.parent.email);
+    } catch (error) {
+      console.log(error);
+    }
 
     console.log("here is the data: ", data);
   };
@@ -223,6 +235,19 @@ const CreateFamilyProfile = () => {
                     </p>
                   )}
                 </Form.Group>
+                {/* <Form.Group controlId="password" className="mb-3">
+                  <Form.Label>password</Form.Label>
+                  <Form.Control
+                    autoComplete="new-password"
+                    type="password"
+                    {...register("parent.password")}
+                  />
+                  {errors.parent?.email && (
+                    <p className={styles.Error}>
+                      {errors.parent.email.message ?? "Invalid value"}
+                    </p>
+                  )}
+                </Form.Group> */}
                 <Button
                   text="Create new account"
                   ariaLabel="Create new account for child"
