@@ -6,11 +6,15 @@ type ButtonProps = {
   ariaLabel: ButtonAttributes["aria-label"];
   type: ButtonAttributes["type"];
   disabled?: ButtonAttributes["disabled"];
+  onClick?: ButtonAttributes["onClick"];
+  children?: React.ReactNode;
 };
 
 const Button = ({
-  text,
+  // text,
   ariaLabel,
+  children,
+  onClick,
   type,
   disabled,
 }: ButtonProps): ReactElement => {
@@ -20,8 +24,9 @@ const Button = ({
       className={styles.Button}
       type={type}
       disabled={disabled}
+      onClick={onClick}
     >
-      {text}
+      {children}
     </button>
   );
 };
