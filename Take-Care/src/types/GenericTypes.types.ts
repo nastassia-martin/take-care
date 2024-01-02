@@ -17,6 +17,7 @@ export interface Contact {
 export enum Role {
   User = "User",
   Admin = "Admin",
+  NotApproved = "Not approved",
 }
 
 export enum Gender {

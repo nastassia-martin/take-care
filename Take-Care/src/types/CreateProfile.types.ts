@@ -6,14 +6,28 @@ import {
   Role,
 } from "./GenericTypes.types";
 
-export interface NewChildProfile extends NewUser {
+export interface NewChildProfile {
+  _id: string;
+  contact: {
+    firstName: string;
+    lastName: string;
+    photoURL: string;
+  };
   date_of_birth: Date;
-  department: string;
+  parents: string[];
 }
 
-export interface NewParentProfile extends NewUser {
-  email: string;
-  role: Role.User;
+export interface NewParentProfile {
+  _id: string;
+  contact: Contact;
+  role: Role;
+  children: string[];
+  childrenContact: {
+    firstName: string;
+    lastName: string;
+    date_of_birth: Date;
+  };
+  isAuthorizedForPickUp: boolean;
   password?: string;
 }
 
@@ -40,14 +54,7 @@ export interface ChildProfile {
   parents: string[];
 }
 
-export interface ParentProfile {
-  _id: string;
-  contact: Contact;
-  children: string[];
-  //keyTeacher: Pick<NewTeacherProfile, "contact">;
-  isAuthorizedForPickUp: boolean;
-  role: Role.User;
-}
+export type ParentProfile = Omit<NewParentProfile, "password">;
 
 export interface FamilyProfile {
   child: NewChildProfile;
@@ -59,7 +66,7 @@ export interface NewParentCredential {
     firstName: string;
     lastName: string;
     email: string;
-    //role: Role.User;
+    role?: Role.User;
     password?: string;
   };
   child: {
