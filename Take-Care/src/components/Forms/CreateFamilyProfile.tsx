@@ -21,16 +21,13 @@ import {
   doc,
   setDoc,
 } from "firebase/firestore";
-import { auth, db } from "../../services/firebase";
+import { db } from "../../services/firebase";
 import { useEffect } from "react";
 import { Role } from "../../types/GenericTypes.types";
-import {
-  createUserWithEmailAndPassword,
-  sendPasswordResetEmail,
-  signOut,
-} from "firebase/auth";
+import useAuth from "../../hooks/useAuth";
 
 const CreateFamilyProfile = () => {
+  const { signUp, resetPassword } = useAuth();
   const createCollection = (collectionName: string) => {
     return collection(db, collectionName) as CollectionReference;
   };
@@ -59,54 +56,53 @@ const CreateFamilyProfile = () => {
     },
   });
 
-  const signup = (email: string, password: string) => {
-    return createUserWithEmailAndPassword(auth, email, password);
-  };
-
   const onCreateChildProfile: SubmitHandler<FamilyProfile> = async (data) => {
-    // create parent in auth
+    try {
+      // create parent in auth
+      const userCredential = await signUp(
+        data.parent.email,
+        data.parent.password!
+      );
+      // assign the parentID to be the same as their auth UID, and create a new document using the same parentID.
+      const parentUID = userCredential.user.uid;
+      const childdocRef = doc(children);
+      const parentdocRef = doc(parents, parentUID);
+      const childID = childdocRef.id;
 
-    const userCredential = await signup(
-      data.parent.email,
-      data.parent.password!
-    );
-    const parentUID = userCredential.user.uid;
+      const newChildProfile: ChildProfile = {
+        _id: childID,
+        contact: {
+          firstName: data.child.firstName,
+          lastName: data.child.lastName,
+          photoURL: "https://via.placeholder.com/100",
+        },
+        department: data.child.department,
+        allergies: "",
+        date_of_birth: data.child.date_of_birth,
+        keyTeacher: "",
+        parents: [parentUID], // this creates a collection Ref ie parents/abc
+      };
 
-    const childdocRef = doc(children);
-    const parentdocRef = doc(parents, parentUID);
-    const childID = childdocRef.id;
+      const newParentProfile: ParentProfile = {
+        _id: parentUID,
+        contact: {
+          firstName: data.parent.firstName,
+          lastName: data.parent.lastName,
+          email: data.parent.email,
+          photoURL: "https://via.placeholder.com/100",
+        },
+        children: [childID], // this creates a collection Ref ie children/abc
+        isAuthorizedForPickUp: true,
+        role: data.parent.role,
+      };
 
-    const newChildProfile: ChildProfile = {
-      _id: childID,
-      contact: {
-        firstName: data.child.firstName,
-        lastName: data.child.lastName,
-        photoURL: "https://via.placeholder.com/100",
-      },
-      department: data.child.department,
-      allergies: "",
-      date_of_birth: data.child.date_of_birth,
-      keyTeacher: "",
-      parents: [parentUID], // this creates a collection Ref ie parents/abc
-    };
+      await setDoc(childdocRef, newChildProfile);
+      await setDoc(parentdocRef, newParentProfile);
 
-    const newParentProfile: ParentProfile = {
-      _id: parentUID,
-      contact: {
-        firstName: data.parent.firstName,
-        lastName: data.parent.lastName,
-        email: data.parent.email,
-        photoURL: "https://via.placeholder.com/100",
-      },
-      children: [childID], // this creates a collection Ref ie children/abc
-      isAuthorizedForPickUp: true,
-      role: data.parent.role,
-    };
-
-    await setDoc(childdocRef, newChildProfile);
-    await setDoc(parentdocRef, newParentProfile);
-
-    sendPasswordResetEmail(auth, data.parent.email);
+      resetPassword(data.parent.email);
+    } catch (error) {
+      console.log(error);
+    }
   };
   useEffect(() => {
     if (isSubmitSuccessful) {
@@ -117,9 +113,8 @@ const CreateFamilyProfile = () => {
   /**
    * @todo map department for child depnding on auth of teacher
    * @todo on create the account is created for parent and child (toast)
-   * @todo on success generate an email to the parent that their account has been set up
    * @todo on error show a toast
-   * @todo what happens if the email already exists?
+   * @todo what happens if the email already exists? => firebase handles this, show firebase message
    */
   return (
     <main className={styles.MainNewProfileWrapper}>
