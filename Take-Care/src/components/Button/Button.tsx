@@ -2,7 +2,7 @@ import { ButtonHTMLAttributes, ReactElement } from "react";
 import styles from "./styles.module.scss";
 type ButtonAttributes = ButtonHTMLAttributes<HTMLButtonElement>;
 type ButtonProps = {
-  text: string;
+  //text: string;
   ariaLabel: ButtonAttributes["aria-label"];
   type: ButtonAttributes["type"];
   disabled?: ButtonAttributes["disabled"];

@@ -17,15 +17,23 @@ const genericName = z.object({
 // validation schema for Child
 export const NewChildProfileSchema = genericName.extend({
   date_of_birth: z.date(),
-  department: z.string().min(1, { message: "please select a department" }),
+  //department: z.string().min(1, { message: "please select a department" }),
 });
 
 // validation schema for Parent
-const NewParentProfileSchema = genericName.extend({
-  email: z.string().email({ message: "please use a valid email" }),
-  role: z.literal(Role.User),
-  password: z.string(),
-});
+const NewParentProfileSchema = genericName
+  .extend({
+    email: z.string().email({ message: "please use a valid email" }),
+    //role: z.literal(Role.User),
+    password: z
+      .string()
+      .min(6, { message: "password must be at least 6 characters" }),
+    passwordConfirm: z.string(),
+  })
+  .refine((data) => data.password === data.passwordConfirm, {
+    message: "Passwords don't match",
+    path: ["passwordConfirm"],
+  });
 
 // combined Validation schemas to be used when creating a new Child profile
 export const NewProfileSchema = z.object({

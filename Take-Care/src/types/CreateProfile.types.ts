@@ -53,3 +53,18 @@ export interface FamilyProfile {
   child: NewChildProfile;
   parent: NewParentProfile;
 }
+
+export interface NewParentCredential {
+  parent: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    //role: Role.User;
+    password?: string;
+  };
+  child: {
+    firstName: string;
+    lastName: string;
+    date_of_birth: Date;
+  };
+}
