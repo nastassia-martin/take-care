@@ -38,7 +38,7 @@ const LoginUserPage = () => {
       <Row>
         <Col md={{ span: 6, offset: 3 }}>
           <div className={styles.CardWrapper}>
-            <h3 className={styles.Header}>Register</h3>
+            <h3 className={styles.Header}>Log in</h3>
             {errorMessage && (
               <p className={styles.ErrorMessage}>{errorMessage}</p>
             )}

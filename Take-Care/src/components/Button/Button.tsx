@@ -1,18 +1,19 @@
 import { ButtonHTMLAttributes, ReactElement } from "react";
 import styles from "./styles.module.scss";
+import classNames from "classnames";
 type ButtonAttributes = ButtonHTMLAttributes<HTMLButtonElement>;
 type ButtonProps = {
-  //text: string;
   ariaLabel: ButtonAttributes["aria-label"];
-  type: ButtonAttributes["type"];
+  type?: ButtonAttributes["type"];
   disabled?: ButtonAttributes["disabled"];
   onClick?: ButtonAttributes["onClick"];
   children?: React.ReactNode;
+  className?: ButtonAttributes["className"];
 };
 
 const Button = ({
-  // text,
   ariaLabel,
+  className,
   children,
   onClick,
   type,
@@ -21,7 +22,7 @@ const Button = ({
   return (
     <button
       aria-label={ariaLabel}
-      className={styles.Button}
+      className={classNames(styles.Button, className)}
       type={type}
       disabled={disabled}
       onClick={onClick}
