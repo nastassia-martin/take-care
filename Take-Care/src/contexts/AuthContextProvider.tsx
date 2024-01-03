@@ -8,7 +8,15 @@ import {
   UserCredential,
 } from "firebase/auth";
 import { createContext, useEffect, useState } from "react";
-import { auth } from "../services/firebase";
+import { auth, newChildCol, newParentCol } from "../services/firebase";
+import { doc, setDoc } from "firebase/firestore";
+import {
+  BasicChildProfile,
+  BasicParentProfile,
+  NewChildProfile,
+  NewParentProfile,
+} from "../types/CreateProfile.types";
+import { Role } from "../types/GenericTypes.types";
 
 type AuthContextType = {
   currentUser: User | null;
@@ -16,7 +24,12 @@ type AuthContextType = {
   reloadUser: () => Promise<boolean>;
   resetPassword: (email: string) => Promise<void>;
   setEmail: (email: string) => Promise<void>;
-  signUp: (email: string, password: string) => Promise<UserCredential>;
+  signUp: (
+    email: string,
+    password: string,
+    newParentProfile: BasicParentProfile,
+    newChildProfile: BasicChildProfile
+  ) => Promise<UserCredential>;
   userEmail: string | null;
 };
 
@@ -51,8 +64,64 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
     }
     return sendPasswordResetEmail(auth, email);
   };
-  const signUp = (email: string, password: string) => {
-    return createUserWithEmailAndPassword(auth, email, password);
+
+  const signUp = async (
+    email: string,
+    password: string,
+    newParentProfile: BasicParentProfile,
+    newChildProfile: BasicChildProfile
+  ) => {
+    // try to sign up user using email & password
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      // if user is verified assign ids
+      if (userCredential.user) {
+        const parentUID = userCredential.user.uid;
+        const childdocRef = doc(newChildCol);
+        const parentdocRef = doc(newParentCol, parentUID);
+        const childID = childdocRef.id;
+
+        // assign defualt values to satisfy type. These will be overrided in the form component.
+        const defaultParentProfile: NewParentProfile = {
+          _id: "",
+          contact: { firstName: "", lastName: "", email: "", photoURL: "" },
+          role: Role.NotApproved,
+          children: [""],
+          childrenContact: {
+            firstName: "",
+            lastName: "",
+            date_of_birth: new Date(),
+          },
+          isAuthorizedForPickUp: false,
+        };
+
+        // assign the auth id to the parent id to connect the user colleciton
+        const newParent: NewParentProfile = {
+          ...defaultParentProfile,
+          ...newParentProfile,
+          _id: parentUID,
+          children: [childID],
+        };
+
+        // assign the parent id inside the children doc to connect the collections
+        const newChild: NewChildProfile = {
+          ...newChildProfile,
+          _id: childID,
+          parents: [parentUID],
+        };
+
+        await setDoc(parentdocRef, newParent);
+        await setDoc(childdocRef, newChild);
+      }
+      return userCredential;
+    } catch (error) {
+      throw new Error();
+    }
   };
 
   const setEmail = (email: string) => {

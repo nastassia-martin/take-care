@@ -24,7 +24,7 @@ const App = () => {
         <Route path="/newFamilyProfile" element={<CreateFamilyProfile />} />
         <Route path="/newTeacherProfile" element={<CreateTeacherProfile />} />
 
-        <Route path="/profile" element={<ParentProfilePage />} />
+        <Route path="/profiles" element={<ParentProfilePage />} />
 
         {/* <Route path="/" element={<FAQ />} /> */}
         {/* Protected Routes */}

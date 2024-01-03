@@ -17,6 +17,19 @@ export interface NewChildProfile {
   parents: string[];
 }
 
+export interface BasicParentProfile {
+  contact: Contact;
+}
+
+export interface BasicChildProfile {
+  contact: {
+    firstName: string;
+    lastName: string;
+    photoURL: string;
+  };
+  date_of_birth: Date;
+}
+
 export interface NewParentProfile {
   _id: string;
   contact: Contact;
