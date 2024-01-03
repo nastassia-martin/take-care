@@ -19,8 +19,9 @@ import { NewParentCredential } from "../../types/CreateProfile.types";
 
 interface IFormProps {
   onSignup: SubmitHandler<NewParentCredential>;
+  loading: boolean;
 }
-const RegisterUserForm: React.FC<IFormProps> = ({ onSignup }) => {
+const RegisterUserForm: React.FC<IFormProps> = ({ onSignup, loading }) => {
   const {
     handleSubmit,
     register,
@@ -147,7 +148,7 @@ const RegisterUserForm: React.FC<IFormProps> = ({ onSignup }) => {
         )}
       </Form.Group>
       <Button ariaLabel="Register user" type="submit" disabled={!isValid}>
-        Register
+        {loading ? "submitting" : "register"}
       </Button>
     </Form>
   );

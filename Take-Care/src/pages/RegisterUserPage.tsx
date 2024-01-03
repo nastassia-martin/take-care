@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 
 const RegisterUserPage = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const { signUp } = useAuth();
@@ -23,6 +24,7 @@ const RegisterUserPage = () => {
 
     // try to register the user using form
     try {
+      setLoading(true);
       const newParentProfile: NewParentProfile = {
         _id: "", //fulfilled by auth
         contact: {
@@ -64,6 +66,8 @@ const RegisterUserPage = () => {
       } else {
         setErrorMessage("Internal error");
       }
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -76,7 +80,7 @@ const RegisterUserPage = () => {
               <p className={styles.ErrorMessage}>{errorMessage}</p>
             )}
 
-            <RegisterUserForm onSignup={handleSignUp} />
+            <RegisterUserForm onSignup={handleSignUp} loading={loading} />
           </div>
         </Col>
       </Row>

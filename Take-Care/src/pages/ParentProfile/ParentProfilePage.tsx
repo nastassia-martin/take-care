@@ -6,17 +6,11 @@ import useGetChild from "../../hooks/useGetChild";
 import { useEffect, useState } from "react";
 import Button from "../../components/Button/Button";
 const ParentProfilePage = () => {
-  const { id } = useParams();
-  const documentId = id as string;
-
   const {
     data: parent,
     loading: parentLoading,
     error: parentError,
-  } = useGetParent(
-    // "DxLDkPxTBKGh39lMZ8ZO" // another example
-    "POL3GGZm2fx5VbCaivwa"
-  );
+  } = useGetParent("ncPhbA4HC3OLVHQP28L0xxypWCB2");
   const [childId, setChildId] = useState<string | null>(null);
   // Whenever the parent data changes, update the childId state.
   useEffect(() => {
@@ -54,7 +48,7 @@ const ParentProfilePage = () => {
   );
   return (
     <div className={styles.PageWrapper}>
-      {parent && (
+      {parent && parent.role === "User" && (
         <>
           <section className={styles.ProfileDetails}>
             <ProfileDetails

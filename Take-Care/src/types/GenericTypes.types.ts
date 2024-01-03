@@ -24,3 +24,7 @@ export enum Gender {
   Male = "Male",
   Female = "Female",
 }
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}

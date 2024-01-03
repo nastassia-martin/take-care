@@ -11,11 +11,13 @@ const HomePage = () => {
         <div className={styles.Tagline}>
           <h4>Tagline Lorem, vero sint omnis alias ut ratione hic fugit.</h4>
           <div className={styles.ButtonWrapper}>
-            <Button ariaLabel="Log in" type="button">
-              Log in
-            </Button>
+            <Link to="/login">
+              <Button ariaLabel="Log in user" type="button">
+                Log in
+              </Button>
+            </Link>
             <Link to="/register">
-              <Button ariaLabel="Log in" type="button">
+              <Button ariaLabel="Register new user" type="button">
                 Register
               </Button>
             </Link>

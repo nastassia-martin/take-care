@@ -2,6 +2,7 @@ import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   sendPasswordResetEmail,
+  signInWithEmailAndPassword,
   signOut,
   updateEmail,
   User,
@@ -20,6 +21,7 @@ import { Role } from "../types/GenericTypes.types";
 
 type AuthContextType = {
   currentUser: User | null;
+  login: (email: string, password: string) => Promise<UserCredential>;
   logout: () => Promise<void>;
   reloadUser: () => Promise<boolean>;
   resetPassword: (email: string) => Promise<void>;
@@ -44,6 +46,10 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [userEmail, setUserEmail] = useState<string | null>(null);
+
+  const login = (email: string, password: string) => {
+    return signInWithEmailAndPassword(auth, email, password);
+  };
 
   const logout = () => {
     return signOut(auth);
@@ -153,6 +159,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
     <AuthContext.Provider
       value={{
         currentUser,
+        login,
         userEmail,
         setEmail,
         signUp,
@@ -161,7 +168,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
         resetPassword,
       }}
     >
-      {loading ? <div>im not ready</div> : <>{children}</>}
+      {loading ? <div>loading...</div> : <>{children}</>}
     </AuthContext.Provider>
   );
 };
