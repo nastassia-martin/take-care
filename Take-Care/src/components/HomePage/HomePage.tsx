@@ -6,18 +6,20 @@ import { Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import useGetParent from "../../hooks/useGetParent";
 import { useNavigate } from "react-router-dom";
+import useGetTeacher from "../../hooks/useGetTeacher";
 
 const HomePage = () => {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
   const isParentProfile = useGetParent(currentUser?.uid);
+  const isTeacherProfile = useGetTeacher(currentUser?.uid);
 
   const handleClick = () => {
     // if the current user is a parent, navigate to their profile
     if (currentUser && isParentProfile) navigate(`/parents/${currentUser.uid}`);
-
-    // if the current user is a parent, navigate to their profile
-    // if isTeacher navigate to `/teachers/${currentUser.uid}`
+    // if the current user is a teacher, navigate to their profile
+    if (currentUser && isTeacherProfile)
+      navigate(`/teachers/${currentUser.uid}`);
   };
   return (
     <>

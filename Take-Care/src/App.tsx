@@ -25,6 +25,7 @@ const App = () => {
         <Route path="/login" element={<LoginUserPage />} />
         <Route path="/newFamilyProfile" element={<CreateFamilyProfile />} />
         <Route path="/newTeacherProfile" element={<CreateTeacherProfile />} />
+        <Route path="/teachers/:id" element={<ParentProfilePage />} />
         <Route path="/parents/:id" element={<ParentProfilePage />} />
         <Route path="/children" />
         <Route path="/children/:id" element={<ChildProfilePage />} />
