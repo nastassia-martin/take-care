@@ -11,7 +11,7 @@ const AccessDenied: React.FC<IAccessDeniedPropss> = ({ text }) => {
     <main className={styles.AccessDenied}>
       <section className={styles.AccessDeniedDetails}>
         <p>You are logged in as {text}</p>
-        <p>You can view this profile once you are approved.</p>
+        <p>You are not approved to view this profile.</p>
         <Link to="/" className={styles.AccessDeniedLink}>
           <Button type="button" ariaLabel="Back to home page">
             Back to Home Page

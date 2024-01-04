@@ -20,8 +20,8 @@ const LoginUserPage = () => {
     try {
       setLoading(true);
       await login(data.email, data.password);
-      reloadUser();
-      navigate("/profiles");
+      await reloadUser();
+      navigate("/"); // eventually to dashboard
     } catch (error) {
       if (error instanceof FirebaseError) {
         setErrorMessage(error.message);

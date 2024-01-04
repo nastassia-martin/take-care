@@ -6,6 +6,7 @@ import useAuth from "../../hooks/useAuth";
 import useGetParent from "../../hooks/useGetParent";
 import AccessDenied from "../../components/AccessDenied/AccessDenied";
 import useGetChildren from "../../hooks/useGetChildren";
+import { Link } from "react-router-dom";
 
 const ParentProfilePage = () => {
   const { currentUser } = useAuth();
@@ -72,14 +73,15 @@ const ParentProfilePage = () => {
           <h3>Child's profile - Quick View</h3>
           {children &&
             children.map((child) => (
-              <ProfileDetails
-                key={child._id}
-                className={styles.CardWrapper}
-                image={child.contact.photoURL}
-                firstName={child.contact.firstName}
-                lastName={child.contact.lastName}
-                children={goToProfile}
-              />
+              <Link to={`/children/${child._id}`} key={child._id}>
+                <ProfileDetails
+                  className={styles.CardWrapper}
+                  image={child.contact.photoURL}
+                  firstName={child.contact.firstName}
+                  lastName={child.contact.lastName}
+                  children={goToProfile}
+                />
+              </Link>
             ))}
         </section>
       )}

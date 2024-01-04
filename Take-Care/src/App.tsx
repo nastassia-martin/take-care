@@ -7,6 +7,7 @@ import CreateTeacherProfile from "./components/Forms/CreateTeacherProfile";
 import CreateFamilyProfile from "./components/Forms/CreateFamilyProfile";
 import RegisterUserPage from "./pages/RegisterUserPage";
 import LoginUserPage from "./pages/LoginUserPage";
+import ChildProfilePage from "./pages/ChildProfile/ChildPage";
 
 /**
  * @todo - set up routing for dashboard (teacher)
@@ -24,9 +25,9 @@ const App = () => {
         <Route path="/login" element={<LoginUserPage />} />
         <Route path="/newFamilyProfile" element={<CreateFamilyProfile />} />
         <Route path="/newTeacherProfile" element={<CreateTeacherProfile />} />
-
-        <Route path="/profiles" element={<ParentProfilePage />} />
-
+        <Route path="/parents/:id" element={<ParentProfilePage />} />
+        <Route path="/children" />
+        <Route path="/children/:id" element={<ChildProfilePage />} />
         {/* <Route path="/" element={<FAQ />} /> */}
         {/* Protected Routes */}
         <Route />
