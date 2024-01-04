@@ -1,22 +1,21 @@
 import ProfileDetails from "../../components/Profile/ProfileDetails";
 import styles from "./styles.module.scss";
-import { useEffect } from "react";
 import Button from "../../components/Button/Button";
 import useAuth from "../../hooks/useAuth";
-import useGetParent from "../../hooks/useGetParent";
 import AccessDenied from "../../components/AccessDenied/AccessDenied";
+import useGetTeacher from "../../hooks/useGetTeacher";
 import useGetChildren from "../../hooks/useGetChildren";
+
 import { Link } from "react-router-dom";
 
-const ParentProfilePage = () => {
+const TeacherProfilePage = () => {
   const { currentUser } = useAuth();
 
   if (!currentUser) {
-    return <div>Internal server error.</div>;
+    return <div>We could not find a profile.</div>;
   }
-  const { data: parent } = useGetParent(currentUser.uid);
 
-  // call on the children collection as parent can have more than one child
+  const { data: teacher } = useGetTeacher(currentUser.uid);
   const { data: children } = useGetChildren(currentUser.uid);
 
   const goToProfile = (
@@ -24,18 +23,27 @@ const ParentProfilePage = () => {
       Go to profile
     </Button>
   );
-  // If parent does not exist, limit access
-  return parent && parent.role === "Not approved" ? (
-    <AccessDenied text={parent.contact.email} />
+
+  const noChildrenFound = (
+    <main className={styles.AccessDenied}>
+      <section className={styles.AccessDeniedDetails}>
+        <p>There are no children assigned to you yet.</p>
+      </section>
+    </main>
+  );
+
+  // If teacher does not exist, limit access
+  return teacher && !teacher.role ? (
+    <AccessDenied text={teacher.contact.email} />
   ) : (
     <div className={styles.PageWrapper}>
-      {parent && parent.role === "User" && (
+      {teacher && teacher.role === "Admin" && (
         <section className={styles.ProfileDetails}>
           <ProfileDetails
             className={styles.CardWrapper}
-            image={parent.contact.photoURL}
-            firstName={parent.contact.firstName}
-            lastName={parent.contact.lastName}
+            image={teacher.contact.photoURL}
+            firstName={teacher.contact.firstName}
+            lastName={teacher.contact.lastName}
           />
           <div className={styles.AddressWrapper}>
             <Button ariaLabel="Edit profile" type="button">
@@ -48,7 +56,7 @@ const ParentProfilePage = () => {
             <p className={styles.AddressDetails}>
               <span className={styles.AddressField}>Email: </span>
               <span className={styles.AddressValue}>
-                {parent.contact.email}
+                {teacher.contact.email}
               </span>
             </p>
             <p className={styles.AddressDetails}>
@@ -58,26 +66,28 @@ const ParentProfilePage = () => {
           </div>
         </section>
       )}
-      {/* Conditional rendering for child profile */}
-      {parent && parent.role === "User" && (
-        <section className={styles.ChildProfileWrapper}>
-          <h3>Child's profile - Quick View</h3>
-          {children &&
-            children.map((child) => (
+      {/* Conditional rendering for child profile if there are children assigned to teacher */}
+      {teacher && teacher.role === "Admin" ? (
+        children && children.length > 0 ? (
+          <section className={styles.ChildProfileWrapper}>
+            <h3>Child's profile - Quick View</h3>
+            {children.map((child) => (
               <Link to={`/children/${child._id}`} key={child._id}>
                 <ProfileDetails
                   className={styles.CardWrapper}
                   image={child.contact.photoURL}
                   firstName={child.contact.firstName}
                   lastName={child.contact.lastName}
-                  children={goToProfile}
+                  children={goToProfile} // Ensure this prop is correctly named and used
                 />
               </Link>
             ))}
-        </section>
-      )}
+          </section>
+        ) : (
+          noChildrenFound
+        )
+      ) : null}
     </div>
   );
 };
-
-export default ParentProfilePage;
+export default TeacherProfilePage;

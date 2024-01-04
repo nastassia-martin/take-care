@@ -30,7 +30,7 @@ const ChildProfilePage = () => {
   // child?.keyTeacher === currentUser.uid;
 
   if (currentUser.uid !== authorisedId) {
-    // assert that email exists becuase user cannot log in without an email
+    // assert that email exists because user cannot log in without an email
     return <AccessDenied text={currentUser.email!} />;
   }
 

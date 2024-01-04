@@ -2,11 +2,11 @@ import styles from "./styles.module.scss";
 import Button from "../Button/Button";
 import { Link } from "react-router-dom";
 
-interface IAccessDeniedPropss {
+interface IAccessDeniedProps {
   text: string;
 }
 
-const AccessDenied: React.FC<IAccessDeniedPropss> = ({ text }) => {
+const AccessDenied: React.FC<IAccessDeniedProps> = ({ text }) => {
   return (
     <main className={styles.AccessDenied}>
       <section className={styles.AccessDeniedDetails}>
