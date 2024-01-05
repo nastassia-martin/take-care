@@ -15,11 +15,16 @@ const HomePage = () => {
   const isTeacherProfile = useGetTeacher(currentUser?.uid);
 
   const handleClick = () => {
-    // if the current user is a parent, navigate to their profile
-    if (currentUser && isParentProfile) navigate(`/parents/${currentUser.uid}`);
-    // if the current user is a teacher, navigate to their profile
-    if (currentUser && isTeacherProfile)
-      navigate(`/teachers/${currentUser.uid}`);
+    if (currentUser) {
+      // Check if the current user is a parent and navigate to their profile
+      if (isParentProfile?.data) {
+        navigate(`/parents/${currentUser.uid}`);
+      }
+      // Else, if the current user is a teacher, navigate to their profile
+      else if (isTeacherProfile?.data) {
+        navigate(`/teachers/${currentUser.uid}`);
+      }
+    }
   };
   return (
     <>
