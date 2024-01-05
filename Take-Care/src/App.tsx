@@ -9,6 +9,7 @@ import RegisterUserPage from "./pages/RegisterUserPage";
 import LoginUserPage from "./pages/LoginUserPage";
 import ChildProfilePage from "./pages/ChildProfile/ChildPage";
 import TeacherProfilePage from "./pages/TeacherProfile/TeacherProfilePage";
+import UserListPage from "./pages/UserList/UserListPage";
 
 /**
  * @todo - set up routing for dashboard (teacher)
@@ -27,9 +28,11 @@ const App = () => {
         <Route path="/newFamilyProfile" element={<CreateFamilyProfile />} />
         <Route path="/newTeacherProfile" element={<CreateTeacherProfile />} />
         <Route path="/teachers/:id" element={<TeacherProfilePage />} />
+        <Route path="/parents" element={<UserListPage />} />
         <Route path="/parents/:id" element={<ParentProfilePage />} />
         <Route path="/children" />
         <Route path="/children/:id" element={<ChildProfilePage />} />
+
         {/* <Route path="/" element={<FAQ />} /> */}
         {/* Protected Routes */}
         <Route />
