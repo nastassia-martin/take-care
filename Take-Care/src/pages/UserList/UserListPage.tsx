@@ -1,5 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
+import Alert from "react-bootstrap/Alert";
 import Image from "react-bootstrap/Image";
+
 import styles from "./styles.module.scss";
 import useAuth from "../../hooks/useAuth";
 import useGetTeacher from "../../hooks/useGetTeacher";
@@ -8,6 +10,18 @@ import { ParentProfile } from "../../types/CreateProfile.types";
 import UserListTable from "../../components/Tables/Table.tsx/Table";
 import AccessDenied from "../../components/AccessDenied/AccessDenied";
 import { useEffect, useState } from "react";
+import Button from "../../components/Button/Button";
+import { updateParentRole } from "../../helpers";
+import { Role } from "../../types/GenericTypes.types";
+
+const handleParentRoleClick = async (parentId: string, role: Role) => {
+  const newRole = role === Role.NotApproved ? Role.User : Role.NotApproved;
+  try {
+    await updateParentRole(parentId, newRole);
+  } catch (error: any) {
+    <Alert variant="warning">{error.message}</Alert>;
+  }
+};
 
 const columns: ColumnDef<ParentProfile>[] = [
   {
@@ -41,6 +55,26 @@ const columns: ColumnDef<ParentProfile>[] = [
         header: "Status",
         accessorKey: "role",
       },
+      {
+        header: "Change status",
+        accessorKey: "_id",
+        meta: {
+          align: "center",
+        },
+        cell: (cell) => (
+          <Button
+            ariaLabel="change parent status"
+            onClick={() =>
+              handleParentRoleClick(
+                cell.row.original._id,
+                cell.row.original.role
+              )
+            }
+          >
+            Change status
+          </Button>
+        ),
+      },
     ],
   },
   {
@@ -62,41 +96,47 @@ const UserListPage = () => {
   const { currentUser } = useAuth();
   const [hasAdminAccess, setHasAdminAccess] = useState(false);
 
+  const { data: teacher, loading: teacherLoading } = useGetTeacher(
+    currentUser?.uid
+  );
+  const { data: parents, loading: parentsLoading } =
+    useGetParentsForAdminList();
+
+  const isLoading = teacherLoading || parentsLoading;
+
+  useEffect(() => {
+    // When teacher data is fetched, check if the role is 'admin'
+    if (teacher) {
+      teacher?.role === "Admin"
+        ? setHasAdminAccess(true)
+        : setHasAdminAccess(false);
+    }
+  }, [teacher]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   if (!currentUser) {
     return <div>You don't have a profile.</div>;
   }
-
-  const { data: teacher } = useGetTeacher(currentUser.uid);
-  const { data: parents } = useGetParentsForAdminList();
-
-  useEffect(() => {
-    if (!teacher) {
-      return;
-    }
-    // When teacher data is fetched, check if the role is 'admin'
-    teacher.role === "Admin"
-      ? setHasAdminAccess(true)
-      : setHasAdminAccess(false);
-  }, [teacher]);
   return (
-    <>
-      <main className={styles.PageWrapper}>
-        <section>
-          {hasAdminAccess && (
-            <>
-              <h3>
-                Hey {teacher?.contact.firstName}, here's a list of all parent
-                users
-              </h3>
-              {parents && <UserListTable data={parents} columns={columns} />}
-            </>
-          )}
-          {!hasAdminAccess && currentUser && (
-            <AccessDenied text={currentUser.email!} />
-          )}
-        </section>
-      </main>
-    </>
+    <main className={styles.PageWrapper}>
+      <section>
+        {hasAdminAccess && (
+          <>
+            <h3 className={styles.Title}>
+              Hey {teacher?.contact.firstName}, here's a list of all parent
+              users
+            </h3>
+            {parents && <UserListTable data={parents} columns={columns} />}
+          </>
+        )}
+        {!hasAdminAccess && currentUser && (
+          <AccessDenied text={currentUser.email!} />
+        )}
+      </section>
+    </main>
   );
 };
 export default UserListPage;
