@@ -28,6 +28,10 @@ const TeacherProfilePage = () => {
     <main className={styles.AccessDenied}>
       <section className={styles.AccessDeniedDetails}>
         <p>There are no children assigned to you yet.</p>
+        <p>To add a child go to the Children list</p>
+        <Link to="/children">
+          <Button ariaLabel="Go to children list">Go to list</Button>
+        </Link>
       </section>
     </main>
   );

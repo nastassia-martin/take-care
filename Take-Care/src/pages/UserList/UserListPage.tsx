@@ -120,6 +120,7 @@ const UserListPage = () => {
   if (!currentUser) {
     return <div>You don't have a profile.</div>;
   }
+
   return (
     <main className={styles.PageWrapper}>
       <section>

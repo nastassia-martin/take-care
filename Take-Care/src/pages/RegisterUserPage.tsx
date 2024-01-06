@@ -59,7 +59,7 @@ const RegisterUserPage = () => {
         newParentProfile,
         newChildProfile
       );
-      navigate("/profiles");
+      navigate("/");
     } catch (error) {
       if (error instanceof FirebaseError) {
         setErrorMessage(error.message);

@@ -62,7 +62,11 @@ export interface ChildProfile {
   department: string;
   //gender: Gender;
   date_of_birth: Date;
-  keyTeacher: string;
+  keyTeacher: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+  };
   allergies: string;
   parents: string[];
 }

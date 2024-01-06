@@ -119,11 +119,12 @@ const CreateTeacherProfile = () => {
                   )}
                 </Form.Group>
                 <Button
-                  text="Create new account"
                   ariaLabel="Create new account for child"
                   type="submit"
                   disabled={!isDirty || !isValid}
-                />
+                >
+                  Create new account
+                </Button>
               </Form>
             </div>
           </Card>
