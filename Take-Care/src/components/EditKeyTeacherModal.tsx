@@ -15,12 +15,7 @@ const EditKeyTeacherModal: React.FC<IModalProps> = ({
   data,
 }) => {
   return (
-    <Modal
-      show={isOpen}
-      onBackdropClick={onClose}
-      onHide={onClose}
-      aria-label="Edit key teacher"
-    >
+    <Modal show={isOpen} onHide={onClose} aria-label="Edit key teacher">
       <Modal.Header closeButton>
         <Modal.Title>
           {`Edit key teacher for ${data.contact.firstName} ${data.contact.lastName}`}

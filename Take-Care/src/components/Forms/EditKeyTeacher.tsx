@@ -5,20 +5,20 @@ import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { TeacherProfile } from "../../types/CreateProfile.types";
 
-type KeyTeacher = {
+export type KeyTeacher = {
   _id: string;
   firstName: string;
   lastName: string;
 };
 
 interface IKeyTeacherFormProps {
-  onSignup: SubmitHandler<KeyTeacher>;
+  onEdit: SubmitHandler<KeyTeacher>;
   loading: boolean;
-  teachers?: TeacherProfile[];
+  teachers: TeacherProfile[] | null;
 }
 
 const EditKeyTeacherForm: React.FC<IKeyTeacherFormProps> = ({
-  onSignup,
+  onEdit,
   loading,
   teachers,
 }) => {
@@ -36,7 +36,7 @@ const EditKeyTeacherForm: React.FC<IKeyTeacherFormProps> = ({
   }, [isSubmitSuccessful]);
 
   return (
-    <Form onSubmit={handleSubmit(onSignup)}>
+    <Form onSubmit={handleSubmit(onEdit)}>
       <Form.Group controlId="_id">
         <Form.Label>Select Teacher</Form.Label>
         <Form.Select {...register("_id", { required: true })}>

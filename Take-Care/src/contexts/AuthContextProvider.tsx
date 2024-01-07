@@ -9,8 +9,14 @@ import {
   UserCredential,
 } from "firebase/auth";
 import { createContext, useEffect, useState } from "react";
-import { auth, newChildCol, newParentCol } from "../services/firebase";
-import { doc, setDoc } from "firebase/firestore";
+import {
+  auth,
+  newChildCol,
+  newParentCol,
+  childrenCol,
+  teachersCol,
+} from "../services/firebase";
+import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore";
 import {
   BasicChildProfile,
   BasicParentProfile,
@@ -18,6 +24,7 @@ import {
   NewParentProfile,
 } from "../types/CreateProfile.types";
 import { Role } from "../types/GenericTypes.types";
+import { KeyTeacher } from "../components/Forms/EditKeyTeacher";
 
 type AuthContextType = {
   currentUser: User | null;
@@ -33,6 +40,14 @@ type AuthContextType = {
     newChildProfile: BasicChildProfile
   ) => Promise<UserCredential>;
   userEmail: string | null;
+  updateKeyTeacher: (
+    childId: string,
+    keyTeacher: KeyTeacher
+  ) => Promise<false | void>;
+  updateResponsibleForChildren: (
+    teacherId: string,
+    childId: string
+  ) => Promise<false | void>;
 };
 
 // This creates the context and sets the context's initial/default value
@@ -137,6 +152,29 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
     return updateEmail(currentUser, email);
   };
 
+  const updateKeyTeacher = async (childId: string, keyTeacher: KeyTeacher) => {
+    if (!auth.currentUser) {
+      return false;
+    }
+    const childDocRef = doc(childrenCol, childId);
+
+    return await updateDoc(childDocRef, { keyTeacher: keyTeacher });
+  };
+
+  const updateResponsibleForChildren = async (
+    teacherId: string,
+    childId: string
+  ) => {
+    if (!auth.currentUser) {
+      return false;
+    }
+    const teacherDocRef = doc(teachersCol, teacherId);
+
+    return await updateDoc(teacherDocRef, {
+      responsibileForChildren: arrayUnion(childId),
+    });
+  };
+
   // auth-state observer
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -160,12 +198,14 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
       value={{
         currentUser,
         login,
-        userEmail,
-        setEmail,
-        signUp,
         logout,
         reloadUser,
         resetPassword,
+        setEmail,
+        signUp,
+        updateKeyTeacher,
+        updateResponsibleForChildren,
+        userEmail,
       }}
     >
       {loading ? <div>loading...</div> : <>{children}</>}

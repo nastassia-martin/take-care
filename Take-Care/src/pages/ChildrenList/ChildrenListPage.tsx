@@ -1,5 +1,4 @@
 import { ColumnDef } from "@tanstack/react-table";
-import Alert from "react-bootstrap/Alert";
 import Image from "react-bootstrap/Image";
 
 import styles from "./styles.module.scss";
@@ -12,10 +11,17 @@ import Button from "../../components/Button/Button";
 import { ChildProfile } from "../../types/CreateProfile.types";
 import useGetChildrenForAdmin from "../../hooks/useGetChildrenForAdmin";
 import EditKeyTeacherModal from "../../components/EditKeyTeacherModal";
-import EditKeyTeacherForm from "../../components/Forms/EditKeyTeacher";
+import EditKeyTeacherForm, {
+  KeyTeacher,
+} from "../../components/Forms/EditKeyTeacher";
+import useGetTeachers from "../../hooks/useGetTeachers";
+import { FirebaseError } from "firebase/app";
 
 const ChildrenListPage = () => {
-  const { currentUser } = useAuth();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const { currentUser, updateKeyTeacher, updateResponsibleForChildren } =
+    useAuth();
   const [hasAdminAccess, setHasAdminAccess] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedChildData, setSelectedChildData] =
@@ -25,11 +31,45 @@ const ChildrenListPage = () => {
     currentUser?.uid
   );
   const { data: children, loading: childrenLoading } = useGetChildrenForAdmin();
+  const { data: teachers, loading: teachersLoading } = useGetTeachers();
+  const isLoading = teacherLoading || childrenLoading || teachersLoading;
 
-  const isLoading = teacherLoading || childrenLoading;
+  const handleEdit = async (data: KeyTeacher) => {
+    if (!selectedChildData) {
+      setErrorMessage("No child selected!");
+      return;
+    }
 
-  const handleSignUp = async (data) => {
-    console.log(data);
+    try {
+      setLoading(true);
+      const selectedTeacher = teachers?.find(
+        (teacher) => teacher._id === data._id
+      );
+      if (selectedTeacher) {
+        // KeyTeacher is the selected teacher
+        const keyTeacherData: KeyTeacher = {
+          _id: selectedTeacher._id,
+          firstName: selectedTeacher.contact.firstName,
+          lastName: selectedTeacher.contact.lastName,
+        };
+
+        await updateKeyTeacher(selectedChildData._id, keyTeacherData);
+        await updateResponsibleForChildren(
+          keyTeacherData._id,
+          selectedChildData._id
+        );
+        // close modal on success
+        setIsModalOpen(false);
+      }
+    } catch (error) {
+      if (error instanceof FirebaseError) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage("Internal error");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
   const columns: ColumnDef<ChildProfile>[] = [
     {
@@ -60,43 +100,61 @@ const ChildrenListPage = () => {
           accessorKey: "contact.lastName",
         },
         {
-          header: "Status",
+          header: "Key Teacher",
           accessorKey: "keyTeacher._id",
-          cell: (teacher) => {
-            // If cell's value is undefined, or null,  will return a default value
-            return teacher.getValue()
-              ? teacher.getValue()
-              : "No teacher assigned";
+          cell: (cell) => {
+            // find teacher in Teacher col, and make sure they are the same as the selected teacher
+            const keyTeacherId = cell.row.original.keyTeacher?._id;
+            const keyTeacher = teachers?.find(
+              (teacher) => teacher._id === keyTeacherId
+            );
+
+            // If the child has been assigned a teacher give name, else display generic message
+            const keyTeacherName = keyTeacher
+              ? `${keyTeacher.contact.firstName} ${keyTeacher.contact.lastName}`
+              : "No Teacher Assigned";
+
+            // Finding the selected child in the Children col
+            const selectedChild = children?.find(
+              (child) => child._id === cell.row.original._id
+            );
+
+            // Handling the click event for the button
+            const handleButtonClick = () => {
+              if (selectedChild) {
+                setSelectedChildData(selectedChild);
+                setIsModalOpen(true);
+              } else {
+                console.error("Selected child not found");
+              }
+            };
+
+            return (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                {/* Display the status */}
+                <div>{keyTeacherName} </div>
+
+                {/* Button to edit or assign a teacher */}
+                <Button
+                  ariaLabel="Change key teacher"
+                  onClick={handleButtonClick}
+                >
+                  {keyTeacherId ? "Edit Teacher" : "Assign Teacher"}
+                </Button>
+              </div>
+            );
           },
-        },
-        {
-          header: "Add key teacher",
-          accessorKey: "_id",
-          meta: {
-            align: "center",
-          },
-          cell: (cell) => (
-            <Button
-              ariaLabel="change parent status"
-              onClick={() => {
-                const selectedChild = children?.find(
-                  (child) => child._id === cell.row.original._id
-                );
-                if (selectedChild) {
-                  setSelectedChildData(selectedChild); // Set the selected child data
-                  setIsModalOpen(true); // Open the modal
-                } else {
-                  console.error("Selected child not found"); // Handle the case where child is not found
-                }
-              }}
-            >
-              Edit key teacher
-            </Button>
-          ),
         },
       ],
     },
   ];
+
   useEffect(() => {
     // When teacher data is fetched, check if the role is 'admin'
     if (teacher) {
@@ -106,7 +164,7 @@ const ChildrenListPage = () => {
     }
   }, [teacher]);
 
-  if (isLoading) {
+  if (isLoading || loading) {
     return <div>Loading...</div>;
   }
 
@@ -122,6 +180,9 @@ const ChildrenListPage = () => {
             <h3 className={styles.Title}>
               Hey {teacher?.contact.firstName}, here's a list of all children
             </h3>
+            {errorMessage && (
+              <p className={styles.ErrorMessage}>{errorMessage}</p>
+            )}
             {selectedChildData && (
               <EditKeyTeacherModal
                 isOpen={isModalOpen}
@@ -131,7 +192,8 @@ const ChildrenListPage = () => {
                 {teacher && (
                   <EditKeyTeacherForm
                     loading={isLoading}
-                    onSignup={handleSignUp}
+                    onEdit={handleEdit}
+                    teachers={teachers}
                   />
                 )}
               </EditKeyTeacherModal>
