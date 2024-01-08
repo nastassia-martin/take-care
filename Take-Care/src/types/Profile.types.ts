@@ -74,9 +74,9 @@ export type KeyTeacher = {
 export type ParentProfile = Omit<NewParentProfile, "password">;
 
 export type UpdateProfile = {
-  email: string;
-  password: string;
-  photoFile: FileList;
+  email?: string;
+  password?: string;
+  photoFile?: FileList;
 };
 
 export interface FamilyProfile {

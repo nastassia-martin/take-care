@@ -6,6 +6,11 @@ import { useEffect, useRef } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { UpdateProfile } from "../../types/Profile.types";
 import useAuth from "../../hooks/useAuth";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  UpdateProfileSchema,
+  UpdateProfileSchemaType,
+} from "../../schemas/UpdateProfile";
 
 interface IUpdateUserProfileProps {
   onUpdateUserProfile: SubmitHandler<UpdateProfile>;
@@ -24,14 +29,18 @@ const UpdateUserProfileForm: React.FC<IUpdateUserProfileProps> = ({
     register,
     reset,
     watch,
-    formState: { errors, isValid, isSubmitSuccessful },
-  } = useForm<UpdateProfile>({
+    formState: { errors, isSubmitSuccessful },
+  } = useForm<UpdateProfileSchemaType>({
     defaultValues: {
       email: currentUser?.email ?? "",
     },
+    resolver: zodResolver(UpdateProfileSchema),
+    mode: "onChange",
   });
-  const photoFileRef = useRef<FileList | null>(null);
+
+  const photoFileRef = useRef<FileList | null | undefined>(null);
   photoFileRef.current = watch("photoFile");
+
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset();
@@ -46,7 +55,7 @@ const UpdateUserProfileForm: React.FC<IUpdateUserProfileProps> = ({
           type="email"
           {...register("email")}
         />
-        {errors?.email && (
+        {errors.email && (
           <p className={styles.Error}>
             {errors.email.message ?? "Invalid value"}
           </p>
@@ -57,11 +66,11 @@ const UpdateUserProfileForm: React.FC<IUpdateUserProfileProps> = ({
         <Form.Control
           placeholder="password"
           type="password"
-          {...register("password")}
+          {...(register("password"), { required: false })}
         />
-        {errors?.email && (
+        {errors.password && (
           <p className={styles.Error}>
-            {errors.email.message ?? "Invalid value"}
+            {errors.password.message ?? "Invalid value"}
           </p>
         )}
       </Form.Group>
@@ -98,7 +107,7 @@ const UpdateUserProfileForm: React.FC<IUpdateUserProfileProps> = ({
         </Form.Text>
       </Form.Group>
 
-      <Button ariaLabel="Update user" type="submit" disabled={!isValid}>
+      <Button ariaLabel="Update user" type="submit" disabled={loading}>
         {loading ? "submitting" : "update"}
       </Button>
     </Form>
