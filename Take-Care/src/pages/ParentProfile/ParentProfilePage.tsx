@@ -5,17 +5,33 @@ import useAuth from "../../hooks/useAuth";
 import useGetParent from "../../hooks/useGetParent";
 import AccessDenied from "../../components/AccessDenied/AccessDenied";
 import useGetChildren from "../../hooks/useGetChildren";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import useGetTeacher from "../../hooks/useGetTeacher";
 
 const ParentProfilePage = () => {
   const { currentUser } = useAuth();
+  const { id } = useParams();
+  const parentId = id as string;
 
   if (!currentUser) {
     return <div>Internal server error.</div>;
   }
-  const { data: parent } = useGetParent(currentUser.uid);
+  const { data: parent } = useGetParent(parentId);
   // call on the children collection as parent can have more than one child
-  const { data: children } = useGetChildren(currentUser.uid);
+  const { data: children } = useGetChildren(parentId);
+  const { data: teacher } = useGetTeacher(currentUser.uid);
+
+  const isParentViewingOwnProfile = currentUser.uid === parentId;
+  // const isCoParentViewingProfile = currentUser.uid === parent.coParentId // coParent in parent profile can view
+  const isTeacher = teacher && teacher.role === "Admin";
+
+  if (!isParentViewingOwnProfile && !isTeacher) {
+    return <AccessDenied text={currentUser.email!} />;
+  }
+
+  if (parent && parent.role === "Not approved") {
+    return <AccessDenied text={parent.contact.email} />;
+  }
 
   const goToProfile = (
     <Button ariaLabel="go to profile" type="button">
@@ -23,10 +39,8 @@ const ParentProfilePage = () => {
     </Button>
   );
 
-  // If parent does not exist, limit access
-  return parent && parent.role === "Not approved" ? (
-    <AccessDenied text={parent.contact.email} />
-  ) : (
+  // If parent has not been approved, limit access
+  return (
     <div className={styles.PageWrapper}>
       {parent && parent.role === "User" && (
         <section className={styles.ProfileDetails}>
@@ -37,11 +51,14 @@ const ParentProfilePage = () => {
             lastName={parent.contact.lastName}
           />
           <div className={styles.AddressWrapper}>
-            <Link to={`/parents/${parent._id}/update`}>
-              <Button ariaLabel="Edit profile" type="button">
-                Edit profile
-              </Button>
-            </Link>
+            {/* only the person that owns the profile should be able to edit */}
+            {isParentViewingOwnProfile && (
+              <Link to={`/parents/${parent._id}/update`}>
+                <Button ariaLabel="Edit profile" type="button">
+                  Edit profile
+                </Button>
+              </Link>
+            )}
 
             <p className={styles.AddressDetails}>
               <span className={styles.AddressField}>Telephone: </span>
