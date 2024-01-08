@@ -2,7 +2,7 @@ import {
   NewChildProfile,
   NewParentCredential,
   NewParentProfile,
-} from "../types/CreateProfile.types";
+} from "../types/Profile.types";
 import RegisterUserForm from "../components/Forms/RegisterUserForm";
 import { Role } from "../types/GenericTypes.types";
 import Col from "react-bootstrap/Col";

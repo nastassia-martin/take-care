@@ -1,5 +1,5 @@
 import { parentsCol } from "../services/firebase";
-import { ParentProfile } from "../types/CreateProfile.types";
+import { ParentProfile } from "../types/Profile.types";
 import useStreamDocument from "./useStreamDocument";
 
 const useGetParent = (documentId = "") => {

@@ -3,13 +3,7 @@ import Form from "react-bootstrap/Form";
 import Button from "../Button/Button";
 import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { TeacherProfile } from "../../types/CreateProfile.types";
-
-export type KeyTeacher = {
-  _id: string;
-  firstName: string;
-  lastName: string;
-};
+import { KeyTeacher, TeacherProfile } from "../../types/Profile.types";
 
 interface IKeyTeacherFormProps {
   onEdit: SubmitHandler<KeyTeacher>;

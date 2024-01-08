@@ -9,7 +9,7 @@ import Row from "react-bootstrap/Row";
 import Button from "../Button/Button";
 import { newTeacherCol } from "../../services/firebase";
 import { doc, setDoc } from "firebase/firestore";
-import { NewTeacherProfile } from "../../types/CreateProfile.types";
+import { NewTeacherProfile } from "../../types/Profile.types";
 import { Role } from "../../types/GenericTypes.types";
 import {
   NewTeacherProfileSchema,

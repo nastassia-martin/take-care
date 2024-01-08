@@ -1,6 +1,5 @@
 import ProfileDetails from "../../components/Profile/ProfileDetails";
 import styles from "./styles.module.scss";
-import { useEffect } from "react";
 import Button from "../../components/Button/Button";
 import useAuth from "../../hooks/useAuth";
 import useGetParent from "../../hooks/useGetParent";

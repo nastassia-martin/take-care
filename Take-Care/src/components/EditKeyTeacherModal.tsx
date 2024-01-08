@@ -1,5 +1,5 @@
 import Modal from "react-bootstrap/Modal";
-import { ChildProfile } from "../types/CreateProfile.types";
+import { ChildProfile } from "../types/Profile.types";
 
 interface IModalProps {
   children: React.ReactNode;

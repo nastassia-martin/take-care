@@ -13,7 +13,7 @@ import {
   NewTeacherProfile,
   ParentProfile,
   TeacherProfile,
-} from "../types/CreateProfile.types";
+} from "../types/Profile.types";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {

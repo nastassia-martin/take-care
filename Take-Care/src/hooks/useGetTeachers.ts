@@ -1,5 +1,5 @@
 import { teachersCol } from "../services/firebase";
-import { TeacherProfile } from "../types/CreateProfile.types";
+import { TeacherProfile } from "../types/Profile.types";
 import useStreamCollection from "./useStreamCollection";
 
 const useGetTeachers = () => {

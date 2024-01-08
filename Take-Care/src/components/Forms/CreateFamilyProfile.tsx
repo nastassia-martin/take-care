@@ -14,7 +14,7 @@ import {
   ChildProfile,
   FamilyProfile,
   ParentProfile,
-} from "../../types/CreateProfile.types";
+} from "../../types/Profile.types";
 import {
   CollectionReference,
   collection,

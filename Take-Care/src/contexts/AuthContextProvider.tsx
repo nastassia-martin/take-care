@@ -15,6 +15,7 @@ import {
   newParentCol,
   childrenCol,
   teachersCol,
+  parentsCol,
 } from "../services/firebase";
 import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore";
 import {
@@ -22,9 +23,9 @@ import {
   BasicParentProfile,
   NewChildProfile,
   NewParentProfile,
-} from "../types/CreateProfile.types";
+} from "../types/Profile.types";
 import { Role } from "../types/GenericTypes.types";
-import { KeyTeacher } from "../components/Forms/EditKeyTeacher";
+import { KeyTeacher } from "../types/Profile.types";
 
 type AuthContextType = {
   currentUser: User | null;
@@ -42,7 +43,8 @@ type AuthContextType = {
   userEmail: string | null;
   updateKeyTeacher: (
     childId: string,
-    keyTeacher: KeyTeacher
+    keyTeacher: KeyTeacher,
+    parentId: string
   ) => Promise<false | void>;
   updateResponsibleForChildren: (
     teacherId: string,
@@ -152,12 +154,21 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
     return updateEmail(currentUser, email);
   };
 
-  const updateKeyTeacher = async (childId: string, keyTeacher: KeyTeacher) => {
+  const updateKeyTeacher = async (
+    childId: string,
+    keyTeacher: KeyTeacher,
+    parentId: string
+  ) => {
     if (!auth.currentUser) {
       return false;
     }
     const childDocRef = doc(childrenCol, childId);
+    const parentDocRef = doc(parentsCol, parentId);
 
+    const keyTeacherWithChildId = { ...keyTeacher, childId };
+    await updateDoc(parentDocRef, {
+      keyTeacher: arrayUnion(keyTeacherWithChildId),
+    });
     return await updateDoc(childDocRef, { keyTeacher: keyTeacher });
   };
 

@@ -9,8 +9,9 @@ import { Link, useParams } from "react-router-dom";
 
 const ChildProfilePage = () => {
   const { id } = useParams();
-  const { currentUser } = useAuth();
   const childId = id;
+
+  const { currentUser } = useAuth();
 
   if (!childId) {
     return <div>We could not find a profile.</div>;
@@ -22,14 +23,17 @@ const ChildProfilePage = () => {
   if (!currentUser || !parents) {
     return;
   }
-  const authorisedId = child?.parents.find(
+
+  // return first parent in parents array that returns true.
+  const isParent = child?.parents.some(
     (parentId) => parentId === currentUser.uid
   );
-  // add the following to the authorisedId logic check when the key teacher id is added
-  // ||
-  // child?.keyTeacher === currentUser.uid;
 
-  if (currentUser.uid !== authorisedId) {
+  const isKeyTeacher = child?.keyTeacher._id === currentUser.uid;
+
+  const isAuthorised = isParent || isKeyTeacher;
+
+  if (!isAuthorised) {
     // assert that email exists because user cannot log in without an email
     return <AccessDenied text={currentUser.email!} />;
   }
@@ -42,7 +46,7 @@ const ChildProfilePage = () => {
 
   return (
     <div className={styles.PageWrapper}>
-      {child && authorisedId && (
+      {child && isAuthorised && (
         <section className={styles.ProfileDetails}>
           <ProfileDetails
             className={styles.CardWrapper}

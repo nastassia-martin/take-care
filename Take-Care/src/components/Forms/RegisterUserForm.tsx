@@ -15,7 +15,7 @@ import Form from "react-bootstrap/Form";
 import styles from "./styles.module.scss";
 import Button from "../Button/Button";
 import { useEffect } from "react";
-import { NewParentCredential } from "../../types/CreateProfile.types";
+import { NewParentCredential } from "../../types/Profile.types";
 
 interface IFormProps {
   onSignup: SubmitHandler<NewParentCredential>;

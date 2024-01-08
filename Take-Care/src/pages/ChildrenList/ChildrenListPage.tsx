@@ -8,14 +8,13 @@ import UserListTable from "../../components/Tables/Table.tsx/Table";
 import AccessDenied from "../../components/AccessDenied/AccessDenied";
 import { useEffect, useState } from "react";
 import Button from "../../components/Button/Button";
-import { ChildProfile } from "../../types/CreateProfile.types";
+import { ChildProfile } from "../../types/Profile.types";
 import useGetChildrenForAdmin from "../../hooks/useGetChildrenForAdmin";
 import EditKeyTeacherModal from "../../components/EditKeyTeacherModal";
-import EditKeyTeacherForm, {
-  KeyTeacher,
-} from "../../components/Forms/EditKeyTeacher";
+import EditKeyTeacherForm from "../../components/Forms/EditKeyTeacher";
 import useGetTeachers from "../../hooks/useGetTeachers";
 import { FirebaseError } from "firebase/app";
+import { KeyTeacher } from "../../types/Profile.types";
 
 const ChildrenListPage = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -53,7 +52,12 @@ const ChildrenListPage = () => {
           lastName: selectedTeacher.contact.lastName,
         };
 
-        await updateKeyTeacher(selectedChildData._id, keyTeacherData);
+        const parentId = selectedChildData.parents
+          .map((parent) => parent)
+          .toString();
+        console.log(parentId);
+
+        await updateKeyTeacher(selectedChildData._id, keyTeacherData, parentId);
         await updateResponsibleForChildren(
           keyTeacherData._id,
           selectedChildData._id

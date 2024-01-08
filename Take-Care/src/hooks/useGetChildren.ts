@@ -1,6 +1,6 @@
 import { where } from "firebase/firestore";
 import { childrenCol } from "../services/firebase";
-import { ChildProfile } from "../types/CreateProfile.types";
+import { ChildProfile } from "../types/Profile.types";
 import useStreamCollection from "./useStreamCollection";
 
 const useGetChildren = (id = "") => {

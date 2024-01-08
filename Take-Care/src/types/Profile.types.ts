@@ -71,6 +71,12 @@ export interface ChildProfile {
   parents: string[];
 }
 
+export type KeyTeacher = {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  childId?: string;
+};
 export type ParentProfile = Omit<NewParentProfile, "password">;
 
 export interface FamilyProfile {

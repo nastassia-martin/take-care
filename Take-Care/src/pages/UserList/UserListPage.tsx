@@ -6,7 +6,7 @@ import styles from "./styles.module.scss";
 import useAuth from "../../hooks/useAuth";
 import useGetTeacher from "../../hooks/useGetTeacher";
 import useGetParentsForAdminList from "../../hooks/useGetParentsForAdminList";
-import { ParentProfile } from "../../types/CreateProfile.types";
+import { ParentProfile } from "../../types/Profile.types";
 import UserListTable from "../../components/Tables/Table.tsx/Table";
 import AccessDenied from "../../components/AccessDenied/AccessDenied";
 import { useEffect, useState } from "react";
