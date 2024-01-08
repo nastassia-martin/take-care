@@ -1,10 +1,4 @@
-import {
-  Department,
-  Gender,
-  NewUser,
-  Contact,
-  Role,
-} from "./GenericTypes.types";
+import { Department, Contact, Role } from "./GenericTypes.types";
 
 export interface NewChildProfile {
   _id: string;
@@ -78,6 +72,12 @@ export type KeyTeacher = {
   childId?: string;
 };
 export type ParentProfile = Omit<NewParentProfile, "password">;
+
+export type UpdateProfile = {
+  email: string;
+  password: string;
+  photoFile: FileList;
+};
 
 export interface FamilyProfile {
   child: NewChildProfile;

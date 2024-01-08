@@ -9,7 +9,7 @@ import { Link, useParams } from "react-router-dom";
 
 const ChildProfilePage = () => {
   const { id } = useParams();
-  const childId = id;
+  const childId = id as string;
 
   const { currentUser } = useAuth();
 
@@ -29,9 +29,9 @@ const ChildProfilePage = () => {
     (parentId) => parentId === currentUser.uid
   );
 
-  const isKeyTeacher = child?.keyTeacher._id === currentUser.uid;
+  const isKeyTeacher = child?.keyTeacher?._id === currentUser.uid;
 
-  const isAuthorised = isParent || isKeyTeacher;
+  const isAuthorised = isParent || (child?.keyTeacher && isKeyTeacher);
 
   if (!isAuthorised) {
     // assert that email exists because user cannot log in without an email

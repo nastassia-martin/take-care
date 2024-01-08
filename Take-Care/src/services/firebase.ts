@@ -1,5 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getStorage } from "firebase/storage";
+
 import {
   CollectionReference,
   DocumentData,
@@ -33,6 +35,9 @@ export const db = getFirestore(app);
 
 // Get auth instance
 export const auth = getAuth(app);
+
+//Get storage instance
+export const storage = getStorage(app);
 
 // Helper function to add type to db responses
 const createCollection = <T = DocumentData>(collectionName: string) => {

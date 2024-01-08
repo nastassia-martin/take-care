@@ -14,6 +14,7 @@ export interface Contact {
   photoURL?: string;
   email: string;
 }
+
 export enum Role {
   User = "User",
   Admin = "Admin",
