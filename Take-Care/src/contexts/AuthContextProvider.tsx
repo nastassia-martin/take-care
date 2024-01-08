@@ -1,3 +1,4 @@
+import { createContext, useEffect, useState } from "react";
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
@@ -5,10 +6,12 @@ import {
   signInWithEmailAndPassword,
   signOut,
   updateEmail,
+  updatePassword,
+  updateProfile,
   User,
   UserCredential,
 } from "firebase/auth";
-import { createContext, useEffect, useState } from "react";
+import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore";
 import {
   auth,
   newChildCol,
@@ -17,23 +20,24 @@ import {
   teachersCol,
   parentsCol,
 } from "../services/firebase";
-import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore";
+import { Role } from "../types/GenericTypes.types";
 import {
   BasicChildProfile,
   BasicParentProfile,
   NewChildProfile,
   NewParentProfile,
+  KeyTeacher,
 } from "../types/Profile.types";
-import { Role } from "../types/GenericTypes.types";
-import { KeyTeacher } from "../types/Profile.types";
 
 type AuthContextType = {
   currentUser: User | null;
   login: (email: string, password: string) => Promise<UserCredential>;
   logout: () => Promise<void>;
+  setPassword: (password: string) => Promise<void>;
   reloadUser: () => Promise<boolean>;
   resetPassword: (email: string) => Promise<void>;
   setEmail: (email: string) => Promise<void>;
+  setPhotoUrl: (photoURL: string) => Promise<void>;
   signUp: (
     email: string,
     password: string,
@@ -41,6 +45,7 @@ type AuthContextType = {
     newChildProfile: BasicChildProfile
   ) => Promise<UserCredential>;
   userEmail: string | null;
+  userPhotoUrl: string | null;
   updateKeyTeacher: (
     childId: string,
     keyTeacher: KeyTeacher,
@@ -49,6 +54,10 @@ type AuthContextType = {
   updateResponsibleForChildren: (
     teacherId: string,
     childId: string
+  ) => Promise<false | void>;
+  updateParentPhotoUrl: (
+    parentId: string,
+    photoURL: string
   ) => Promise<false | void>;
 };
 
@@ -63,6 +72,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [userPhotoUrl, setUserPhotoUrl] = useState<string | null>(null);
 
   const login = (email: string, password: string) => {
     return signInWithEmailAndPassword(auth, email, password);
@@ -77,6 +87,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
       return false;
     }
     setUserEmail(auth.currentUser.email);
+    setUserPhotoUrl(auth.currentUser.photoURL);
 
     return true;
   };
@@ -143,7 +154,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
       }
       return userCredential;
     } catch (error) {
-      throw new Error();
+      throw new Error("Server error");
     }
   };
 
@@ -154,11 +165,19 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
     return updateEmail(currentUser, email);
   };
 
+  const setPassword = (password: string) => {
+    if (!currentUser) {
+      throw new Error("There is no current user");
+    }
+    return updatePassword(currentUser, password);
+  };
+
   const updateKeyTeacher = async (
     childId: string,
     keyTeacher: KeyTeacher,
     parentId: string
   ) => {
+    // only teachers who have admin status are authorised to do this operation
     if (!auth.currentUser) {
       return false;
     }
@@ -186,6 +205,26 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
     });
   };
 
+  const setPhotoUrl = (photoURL: string) => {
+    if (!currentUser) {
+      throw new Error("There is no current user");
+    }
+    setUserPhotoUrl(photoURL);
+    return updateProfile(currentUser, { photoURL });
+  };
+
+  const updateParentPhotoUrl = async (parentId: string, photoURL: string) => {
+    if (!auth.currentUser) {
+      return false;
+    }
+    try {
+      const parentdoc = doc(parentsCol, parentId);
+      const updatedProfile = { "contact.photoURL": photoURL };
+      return await updateDoc(parentdoc, updatedProfile);
+    } catch (error) {
+      throw new Error("Server error");
+    }
+  };
   // auth-state observer
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -194,9 +233,11 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
       if (user) {
         // User is logged in
         setUserEmail(user.email);
+        setUserPhotoUrl(user.photoURL);
       } else {
         // No user is logged in
         setUserEmail(null);
+        setUserPhotoUrl(null);
       }
       setLoading(false);
     });
@@ -213,8 +254,12 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
         reloadUser,
         resetPassword,
         setEmail,
+        setPhotoUrl,
+        userPhotoUrl,
+        setPassword,
         signUp,
         updateKeyTeacher,
+        updateParentPhotoUrl,
         updateResponsibleForChildren,
         userEmail,
       }}
