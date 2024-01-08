@@ -14,7 +14,6 @@ const ParentProfilePage = () => {
     return <div>Internal server error.</div>;
   }
   const { data: parent } = useGetParent(currentUser.uid);
-
   // call on the children collection as parent can have more than one child
   const { data: children } = useGetChildren(currentUser.uid);
 
@@ -23,6 +22,7 @@ const ParentProfilePage = () => {
       Go to profile
     </Button>
   );
+
   // If parent does not exist, limit access
   return parent && parent.role === "Not approved" ? (
     <AccessDenied text={parent.contact.email} />
@@ -37,9 +37,12 @@ const ParentProfilePage = () => {
             lastName={parent.contact.lastName}
           />
           <div className={styles.AddressWrapper}>
-            <Button ariaLabel="Edit profile" type="button">
-              Edit profile
-            </Button>
+            <Link to={`/parents/${parent._id}/update`}>
+              <Button ariaLabel="Edit profile" type="button">
+                Edit profile
+              </Button>
+            </Link>
+
             <p className={styles.AddressDetails}>
               <span className={styles.AddressField}>Telephone: </span>
               <span className={styles.AddressValue}>012345678</span>
