@@ -11,7 +11,13 @@ import {
   User,
   UserCredential,
 } from "firebase/auth";
-import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore";
+import {
+  arrayRemove,
+  arrayUnion,
+  doc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import {
   auth,
   newChildCol,
@@ -54,9 +60,14 @@ type AuthContextType = {
   updateResponsibleForChildren: (
     teacherId: string,
     childId: string
-  ) => Promise<false | void>;
+  ) => Promise<void>;
   updateParentPhotoUrl: (parentId: string, photoURL: string) => Promise<void>;
   updateTeacherPhotoUrl: (teacherId: string, photoURL: string) => Promise<void>;
+  removeResponsibleForChild: (
+    keyTeacher: KeyTeacher,
+    childId: string,
+    parentId: string
+  ) => Promise<void>;
 };
 
 // This creates the context and sets the context's initial/default value
@@ -195,12 +206,33 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
     childId: string
   ) => {
     if (!auth.currentUser) {
-      return false;
+      throw new Error("There is no current user");
     }
     const teacherDocRef = doc(teachersCol, teacherId);
 
     return await updateDoc(teacherDocRef, {
       responsibileForChildren: arrayUnion(childId),
+    });
+  };
+
+  const removeResponsibleForChild = async (
+    keyTeacher: KeyTeacher,
+    childId: string,
+    parentId: string
+  ) => {
+    if (!auth.currentUser) {
+      throw new Error("There is no current user");
+    }
+    const teacherDocRef = doc(teachersCol, keyTeacher._id);
+    const parentDocRef = doc(parentsCol, parentId);
+
+    const keyTeacherWithChildId = { ...keyTeacher, childId };
+
+    await updateDoc(parentDocRef, {
+      keyTeacher: arrayRemove(keyTeacherWithChildId),
+    });
+    return await updateDoc(teacherDocRef, {
+      responsibileForChildren: arrayRemove(childId),
     });
   };
 
@@ -275,6 +307,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
         updateParentPhotoUrl,
         updateTeacherPhotoUrl,
         updateResponsibleForChildren,
+        removeResponsibleForChild,
         userEmail,
       }}
     >

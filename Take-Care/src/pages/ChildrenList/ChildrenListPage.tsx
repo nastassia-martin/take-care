@@ -19,8 +19,12 @@ import { KeyTeacher } from "../../types/Profile.types";
 const ChildrenListPage = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const { currentUser, updateKeyTeacher, updateResponsibleForChildren } =
-    useAuth();
+  const {
+    currentUser,
+    updateKeyTeacher,
+    updateResponsibleForChildren,
+    removeResponsibleForChild,
+  } = useAuth();
   const [hasAdminAccess, setHasAdminAccess] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedChildData, setSelectedChildData] =
@@ -38,6 +42,7 @@ const ChildrenListPage = () => {
       setErrorMessage("No child selected!");
       return;
     }
+    const previousTeacher = selectedChildData.keyTeacher;
 
     try {
       setLoading(true);
@@ -55,7 +60,6 @@ const ChildrenListPage = () => {
         const parentId = selectedChildData.parents
           .map((parent) => parent)
           .toString();
-        console.log(parentId);
 
         await updateKeyTeacher(selectedChildData._id, keyTeacherData, parentId);
         await updateResponsibleForChildren(
@@ -64,6 +68,21 @@ const ChildrenListPage = () => {
         );
         // close modal on success
         setIsModalOpen(false);
+      }
+
+      if (
+        previousTeacher &&
+        previousTeacher._id !== (selectedTeacher && selectedTeacher._id)
+      ) {
+        const parentId = selectedChildData.parents
+          .map((parent) => parent)
+          .toString();
+        // Remove child from the previous teacher's responsibilities
+        await removeResponsibleForChild(
+          previousTeacher,
+          selectedChildData._id,
+          parentId
+        );
       }
     } catch (error) {
       if (error instanceof FirebaseError) {
