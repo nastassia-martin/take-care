@@ -16,8 +16,10 @@ import { Role } from "../../types/GenericTypes.types";
 
 const handleParentRoleClick = async (parentId: string, role: Role) => {
   const newRole = role === Role.NotApproved ? Role.User : Role.NotApproved;
+  const isAuthorizedForPickUp = newRole === Role.User;
+
   try {
-    await updateParentRole(parentId, newRole);
+    await updateParentRole(parentId, newRole, isAuthorizedForPickUp);
   } catch (error: any) {
     <Alert variant="warning">{error.message}</Alert>;
   }
