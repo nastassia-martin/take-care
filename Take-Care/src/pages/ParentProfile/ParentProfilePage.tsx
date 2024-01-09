@@ -95,7 +95,11 @@ const ParentProfilePage = () => {
           <h3>Child's profile - Quick View</h3>
           {children &&
             children.map((child) => (
-              <Link to={`/children/${child._id}`} key={child._id}>
+              <Link
+                className={styles.Link}
+                to={`/children/${child._id}`}
+                key={child._id}
+              >
                 <ProfileDetails
                   className={styles.CardWrapper}
                   image={child.contact.photoURL}

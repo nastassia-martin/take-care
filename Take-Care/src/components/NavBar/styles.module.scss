@@ -20,6 +20,14 @@
     font-family: var(--primary-font);
     color: var(--primary-black);
   }
+
+  .NavButton {
+    margin-left: 1em;
+    color: var(--primary-white);
+    background-color: transparent;
+    font-family: var(--primary-font);
+    border: 2px solid black;
+  }
 }
 
 .NavItem {
@@ -32,8 +40,4 @@
     color: var(--primary-blue);
     text-decoration-style: dashed;
   }
-}
-
-.NavButton {
-  margin-left: 1em;
 }

@@ -50,7 +50,10 @@ const TeacherProfilePage = () => {
             lastName={teacher.contact.lastName}
           />
           <div className={styles.AddressWrapper}>
-            <Link to={`/teachers/${teacher._id}/update`}>
+            <Link
+              className={styles.Link}
+              to={`/teachers/${teacher._id}/update`}
+            >
               <Button ariaLabel="Edit profile" type="button">
                 Edit profile
               </Button>
@@ -84,7 +87,11 @@ const TeacherProfilePage = () => {
                     child.keyTeacher && child.keyTeacher._id === teacher._id
                 )
                 .map((child) => (
-                  <Link to={`/children/${child._id}`} key={child._id}>
+                  <Link
+                    className={styles.Link}
+                    to={`/children/${child._id}`}
+                    key={child._id}
+                  >
                     <ProfileDetails
                       className={styles.CardWrapper}
                       image={child.contact.photoURL}

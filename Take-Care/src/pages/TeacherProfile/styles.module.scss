@@ -88,3 +88,16 @@
     grid-template-columns: repeat(4, 1fr);
   }
 }
+
+.Link {
+  text-decoration: none;
+  color: var(--black);
+
+  &:focus,
+  &:hover,
+  &:visited,
+  &:link,
+  &:active {
+    text-decoration: none;
+  }
+}

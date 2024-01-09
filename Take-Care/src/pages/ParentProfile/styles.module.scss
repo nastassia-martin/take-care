@@ -53,3 +53,16 @@
     margin-bottom: 2em;
   }
 }
+
+.Link {
+  text-decoration: none;
+  color: var(--black);
+
+  &:focus,
+  &:hover,
+  &:visited,
+  &:link,
+  &:active {
+    text-decoration: none;
+  }
+}
