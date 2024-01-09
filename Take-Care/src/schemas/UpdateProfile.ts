@@ -7,6 +7,7 @@ export const UpdateProfileSchema = z.object({
   password: z
     .string()
     .min(6, { message: "password must be at least 6 characters " })
+    .or(z.string().length(0))
     .optional(),
   photoFile: z
     .instanceof(FileList, { message: "format not supported" })

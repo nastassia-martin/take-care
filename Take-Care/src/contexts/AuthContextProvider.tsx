@@ -50,15 +50,13 @@ type AuthContextType = {
     childId: string,
     keyTeacher: KeyTeacher,
     parentId: string
-  ) => Promise<false | void>;
+  ) => Promise<void>;
   updateResponsibleForChildren: (
     teacherId: string,
     childId: string
   ) => Promise<false | void>;
-  updateParentPhotoUrl: (
-    parentId: string,
-    photoURL: string
-  ) => Promise<false | void>;
+  updateParentPhotoUrl: (parentId: string, photoURL: string) => Promise<void>;
+  updateTeacherPhotoUrl: (teacherId: string, photoURL: string) => Promise<void>;
 };
 
 // This creates the context and sets the context's initial/default value
@@ -179,7 +177,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
   ) => {
     // only teachers who have admin status are authorised to do this operation
     if (!auth.currentUser) {
-      return false;
+      throw new Error("There is no current user");
     }
     const childDocRef = doc(childrenCol, childId);
     const parentDocRef = doc(parentsCol, parentId);
@@ -214,8 +212,8 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
   };
 
   const updateParentPhotoUrl = async (parentId: string, photoURL: string) => {
-    if (!auth.currentUser) {
-      return false;
+    if (!currentUser) {
+      throw new Error("There is no current user");
     }
     try {
       const parentdoc = doc(parentsCol, parentId);
@@ -225,6 +223,20 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
       throw new Error("Server error");
     }
   };
+
+  const updateTeacherPhotoUrl = async (teacherId: string, photoURL: string) => {
+    if (!currentUser) {
+      throw new Error("There is no current user");
+    }
+    try {
+      const parentdoc = doc(teachersCol, teacherId);
+      const updatedProfile = { "contact.photoURL": photoURL };
+      return await updateDoc(parentdoc, updatedProfile);
+    } catch (error) {
+      throw new Error("Server error");
+    }
+  };
+
   // auth-state observer
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -260,6 +272,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
         signUp,
         updateKeyTeacher,
         updateParentPhotoUrl,
+        updateTeacherPhotoUrl,
         updateResponsibleForChildren,
         userEmail,
       }}

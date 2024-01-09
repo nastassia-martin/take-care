@@ -1,4 +1,6 @@
-.MainNewProfileWrapper {
+.UpdateProfile {
+  display: flex;
+  flex-direction: column;
   padding: 1em;
   font-family: var(--primary-font);
   background-color: var(--primary-pink);

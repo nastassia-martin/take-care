@@ -66,7 +66,7 @@ const UpdateUserProfileForm: React.FC<IUpdateUserProfileProps> = ({
         <Form.Control
           placeholder="password"
           type="password"
-          {...(register("password"), { required: false })}
+          {...register("password")}
         />
         {errors.password && (
           <p className={styles.Error}>

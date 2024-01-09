@@ -12,14 +12,14 @@ import Row from "react-bootstrap/Row";
 import Button from "../../components/Button/Button";
 import { Link } from "react-router-dom";
 
-const UpdateUserProfilePage = () => {
+const UpdateTeacherProfilePage = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
 
   const {
     currentUser,
-    updateParentPhotoUrl,
+    updateTeacherPhotoUrl,
     setPhotoUrl,
     setEmail,
     reloadUser,
@@ -30,7 +30,7 @@ const UpdateUserProfilePage = () => {
     return <AccessDenied text="no email" />;
   }
 
-  const handleUpdateUserProfile = async (data: UpdateProfile) => {
+  const handleUpdateTeacherProfile = async (data: UpdateProfile) => {
     setErrorMessage(null);
 
     try {
@@ -45,7 +45,7 @@ const UpdateUserProfilePage = () => {
         // ref for file upload, eg / parents/abcd123/miniMouse
         const fileRef = ref(
           storage,
-          `parents/${currentUser.uid}/${userProfilePic.name}`
+          `teachers/${currentUser.uid}/${userProfilePic.name}`
         );
         // upload photo to fileRef
         const uploadTask = uploadBytesResumable(fileRef, userProfilePic);
@@ -69,8 +69,8 @@ const UpdateUserProfilePage = () => {
             const photoUrl = await getDownloadURL(fileRef);
             // update parentAuth
             await setPhotoUrl(photoUrl);
-            // update parent profile with the same url to ensure single source of truth
-            await updateParentPhotoUrl(currentUser.uid, photoUrl);
+            // update teacher profile with the same url to ensure single source of truth
+            await updateTeacherPhotoUrl(currentUser.uid, photoUrl);
             // set to null to remove ProgressBar from DOM
             setUploadProgress(null);
           }
@@ -98,34 +98,32 @@ const UpdateUserProfilePage = () => {
 
   return (
     <main className={styles.UpdateProfile}>
-      {currentUser && (
-        <Row>
-          <Col md={{ span: 6, offset: 3 }}>
-            <div className={styles.CardWrapper}>
-              <h3 className={styles.Header}>Update your info</h3>
-              {errorMessage && (
-                <p className={styles.ErrorMessage}>{errorMessage}</p>
-              )}
+      <Row>
+        <Col md={{ span: 6, offset: 3 }}>
+          <div className={styles.CardWrapper}>
+            <h3 className={styles.Header}>Update your info</h3>
+            {errorMessage && (
+              <p className={styles.ErrorMessage}>{errorMessage}</p>
+            )}
 
-              <UpdateUserProfileForm
-                uploadProgress={uploadProgress}
-                loading={loading}
-                onUpdateUserProfile={handleUpdateUserProfile}
-              />
-              <Link to={`/parents/${currentUser.uid}`}>
-                <Button
-                  ariaLabel="back to profile"
-                  className={styles.BackToProfile}
-                >
-                  Back to profile
-                </Button>
-              </Link>
-            </div>
-          </Col>
-        </Row>
-      )}
+            <UpdateUserProfileForm
+              uploadProgress={uploadProgress}
+              loading={loading}
+              onUpdateUserProfile={handleUpdateTeacherProfile}
+            />
+            <Link to={`/teachers/${currentUser.uid}`}>
+              <Button
+                ariaLabel="back to profile"
+                className={styles.BackToProfile}
+              >
+                Back to profile
+              </Button>
+            </Link>
+          </div>
+        </Col>
+      </Row>
     </main>
   );
 };
 
-export default UpdateUserProfilePage;
+export default UpdateTeacherProfilePage;

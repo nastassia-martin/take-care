@@ -50,9 +50,11 @@ const TeacherProfilePage = () => {
             lastName={teacher.contact.lastName}
           />
           <div className={styles.AddressWrapper}>
-            <Button ariaLabel="Edit profile" type="button">
-              Edit profile
-            </Button>
+            <Link to={`/teachers/${teacher._id}/update`}>
+              <Button ariaLabel="Edit profile" type="button">
+                Edit profile
+              </Button>
+            </Link>
             <p className={styles.AddressDetails}>
               <span className={styles.AddressField}>Telephone: </span>
               <span className={styles.AddressValue}>012345678</span>
