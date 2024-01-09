@@ -16,6 +16,7 @@ import { Role } from "../../types/GenericTypes.types";
 
 const handleParentRoleClick = async (parentId: string, role: Role) => {
   const newRole = role === Role.NotApproved ? Role.User : Role.NotApproved;
+  // if role is User, then isAuthorizedForPickUp is also true
   const isAuthorizedForPickUp = newRole === Role.User;
 
   try {
