@@ -16,6 +16,7 @@ import {
   ParentProfile,
   TeacherProfile,
 } from "../types/Profile.types";
+import { NewPost, Post } from "../types/Posts.types";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -50,8 +51,10 @@ const createCollection = <T = DocumentData>(collectionName: string) => {
 export const parentsCol = createCollection<ParentProfile>("parents");
 export const childrenCol = createCollection<ChildProfile>("children");
 export const teachersCol = createCollection<TeacherProfile>("teachers");
+export const postsCol = createCollection<Post>("posts");
 
 // New collections - CREATE
 export const newChildCol = createCollection<NewChildProfile>("children");
 export const newParentCol = createCollection<NewParentProfile>("parents");
 export const newTeacherCol = createCollection<NewTeacherProfile>("teachers");
+export const newPostCol = createCollection<NewPost>("posts");

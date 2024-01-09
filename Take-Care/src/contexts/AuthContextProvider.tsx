@@ -15,6 +15,7 @@ import {
   arrayRemove,
   arrayUnion,
   doc,
+  serverTimestamp,
   setDoc,
   updateDoc,
 } from "firebase/firestore";
@@ -25,6 +26,7 @@ import {
   childrenCol,
   teachersCol,
   parentsCol,
+  postsCol,
 } from "../services/firebase";
 import { Role } from "../types/GenericTypes.types";
 import {
@@ -34,6 +36,7 @@ import {
   NewParentProfile,
   KeyTeacher,
 } from "../types/Profile.types";
+import { NewPost } from "../types/Posts.types";
 
 type AuthContextType = {
   currentUser: User | null;
@@ -69,6 +72,7 @@ type AuthContextType = {
     childId: string,
     parentId: string
   ) => Promise<void>;
+  createAPost: (data: NewPost, teacherId: string) => Promise<void>;
 };
 
 // This creates the context and sets the context's initial/default value
@@ -100,6 +104,25 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
     setUserPhotoUrl(auth.currentUser.photoURL);
 
     return true;
+  };
+
+  const createAPost = async (data: NewPost, teacherId: string) => {
+    if (!currentUser) {
+      throw new Error("Current User is null!");
+    }
+    try {
+      const docRef = doc(postsCol);
+
+      await setDoc(docRef, {
+        ...data,
+        id: docRef.id,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+        authorId: teacherId,
+      });
+    } catch (error) {
+      console.log(createAPost);
+    }
   };
 
   const resetPassword = (email: string) => {
@@ -160,6 +183,9 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
         };
 
         await setDoc(parentdocRef, newParent);
+        updateProfile(userCredential.user, {
+          displayName: newParent.contact.firstName,
+        });
         await setDoc(childdocRef, newChild);
       }
       return userCredential;
@@ -308,6 +334,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
     <AuthContext.Provider
       value={{
         currentUser,
+        createAPost,
         login,
         logout,
         reloadUser,
