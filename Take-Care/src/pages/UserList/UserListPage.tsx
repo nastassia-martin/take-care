@@ -134,7 +134,7 @@ const UserListPage = () => {
           </>
         )}
         {!hasAdminAccess && currentUser && (
-          <AccessDenied text={currentUser.email!} />
+          <AccessDenied email={currentUser.email!} />
         )}
       </section>
     </main>

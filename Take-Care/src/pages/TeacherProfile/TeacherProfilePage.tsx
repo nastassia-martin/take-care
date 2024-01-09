@@ -38,7 +38,7 @@ const TeacherProfilePage = () => {
 
   // If teacher does not exist, limit access
   return teacher && !teacher.role ? (
-    <AccessDenied text={teacher.contact.email} />
+    <AccessDenied email={teacher.contact.email} />
   ) : (
     <div className={styles.PageWrapper}>
       {teacher && teacher.role === "Admin" && (

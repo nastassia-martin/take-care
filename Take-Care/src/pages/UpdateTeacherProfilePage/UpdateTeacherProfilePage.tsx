@@ -27,7 +27,7 @@ const UpdateTeacherProfilePage = () => {
   } = useAuth();
 
   if (!currentUser) {
-    return <AccessDenied text="no email" />;
+    return <AccessDenied email="no email" />;
   }
 
   const handleUpdateTeacherProfile = async (data: UpdateProfile) => {

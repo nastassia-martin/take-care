@@ -25,12 +25,24 @@ const ParentProfilePage = () => {
   // const isCoParentViewingProfile = currentUser.uid === parent.coParentId // coParent in parent profile can view
   const isTeacher = teacher && teacher.role === "Admin";
 
-  if (!isParentViewingOwnProfile && !isTeacher) {
-    return <AccessDenied text={currentUser.email!} />;
+  //parent not approved
+  if (parent && parent.role === "Not approved" && isTeacher) {
+    return (
+      <AccessDenied
+        email={currentUser.email}
+        customMessage="This user is waiting for approval"
+      />
+    );
   }
 
+  // viewer is neither parent nor teacher
+  if (!isParentViewingOwnProfile && !isTeacher) {
+    return <AccessDenied email={currentUser.email} />;
+  }
+
+  // parent is approved
   if (parent && parent.role === "Not approved") {
-    return <AccessDenied text={parent.contact.email} />;
+    return <AccessDenied email={parent.contact.email} />;
   }
 
   const goToProfile = (

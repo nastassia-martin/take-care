@@ -27,7 +27,7 @@ const UpdateUserProfilePage = () => {
   } = useAuth();
 
   if (!currentUser) {
-    return <AccessDenied text="no email" />;
+    return <AccessDenied email="no email" />;
   }
 
   const handleUpdateUserProfile = async (data: UpdateProfile) => {
