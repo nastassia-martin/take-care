@@ -53,7 +53,15 @@ const ChildProfilePage = () => {
             image={child.contact.photoURL}
             firstName={child.contact.firstName}
             lastName={child.contact.lastName}
-          />
+          >
+            {isParent && (
+              <Link to={`/children/${child._id}/update`}>
+                <Button ariaLabel="Edit profile" type="button">
+                  Edit profile
+                </Button>
+              </Link>
+            )}
+          </ProfileDetails>
         </section>
       )}
       {/* Conditional rendering for parents profile */}

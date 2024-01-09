@@ -109,6 +109,7 @@ const ChildrenListPage = () => {
                   src={row.original.contact.photoURL}
                   alt={`${row.original.contact.firstName} ${row.original.contact.lastName}`}
                   width={40}
+                  height={40}
                 />
               </div>
             );
@@ -226,7 +227,7 @@ const ChildrenListPage = () => {
           </>
         )}
         {!hasAdminAccess && currentUser && (
-          <AccessDenied text={currentUser.email!} />
+          <AccessDenied email={currentUser.email!} />
         )}
       </section>
     </main>

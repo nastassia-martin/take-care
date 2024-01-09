@@ -5,7 +5,6 @@ import Button from "../Button/Button";
 import { useEffect, useRef } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { UpdateProfile } from "../../types/Profile.types";
-import useAuth from "../../hooks/useAuth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   UpdateProfileSchema,
@@ -17,13 +16,11 @@ interface IUpdateUserProfileProps {
   loading: boolean;
   uploadProgress: number | null;
 }
-const UpdateUserProfileForm: React.FC<IUpdateUserProfileProps> = ({
+const UpdateChildForm: React.FC<IUpdateUserProfileProps> = ({
   onUpdateUserProfile,
   loading,
   uploadProgress,
 }) => {
-  const { currentUser } = useAuth();
-
   const {
     handleSubmit,
     register,
@@ -31,9 +28,6 @@ const UpdateUserProfileForm: React.FC<IUpdateUserProfileProps> = ({
     watch,
     formState: { errors, isSubmitSuccessful },
   } = useForm<UpdateProfileSchemaType>({
-    defaultValues: {
-      email: currentUser?.email ?? "",
-    },
     resolver: zodResolver(UpdateProfileSchema),
     mode: "onChange",
   });
@@ -48,32 +42,6 @@ const UpdateUserProfileForm: React.FC<IUpdateUserProfileProps> = ({
   }, [isSubmitSuccessful]);
   return (
     <Form onSubmit={handleSubmit(onUpdateUserProfile)}>
-      <Form.Group className="mb-3" controlId="email">
-        <Form.Label>Email</Form.Label>
-        <Form.Control
-          placeholder="example@example.com"
-          type="email"
-          {...register("email")}
-        />
-        {errors.email && (
-          <p className={styles.Error}>
-            {errors.email.message ?? "Invalid value"}
-          </p>
-        )}
-      </Form.Group>
-      <Form.Group className="mb-3" controlId="password">
-        <Form.Label>Password</Form.Label>
-        <Form.Control
-          placeholder="password"
-          type="password"
-          {...register("password")}
-        />
-        {errors.password && (
-          <p className={styles.Error}>
-            {errors.password.message ?? "Invalid value"}
-          </p>
-        )}
-      </Form.Group>
       <Form.Group controlId="photo" className="mb-3">
         <Form.Label>Profile Photo</Form.Label>
         <Form.Control
@@ -113,4 +81,4 @@ const UpdateUserProfileForm: React.FC<IUpdateUserProfileProps> = ({
     </Form>
   );
 };
-export default UpdateUserProfileForm;
+export default UpdateChildForm;

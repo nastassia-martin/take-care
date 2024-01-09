@@ -63,6 +63,7 @@ type AuthContextType = {
   ) => Promise<void>;
   updateParentPhotoUrl: (parentId: string, photoURL: string) => Promise<void>;
   updateTeacherPhotoUrl: (teacherId: string, photoURL: string) => Promise<void>;
+  updateChildPhotoUrl: (childId: string, photoURL: string) => Promise<void>;
   removeResponsibleForChild: (
     keyTeacher: KeyTeacher,
     childId: string,
@@ -262,9 +263,22 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
       throw new Error("There is no current user");
     }
     try {
-      const parentdoc = doc(teachersCol, teacherId);
+      const teacherdoc = doc(teachersCol, teacherId);
       const updatedProfile = { "contact.photoURL": photoURL };
-      return await updateDoc(parentdoc, updatedProfile);
+      return await updateDoc(teacherdoc, updatedProfile);
+    } catch (error) {
+      throw new Error("Server error");
+    }
+  };
+
+  const updateChildPhotoUrl = async (childId: string, photoURL: string) => {
+    if (!currentUser) {
+      throw new Error("There is no current user");
+    }
+    try {
+      const childDoc = doc(childrenCol, childId);
+      const updatedProfile = { "contact.photoURL": photoURL };
+      return await updateDoc(childDoc, updatedProfile);
     } catch (error) {
       throw new Error("Server error");
     }
@@ -304,6 +318,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
         setPassword,
         signUp,
         updateKeyTeacher,
+        updateChildPhotoUrl,
         updateParentPhotoUrl,
         updateTeacherPhotoUrl,
         updateResponsibleForChildren,
