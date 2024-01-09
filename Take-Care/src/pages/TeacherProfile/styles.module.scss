@@ -77,3 +77,14 @@
     }
   }
 }
+
+.ChilProfileContainer {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-column-gap: 1em;
+  grid-row-gap: 2em;
+
+  @media screen and (min-width: 750px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

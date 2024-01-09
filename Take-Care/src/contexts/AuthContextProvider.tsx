@@ -183,6 +183,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
     const parentDocRef = doc(parentsCol, parentId);
 
     const keyTeacherWithChildId = { ...keyTeacher, childId };
+
     await updateDoc(parentDocRef, {
       keyTeacher: arrayUnion(keyTeacherWithChildId),
     });

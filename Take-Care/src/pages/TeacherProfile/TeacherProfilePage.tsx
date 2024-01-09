@@ -4,7 +4,7 @@ import Button from "../../components/Button/Button";
 import useAuth from "../../hooks/useAuth";
 import AccessDenied from "../../components/AccessDenied/AccessDenied";
 import useGetTeacher from "../../hooks/useGetTeacher";
-import useGetChildren from "../../hooks/useGetChildren";
+import useGetChildrenForAdmin from "../../hooks/useGetChildrenForAdmin";
 
 import { Link } from "react-router-dom";
 
@@ -14,9 +14,9 @@ const TeacherProfilePage = () => {
   if (!currentUser) {
     return <div>We could not find a profile.</div>;
   }
-
+  console.log(currentUser.email);
   const { data: teacher } = useGetTeacher(currentUser.uid);
-  const { data: children } = useGetChildren(currentUser.uid);
+  const { data: children } = useGetChildrenForAdmin();
 
   const goToProfile = (
     <Button ariaLabel="go to profile" type="button">
@@ -72,22 +72,29 @@ const TeacherProfilePage = () => {
           </div>
         </section>
       )}
-      {/* Conditional rendering for child profile if there are children assigned to teacher */}
+      {/* Conditional rendering for child profile if there are children assigned to the teacher */}
       {teacher && teacher.role === "Admin" ? (
         children && children.length > 0 ? (
           <section className={styles.ChildProfileWrapper}>
             <h3>Child's profile - Quick View</h3>
-            {children.map((child) => (
-              <Link to={`/children/${child._id}`} key={child._id}>
-                <ProfileDetails
-                  className={styles.CardWrapper}
-                  image={child.contact.photoURL}
-                  firstName={child.contact.firstName}
-                  lastName={child.contact.lastName}
-                  children={goToProfile} // Ensure this prop is correctly named and used
-                />
-              </Link>
-            ))}
+            <div className={styles.ChilProfileContainer}>
+              {children
+                .filter(
+                  (child) =>
+                    child.keyTeacher && child.keyTeacher._id === teacher._id
+                )
+                .map((child) => (
+                  <Link to={`/children/${child._id}`} key={child._id}>
+                    <ProfileDetails
+                      className={styles.CardWrapper}
+                      image={child.contact.photoURL}
+                      firstName={child.contact.firstName}
+                      lastName={child.contact.lastName}
+                      children={goToProfile} // Ensure this prop is correctly named and used
+                    />
+                  </Link>
+                ))}
+            </div>
           </section>
         ) : (
           noChildrenFound
