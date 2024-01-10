@@ -21,6 +21,7 @@ const useStreamCollection = <T>(
     // Subscribe to changes in the collection in realtime
     const unsubscribe = onSnapshot(queryRef, (snapshot) => {
       if (snapshot.empty) {
+        setLoading(false);
         return;
       }
       // loop over all docs
@@ -39,7 +40,6 @@ const useStreamCollection = <T>(
     // Return unsubscribe function as cleanup
     return unsubscribe;
   }, [colRef]);
-
   return {
     data,
     loading,
