@@ -27,17 +27,12 @@ const ParentProfilePage = () => {
 
   //parent not approved
   if (parent && parent.role === "Not approved" && isTeacher) {
-    return (
-      <AccessDenied
-        email={currentUser.email}
-        customMessage="This user is waiting for approval"
-      />
-    );
+    return <AccessDenied customMessage="Waiting for approval" />;
   }
 
   // viewer is neither parent nor teacher
   if (!isParentViewingOwnProfile && !isTeacher) {
-    return <AccessDenied email={currentUser.email} />;
+    return <AccessDenied />;
   }
 
   // parent is approved

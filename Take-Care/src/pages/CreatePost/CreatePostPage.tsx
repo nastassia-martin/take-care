@@ -15,12 +15,7 @@ const CreatePostPage = () => {
   const { currentUser, createAPost } = useAuth();
 
   if (!currentUser) {
-    return (
-      <AccessDenied
-        email={"n/a"}
-        customMessage="You are not authorised to view this page"
-      />
-    );
+    return <AccessDenied />;
   }
 
   // fetch all teachers.

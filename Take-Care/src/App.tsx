@@ -14,6 +14,7 @@ import ChildrenListPage from "./pages/ChildrenList/ChildrenListPage";
 import UpdateUserProfilePage from "./pages/UpdateUserProfilePage/UpdateUserProfilePage";
 import UpdateTeacherProfilePage from "./pages/UpdateTeacherProfilePage/UpdateTeacherProfilePage";
 import UpdateChildProfilePage from "./pages/UpdateChildProfilePage/UpdateChildProfilePage";
+import CreatePostPage from "./pages/CreatePost/CreatePostPage";
 
 /**
  * @todo - set up routing for dashboard (teacher)
@@ -45,7 +46,7 @@ const App = () => {
           path="/children/:id/update"
           element={<UpdateChildProfilePage />}
         />
-
+        <Route path="/posts" element={<CreatePostPage />} />
         {/* Protected Routes */}
         <Route />
       </Routes>

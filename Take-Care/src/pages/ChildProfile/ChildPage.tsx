@@ -35,7 +35,7 @@ const ChildProfilePage = () => {
 
   if (!isAuthorised) {
     // assert that email exists because user cannot log in without an email
-    return <AccessDenied email={currentUser.email!} />;
+    return <AccessDenied />;
   }
 
   const goToProfile = (

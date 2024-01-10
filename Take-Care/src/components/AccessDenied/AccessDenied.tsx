@@ -3,7 +3,7 @@ import Button from "../Button/Button";
 import { Link } from "react-router-dom";
 
 interface IAccessDeniedProps {
-  email: string | null;
+  email?: string;
   customMessage?: string;
 }
 
@@ -14,7 +14,7 @@ const AccessDenied: React.FC<IAccessDeniedProps> = ({
   return (
     <main className={styles.AccessDenied}>
       <section className={styles.AccessDeniedDetails}>
-        <p>You are logged in as {email}</p>
+        {email && <p>You are logged in as {email}</p>}
         {customMessage ? (
           <p>{customMessage}</p>
         ) : (

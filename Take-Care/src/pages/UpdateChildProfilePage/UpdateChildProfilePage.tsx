@@ -34,12 +34,7 @@ const UpdateChildProfilePage = () => {
   const isParentViewingChildProfile = currentUser.uid === parent?._id;
 
   if (!isParentViewingChildProfile) {
-    return (
-      <AccessDenied
-        email={currentUser.email}
-        customMessage="You cannot edit this profile"
-      />
-    );
+    return <AccessDenied customMessage="You cannot edit this profile" />;
   }
   const handleUpdateChildProfile = async (data: UpdateProfile) => {
     setErrorMessage(null);
