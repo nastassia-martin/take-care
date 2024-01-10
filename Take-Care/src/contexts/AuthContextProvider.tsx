@@ -110,6 +110,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
     if (!currentUser) {
       throw new Error("Current User is null!");
     }
+
     try {
       const docRef = doc(postsCol);
 
@@ -121,7 +122,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
         authorId: teacherId,
       });
     } catch (error) {
-      console.log(createAPost);
+      throw error;
     }
   };
 
