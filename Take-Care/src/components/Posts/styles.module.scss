@@ -1,0 +1,32 @@
+.Section {
+  padding: 2em;
+
+  .MainHeader {
+    margin-bottom: 2em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+}
+
+.PostWrapper {
+  border: 0.1em dashed var(--primary-blue);
+  padding: 1em;
+  margin-bottom: 1.5em;
+
+  .Title {
+    text-transform: capitalize;
+    font-size: 1.125em;
+    font-weight: bold;
+    line-height: 2;
+  }
+
+  .DetailsWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 0.625em;
+  }
+
+  .Name {
+    font-weight: bold;
+  }
+}
