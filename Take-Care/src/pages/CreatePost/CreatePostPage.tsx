@@ -8,6 +8,8 @@ import styles from "./styles.module.scss";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import useGetTeacher from "../../hooks/useGetTeacher";
+import RenderPosts from "../../components/Posts/Posts";
+import useGetPosts from "../../hooks/useGetPosts";
 
 const CreatePostPage = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -18,7 +20,10 @@ const CreatePostPage = () => {
   const { data: teacher, loading: teacherLoading } = useGetTeacher(
     currentUser?.uid
   );
-  const isLoading = teacherLoading || loading;
+
+  const { data: posts, loading: postsLoading } = useGetPosts(currentUser?.uid);
+
+  const isLoading = teacherLoading || loading || postsLoading;
 
   useEffect(() => {
     // When teacher data is fetched, check if the role is 'admin'
@@ -28,10 +33,6 @@ const CreatePostPage = () => {
         : setHasAdminAccess(false);
     }
   }, [teacher]);
-
-  if (isLoading) {
-    return <div>loading...</div>;
-  }
 
   if (!currentUser) {
     return <AccessDenied />;
@@ -66,11 +67,11 @@ const CreatePostPage = () => {
           <div className={styles.CardWrapper}>
             {hasAdminAccess ? (
               <>
+                {isLoading && <div>loading...</div>}
                 <h3 className={styles.Header}>Send a post</h3>
                 {errorMessage && (
                   <p className={styles.ErrorMessage}>{errorMessage}</p>
                 )}
-
                 <CreatePostForm
                   onCreatePost={handleCreatePost}
                   loading={isLoading}
@@ -82,6 +83,14 @@ const CreatePostPage = () => {
           </div>
         </Col>
       </Row>
+
+      {posts && hasAdminAccess && (
+        <RenderPosts
+          data={posts}
+          teacherName={`${teacher?.contact.firstName} ${teacher?.contact.lastName} `}
+        />
+      )}
+      {!posts && hasAdminAccess && <p>No posts created yet - write one!</p>}
     </main>
   );
 };
