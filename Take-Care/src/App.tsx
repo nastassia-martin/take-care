@@ -40,6 +40,8 @@ const App = () => {
         <Route path="/parents" element={<UserListPage />} />
         <Route path="/parents/:id" element={<ParentProfilePage />} />
         <Route path="/parents/:id/update" element={<UpdateUserProfilePage />} />
+        <Route path="/parents/:id/posts" element={<UpdateUserProfilePage />} />
+
         <Route path="/children" element={<ChildrenListPage />} />
         <Route path="/children/:id" element={<ChildProfilePage />} />
         <Route
@@ -48,7 +50,6 @@ const App = () => {
         />
         <Route path="/posts" element={<CreatePostPage />} />
         {/* Protected Routes */}
-        <Route />
       </Routes>
     </>
   );

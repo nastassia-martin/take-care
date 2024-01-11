@@ -1,4 +1,5 @@
 import { Department, Contact, Role } from "./GenericTypes.types";
+import { Post } from "./Posts.types";
 
 export interface NewChildProfile {
   _id: string;
@@ -49,7 +50,10 @@ export interface TeacherProfile {
   department: Department;
   role: Role.Admin;
   responsibileForChildren: string[];
+  parents: string[];
+  posts: Post[];
 }
+
 export interface ChildProfile {
   _id: string;
   contact: Omit<Contact, "email">;
@@ -71,7 +75,20 @@ export type KeyTeacher = {
   lastName: string;
   childId?: string;
 };
-export type ParentProfile = Omit<NewParentProfile, "password">;
+
+export type ParentProfile = {
+  _id: string;
+  contact: Contact;
+  role: Role;
+  children: string[];
+  childrenContact: {
+    firstName: string;
+    lastName: string;
+    date_of_birth: Date;
+  };
+  isAuthorizedForPickUp: boolean;
+  keyTeacher: KeyTeacher[];
+};
 
 export type UpdateProfile = {
   email?: string;

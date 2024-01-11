@@ -9,21 +9,19 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import useGetTeacher from "../../hooks/useGetTeacher";
 import RenderPosts from "../../components/Posts/Posts";
-import useGetPosts from "../../hooks/useGetPosts";
+import useGetPostsForParentOrTeacher from "../../hooks/useGetPostsForParentsOrTeacher";
 
 const CreatePostPage = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [hasAdminAccess, setHasAdminAccess] = useState(false);
-
+  const [isParent, setIsParent] = useState(false);
   const { currentUser, createAPost } = useAuth();
   const { data: teacher, loading: teacherLoading } = useGetTeacher(
     currentUser?.uid
   );
-
-  const { data: posts, loading: postsLoading } = useGetPosts(currentUser?.uid);
-
-  const isLoading = teacherLoading || loading || postsLoading;
+  const { data } = useGetPostsForParentOrTeacher(currentUser?.uid);
+  const isLoading = teacherLoading || loading;
 
   useEffect(() => {
     // When teacher data is fetched, check if the role is 'admin'
@@ -32,7 +30,13 @@ const CreatePostPage = () => {
         ? setHasAdminAccess(true)
         : setHasAdminAccess(false);
     }
-  }, [teacher]);
+    //ensure current user should have access to this page
+    if (data && currentUser) {
+      data.map((parent) => parent.parents.includes(currentUser.uid))
+        ? setIsParent(true)
+        : setIsParent(false);
+    }
+  }, [teacher, data]);
 
   if (!currentUser) {
     return <AccessDenied />;
@@ -77,20 +81,22 @@ const CreatePostPage = () => {
                   loading={isLoading}
                 />
               </>
-            ) : (
-              <AccessDenied customMessage="You don't have permission to view this page" />
-            )}
+            ) : null}
           </div>
         </Col>
       </Row>
-
-      {posts && hasAdminAccess && (
-        <RenderPosts
-          data={posts}
-          teacherName={`${teacher?.contact.firstName} ${teacher?.contact.lastName} `}
-        />
+      {(hasAdminAccess || isParent) &&
+        data &&
+        data.map((teacher) => (
+          <RenderPosts
+            key={teacher._id}
+            data={data}
+            teacherName={`${teacher?.contact.firstName} ${teacher?.contact.lastName} `}
+          />
+        ))}
+      {!teacher?.posts && hasAdminAccess && (
+        <p>No posts created yet - write one!</p>
       )}
-      {!posts && hasAdminAccess && <p>No posts created yet - write one!</p>}
     </main>
   );
 };
