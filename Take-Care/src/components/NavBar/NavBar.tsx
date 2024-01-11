@@ -9,11 +9,15 @@ import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { useState } from "react";
 import Button from "../Button/Button";
+import useGetTeacher from "../../hooks/useGetTeacher";
+import useGetParent from "../../hooks/useGetParent";
 
 const Navigation = () => {
   const navigate = useNavigate();
   const { logout, currentUser } = useAuth();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const isParentProfile = useGetParent(currentUser?.uid);
+  const isTeacherProfile = useGetTeacher(currentUser?.uid);
 
   const onLogout = async () => {
     await logout();
@@ -24,7 +28,18 @@ const Navigation = () => {
   const openLogoutModal = () => {
     setShowLogoutModal(true);
   };
-
+  const handleClick = () => {
+    if (currentUser) {
+      // Check if the current user is a parent and navigate to their profile
+      if (isParentProfile?.data) {
+        navigate(`/parents/${currentUser.uid}`);
+      }
+      // Else, if the current user is a teacher, navigate to their profile
+      else if (isTeacherProfile?.data) {
+        navigate(`/teachers/${currentUser.uid}`);
+      }
+    }
+  };
   return (
     <Navbar expand="sm">
       <div className={styles.NavWrapper}>
@@ -35,13 +50,13 @@ const Navigation = () => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className={styles.NavItems}>
             {/* user is signed in? show the profile, menu, etc */}
-            <Nav.Link as={NavLink} to="/" className={styles.NavItem}>
+            <Nav.Link className={styles.NavItem} onClick={handleClick}>
               Profile
             </Nav.Link>
             <Nav.Link as={NavLink} to="/" className={styles.NavItem}>
               Menu
             </Nav.Link>
-            <Nav.Link as={NavLink} to="/" className={styles.NavItem}>
+            <Nav.Link as={NavLink} to="/posts" className={styles.NavItem}>
               Activity Feed
             </Nav.Link>
             <Nav.Link as={NavLink} to="/" className={styles.NavItem}>
