@@ -64,7 +64,8 @@ const ChildrenListPage = () => {
         await updateKeyTeacher(selectedChildData._id, keyTeacherData, parentId);
         await updateResponsibleForChildren(
           keyTeacherData._id,
-          selectedChildData._id
+          selectedChildData._id,
+          parentId
         );
         // close modal on success
         setIsModalOpen(false);

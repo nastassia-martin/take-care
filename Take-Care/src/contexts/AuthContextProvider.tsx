@@ -15,7 +15,6 @@ import {
   arrayRemove,
   arrayUnion,
   doc,
-  serverTimestamp,
   setDoc,
   updateDoc,
 } from "firebase/firestore";
@@ -26,7 +25,6 @@ import {
   childrenCol,
   teachersCol,
   parentsCol,
-  postsCol,
 } from "../services/firebase";
 import { Role } from "../types/GenericTypes.types";
 import {
@@ -37,6 +35,7 @@ import {
   KeyTeacher,
 } from "../types/Profile.types";
 import { NewPost } from "../types/Posts.types";
+import { v4 as uuidv4 } from "uuid";
 
 type AuthContextType = {
   currentUser: User | null;
@@ -62,7 +61,8 @@ type AuthContextType = {
   ) => Promise<void>;
   updateResponsibleForChildren: (
     teacherId: string,
-    childId: string
+    childId: string,
+    parentId: string
   ) => Promise<void>;
   updateParentPhotoUrl: (parentId: string, photoURL: string) => Promise<void>;
   updateTeacherPhotoUrl: (teacherId: string, photoURL: string) => Promise<void>;
@@ -112,14 +112,21 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
     }
 
     try {
-      const docRef = doc(postsCol);
+      const uuid = uuidv4(); //
 
-      await setDoc(docRef, {
+      const docRef = doc(teachersCol, teacherId);
+      // workaround to get a timestamp in an array in firestore
+      const timestamp = new Date();
+      const newPost = {
         ...data,
-        id: docRef.id,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
+        id: uuid,
+        createdAt: timestamp,
+        updatedAt: timestamp,
         authorId: teacherId,
+      };
+
+      await updateDoc(docRef, {
+        posts: arrayUnion(newPost),
       });
     } catch (error) {
       throw error;
@@ -231,7 +238,8 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
 
   const updateResponsibleForChildren = async (
     teacherId: string,
-    childId: string
+    childId: string,
+    parentId: string
   ) => {
     if (!auth.currentUser) {
       throw new Error("There is no current user");
@@ -240,6 +248,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
 
     return await updateDoc(teacherDocRef, {
       responsibileForChildren: arrayUnion(childId),
+      parents: arrayUnion(parentId),
     });
   };
 
@@ -261,6 +270,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
     });
     return await updateDoc(teacherDocRef, {
       responsibileForChildren: arrayRemove(childId),
+      parents: arrayRemove(parentId),
     });
   };
 
