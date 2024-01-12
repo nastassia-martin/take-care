@@ -15,6 +15,7 @@ import {
   arrayRemove,
   arrayUnion,
   doc,
+  getDoc,
   setDoc,
   updateDoc,
 } from "firebase/firestore";
@@ -33,8 +34,9 @@ import {
   NewChildProfile,
   NewParentProfile,
   KeyTeacher,
+  TeacherProfile,
 } from "../types/Profile.types";
-import { NewPost } from "../types/Posts.types";
+import { NewPost, Post } from "../types/Posts.types";
 import { v4 as uuidv4 } from "uuid";
 
 type AuthContextType = {
@@ -73,6 +75,7 @@ type AuthContextType = {
     parentId: string
   ) => Promise<void>;
   createAPost: (data: NewPost, teacherId: string) => Promise<void>;
+  updateAPost: (data: Post, teacherId: string) => Promise<void>;
 };
 
 // This creates the context and sets the context's initial/default value
@@ -131,6 +134,34 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
     } catch (error) {
       throw error;
     }
+  };
+
+  const updateAPost = async (data: Post, teacherId: string) => {
+    if (!currentUser) {
+      throw new Error("Current User is null!");
+    }
+    const docRef = doc(teachersCol, teacherId);
+    const timestamp = new Date();
+
+    const docSnap = await getDoc(docRef);
+    if (!docSnap.exists()) {
+      throw new Error("TeacherProfile not found!");
+    }
+
+    const teacherProfile = docSnap.data() as TeacherProfile;
+
+    // Update the specific post in the array
+    const updatedPosts = teacherProfile.posts.map((post) => {
+      if (post.id === data.id) {
+        return { ...post, ...data, updatedAt: timestamp };
+      }
+      return post;
+    });
+
+    // Update the document in Firestore
+    await updateDoc(docRef, {
+      posts: updatedPosts,
+    });
   };
 
   const resetPassword = (email: string) => {
@@ -362,6 +393,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
         updateResponsibleForChildren,
         removeResponsibleForChild,
         userEmail,
+        updateAPost,
       }}
     >
       {loading ? <div>loading...</div> : <>{children}</>}

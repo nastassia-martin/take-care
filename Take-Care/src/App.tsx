@@ -15,6 +15,7 @@ import UpdateUserProfilePage from "./pages/UpdateUserProfilePage/UpdateUserProfi
 import UpdateTeacherProfilePage from "./pages/UpdateTeacherProfilePage/UpdateTeacherProfilePage";
 import UpdateChildProfilePage from "./pages/UpdateChildProfilePage/UpdateChildProfilePage";
 import CreatePostPage from "./pages/CreatePost/CreatePostPage";
+import EditPost from "./components/Posts/EditPosts";
 
 /**
  * @todo - set up routing for dashboard (teacher)
@@ -49,6 +50,7 @@ const App = () => {
           element={<UpdateChildProfilePage />}
         />
         <Route path="/posts" element={<CreatePostPage />} />
+        <Route path="/posts/:id" element={<EditPost />} />
         {/* Protected Routes */}
       </Routes>
     </>
