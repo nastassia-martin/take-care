@@ -3,23 +3,30 @@ import Form from "react-bootstrap/Form";
 import Button from "../Button/Button";
 import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { NewPost } from "../../types/Posts.types";
+import { Post } from "../../types/Posts.types";
 
 interface ICreatePostFormProps {
-  onCreatePost: SubmitHandler<NewPost>;
+  onCreatePost: SubmitHandler<Post>;
   loading: boolean;
+  initialValues?: Post;
+  onClick?: () => void;
 }
 
 const CreatePostForm: React.FC<ICreatePostFormProps> = ({
   loading,
   onCreatePost,
+  initialValues,
+  onClick,
 }) => {
   const {
     handleSubmit,
     register,
     reset,
     formState: { errors, isValid, isSubmitSuccessful },
-  } = useForm<NewPost>({ mode: "onChange" });
+  } = useForm<Post>({
+    mode: "onChange",
+    defaultValues: { ...initialValues },
+  });
 
   useEffect(() => {
     if (isSubmitSuccessful) {
@@ -48,7 +55,12 @@ const CreatePostForm: React.FC<ICreatePostFormProps> = ({
           <p className={styles.Error}>{errors.content.message}</p>
         )}
       </Form.Group>
-      <Button ariaLabel="Register user" type="submit" disabled={!isValid}>
+      <Button
+        ariaLabel="Register user"
+        type="submit"
+        disabled={!isValid}
+        onClick={onClick}
+      >
         {loading ? "submitting" : "Send"}
       </Button>
     </Form>
