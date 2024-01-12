@@ -1,6 +1,7 @@
 import {
   CollectionReference,
   QueryCompositeFilterConstraint,
+  QueryNonFilterConstraint,
   onSnapshot,
   query,
 } from "firebase/firestore";
@@ -21,7 +22,8 @@ import { useEffect, useState } from "react";
  */
 const useStreamWithFilterConstraintCollection = <T>(
   colRef: CollectionReference<T>,
-  queryFilterConstraints: QueryCompositeFilterConstraint
+  queryFilterConstraints: QueryCompositeFilterConstraint, // permit "OR", "AND" constraints
+  ...queryConstraints: QueryNonFilterConstraint[]
 ) => {
   const [data, setData] = useState<T[] | null>(null);
   const [loading, setLoading] = useState(true);
@@ -29,7 +31,7 @@ const useStreamWithFilterConstraintCollection = <T>(
   // Get data on component mount
   useEffect(() => {
     // Construct a query reference
-    const queryRef = query(colRef, queryFilterConstraints);
+    const queryRef = query(colRef, queryFilterConstraints, ...queryConstraints);
 
     // Subscribe to changes in the collection in realtime
     const unsubscribe = onSnapshot(queryRef, (snapshot) => {
