@@ -9,6 +9,7 @@ import AccessDenied from "../AccessDenied/AccessDenied";
 import RenderPost from "./RenderPost";
 import useGetPostsForParentOrTeacher from "../../hooks/useGetPostsForParentsOrTeacher";
 import styles from "./styles.module.scss";
+import Button from "../Button/Button";
 
 const EditPost = () => {
   const [hasAdminAccess, setHasAdminAccess] = useState(false);
@@ -18,7 +19,7 @@ const EditPost = () => {
 
   const navigate = useNavigate();
   const { id } = useParams();
-  const { currentUser, updateAPost } = useAuth();
+  const { currentUser, updateAPost, deleteAPost } = useAuth();
   const postId = id as string;
 
   const { data: teacher, loading: teacherLoading } = useGetTeacher(
@@ -76,7 +77,32 @@ const EditPost = () => {
     setLoading(false);
   };
 
+  const handleDelete = async () => {
+    //only a teacher can delete a post
+    if (!teacher) {
+      throw new Error("You do not have permission to delete a post.");
+    }
+
+    try {
+      setLoading(true);
+      // send the postId you want to delete, and the teacher who has authored the post
+      await deleteAPost(postId, teacher._id);
+
+      //navigate to posts & replace the url history as this id path no longer exists.
+      navigate("/posts", {
+        replace: true,
+      });
+    } catch (error: any) {
+      if (error instanceof FirebaseError) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage(error.message);
+      }
+    }
+  };
+
   const handleNavigate = () => {
+    // on send go back to list of posts
     navigate(-1);
   };
   return (
@@ -84,12 +110,17 @@ const EditPost = () => {
       {isLoading && <p>loading</p>}
       {errorMessage && <p className={styles.ErrorMessage}>{errorMessage}</p>}
       {post && hasAdminAccess && (
-        <CreatePostForm
-          onCreatePost={handleUpdatePost}
-          loading={teacherLoading}
-          initialValues={post}
-          onClick={handleNavigate}
-        />
+        <>
+          <CreatePostForm
+            onCreatePost={handleUpdatePost}
+            loading={teacherLoading}
+            initialValues={post}
+            onClick={handleNavigate}
+          />
+          <Button ariaLabel="delete post" onClick={handleDelete}>
+            delete
+          </Button>
+        </>
       )}
       {/* no need for admin to see post */}
       {!hasAdminAccess && isParent && postforParent && (

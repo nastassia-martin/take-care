@@ -76,6 +76,7 @@ type AuthContextType = {
   ) => Promise<void>;
   createAPost: (data: NewPost, teacherId: string) => Promise<void>;
   updateAPost: (data: Post, teacherId: string) => Promise<void>;
+  deleteAPost: (postId: string, teacherId: string) => Promise<void>;
 };
 
 // This creates the context and sets the context's initial/default value
@@ -157,6 +158,31 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
       }
       return post;
     });
+
+    // Update the document in Firestore
+    await updateDoc(docRef, {
+      posts: updatedPosts,
+    });
+  };
+
+  const deleteAPost = async (postId: string, teacherId: string) => {
+    if (!currentUser) {
+      throw new Error("Current User is null!");
+    }
+
+    const docRef = doc(teachersCol, teacherId);
+
+    const docSnap = await getDoc(docRef);
+    if (!docSnap.exists()) {
+      throw new Error("TeacherProfile not found!");
+    }
+
+    const teacherProfile = docSnap.data() as TeacherProfile;
+
+    // Update the specific post in the array
+    const updatedPosts = teacherProfile.posts.filter(
+      (post) => post.id !== postId
+    );
 
     // Update the document in Firestore
     await updateDoc(docRef, {
@@ -394,6 +420,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
         removeResponsibleForChild,
         userEmail,
         updateAPost,
+        deleteAPost,
       }}
     >
       {loading ? <div>loading...</div> : <>{children}</>}
