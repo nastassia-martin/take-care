@@ -1,30 +1,22 @@
 import {
-  collection,
-  CollectionReference,
-  QueryConstraint,
   onSnapshot,
   query,
-  DocumentReference,
+  collectionGroup,
+  QueryCompositeFilterConstraint,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
+import { db } from "../services/firebase";
 
 const useStreamSubcollection = <T>(
-  docRef: DocumentReference, // Reference to the parent document
-  subcollectionName: string, // Name of the subcollection
-  ...queryConstraints: QueryConstraint[]
+  colRef: string,
+  queryFilterConstraints: QueryCompositeFilterConstraint // permit "OR", "AND" constraints
 ) => {
   const [data, setData] = useState<T[] | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Construct a reference to the subcollection
-    const subColRef = collection(
-      docRef,
-      subcollectionName
-    ) as CollectionReference<T>;
-
     // Construct a query reference
-    const queryRef = query(subColRef, ...queryConstraints);
+    const queryRef = query(collectionGroup(db, colRef), queryFilterConstraints);
 
     // Subscribe to changes in the subcollection in realtime
     const unsubscribe = onSnapshot(queryRef, (snapshot) => {
@@ -33,8 +25,8 @@ const useStreamSubcollection = <T>(
         return;
       }
 
-      const data: T[] = snapshot.docs.map((doc) => ({
-        ...doc.data(),
+      const data = snapshot.docs.map((doc) => ({
+        ...(doc.data() as T),
         _id: doc.id,
       }));
 
@@ -44,7 +36,7 @@ const useStreamSubcollection = <T>(
 
     // Return unsubscribe function as cleanup
     return unsubscribe;
-  }, [docRef, subcollectionName]);
+  }, [colRef]);
 
   return {
     data,
