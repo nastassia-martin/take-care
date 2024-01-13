@@ -12,6 +12,11 @@
   border: 0.1em dashed var(--primary-blue);
   padding: 1em;
   margin-bottom: 1.5em;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
 
   .Title {
     text-transform: capitalize;
@@ -29,5 +34,18 @@
 
   .Name {
     font-weight: bold;
+  }
+}
+
+.Link {
+  text-decoration: none;
+  color: var(--black);
+
+  &:focus,
+  &:hover,
+  &:visited,
+  &:link,
+  &:active {
+    text-decoration: none;
   }
 }

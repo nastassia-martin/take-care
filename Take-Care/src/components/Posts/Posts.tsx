@@ -15,7 +15,11 @@ const RenderPosts: React.FC<IPostProps> = ({ data, teacherName }) => {
       {data &&
         data.map((teacher) =>
           teacher.posts.map((post) => (
-            <Link to={post.id} key={`${teacher._id}-${post.id}`}>
+            <Link
+              to={post.id}
+              key={`${teacher._id}-${post.id}`}
+              className={styles.Link}
+            >
               <div className={styles.PostWrapper}>
                 <h2 className={styles.Title}>{post.title}</h2>
                 <div className={styles.DetailsWrapper}>
