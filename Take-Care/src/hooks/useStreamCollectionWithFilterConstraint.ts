@@ -36,6 +36,7 @@ const useStreamWithFilterConstraintCollection = <T>(
     // Subscribe to changes in the collection in realtime
     const unsubscribe = onSnapshot(queryRef, (snapshot) => {
       if (snapshot.empty) {
+        setLoading(false);
         return;
       }
       // loop over all docs
