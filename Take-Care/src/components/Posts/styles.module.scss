@@ -13,9 +13,10 @@
   padding: 1em;
   margin-bottom: 1.5em;
   transition: transform 0.3s ease;
+  // min-width: 80%;
 
   &:hover {
-    transform: scale(1.1);
+    transform: scale(1.05);
   }
 
   .Title {
@@ -48,4 +49,8 @@
   &:active {
     text-decoration: none;
   }
+}
+
+.Container {
+  padding: 2em;
 }

@@ -16,6 +16,7 @@ import {
   arrayUnion,
   doc,
   getDoc,
+  serverTimestamp,
   setDoc,
   updateDoc,
 } from "firebase/firestore";
@@ -26,6 +27,7 @@ import {
   childrenCol,
   teachersCol,
   parentsCol,
+  postsCol,
 } from "../services/firebase";
 import { Role } from "../types/GenericTypes.types";
 import {
@@ -74,7 +76,12 @@ type AuthContextType = {
     childId: string,
     parentId: string
   ) => Promise<void>;
-  createAPost: (data: NewPost, teacherId: string) => Promise<void>;
+  createAPost: (
+    data: NewPost,
+    teacherId: string,
+    parentIds: string[],
+    authorName: string
+  ) => Promise<void>;
   updateAPost: (data: Post, teacherId: string) => Promise<void>;
   deleteAPost: (postId: string, teacherId: string) => Promise<void>;
 };
@@ -110,27 +117,27 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
     return true;
   };
 
-  const createAPost = async (data: NewPost, teacherId: string) => {
+  const createAPost = async (
+    data: NewPost,
+    teacherId: string,
+    parentIds: string[],
+    authorName: string
+  ) => {
     if (!currentUser) {
       throw new Error("Current User is null!");
     }
 
     try {
-      const uuid = uuidv4(); //
+      const docRef = doc(postsCol);
 
-      const docRef = doc(teachersCol, teacherId);
-      // workaround to get a timestamp in an array in firestore
-      const timestamp = new Date();
-      const newPost = {
+      await setDoc(docRef, {
         ...data,
-        id: uuid,
-        createdAt: timestamp,
-        updatedAt: timestamp,
+        _id: docRef.id,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
         authorId: teacherId,
-      };
-
-      await updateDoc(docRef, {
-        posts: arrayUnion(newPost),
+        parents: parentIds,
+        authorName: authorName,
       });
     } catch (error) {
       throw error;
@@ -153,7 +160,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
 
     // Update the specific post in the array
     const updatedPosts = teacherProfile.posts.map((post) => {
-      if (post.id === data.id) {
+      if (post._id === data._id) {
         return { ...post, ...data, updatedAt: timestamp };
       }
       return post;
@@ -181,7 +188,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
 
     // Update the specific post in the array
     const updatedPosts = teacherProfile.posts.filter(
-      (post) => post.id !== postId
+      (post) => post._id !== postId
     );
 
     // Update the document in Firestore

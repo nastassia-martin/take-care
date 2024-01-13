@@ -44,7 +44,7 @@ const UpdateChildProfilePage = () => {
 
       if (data.photoFile && data.photoFile.length) {
         const childProfilePic = data.photoFile[0];
-        // ref for file upload, eg / parents/abcd123/miniMouse
+        // ref for file upload, eg / children/miniMouse
         const fileRef = ref(storage, `children/${childProfilePic.name}`);
         // upload photo to fileRef
         const uploadTask = uploadBytesResumable(fileRef, childProfilePic);

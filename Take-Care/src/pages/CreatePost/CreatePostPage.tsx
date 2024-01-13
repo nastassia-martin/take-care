@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import AccessDenied from "../../components/AccessDenied/AccessDenied";
 import CreatePostForm from "../../components/Forms/CreatePostForm";
 import useAuth from "../../hooks/useAuth";
-import { NewPost } from "../../types/Posts.types";
+import { NewPostWithPhotoFile } from "../../types/Posts.types";
 import { FirebaseError } from "firebase/app";
 import styles from "./styles.module.scss";
 import Col from "react-bootstrap/Col";
@@ -10,11 +10,16 @@ import Row from "react-bootstrap/Row";
 import useGetTeacher from "../../hooks/useGetTeacher";
 import RenderPosts from "../../components/Posts/Posts";
 import useGetPostsForParentOrTeacher from "../../hooks/useGetPostsForParentsOrTeacher";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { storage } from "../../services/firebase";
 
 const CreatePostPage = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [hasAdminAccess, setHasAdminAccess] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
+  const [photoUrl, setPhotoUrl] = useState<string>("");
+
   const [isParent, setIsParent] = useState(false);
   const { currentUser, createAPost } = useAuth();
   const { data: teacher, loading: teacherLoading } = useGetTeacher(
@@ -44,7 +49,7 @@ const CreatePostPage = () => {
 
   // create post
 
-  const handleCreatePost = async (data: NewPost) => {
+  const handleCreatePost = async (data: NewPostWithPhotoFile) => {
     try {
       setLoading(true);
 
@@ -53,10 +58,52 @@ const CreatePostPage = () => {
         throw new Error("You do not have permission to create a post.");
       }
 
-      await createAPost(data, teacher._id);
+      if (data.photo && data.photo.length) {
+        const todaysPic = data.photo[0];
+        // ref for file upload, eg / teachers/miniMouse
+        const fileRef = ref(
+          storage,
+          `teachers/${teacher._id}/posts/${todaysPic.name}`
+        );
+
+        await new Promise((resolve, reject) => {
+          const uploadTask = uploadBytesResumable(fileRef, todaysPic);
+          uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+              setUploadProgress(
+                Math.round(
+                  (snapshot.bytesTransferred / snapshot.totalBytes) * 1000
+                ) / 10
+              );
+            },
+            (err) => {
+              reject(err);
+              setErrorMessage(err.message);
+            },
+            async () => {
+              const url = await getDownloadURL(fileRef);
+              setPhotoUrl(url);
+              resolve(url);
+              setUploadProgress(null);
+            }
+          );
+        });
+      }
+      // remove photo from
+      const { photo, ...restFormData } = data;
+
+      const postData = {
+        ...restFormData,
+        photo: photoUrl,
+      };
+      const authorName = `${teacher.contact.firstName} ${teacher.contact.lastName} `;
+
+      await createAPost(postData, teacher._id, teacher.parents, authorName);
     } catch (error: any) {
       if (error instanceof FirebaseError) {
         setErrorMessage(error.message);
+        console.log(error.message);
       } else {
         setErrorMessage(error.message);
       }
@@ -79,6 +126,7 @@ const CreatePostPage = () => {
                 <CreatePostForm
                   onCreatePost={handleCreatePost}
                   loading={isLoading}
+                  uploadProgress={uploadProgress}
                 />
               </>
             ) : null}
@@ -87,13 +135,7 @@ const CreatePostPage = () => {
       </Row>
       {(hasAdminAccess || isParent) &&
         data &&
-        data.map((teacher) => (
-          <RenderPosts
-            key={teacher._id}
-            data={data}
-            teacherName={`${teacher?.contact.firstName} ${teacher?.contact.lastName} `}
-          />
-        ))}
+        data.map((posts) => <RenderPosts key={posts._id} data={data} />)}
       {!teacher?.posts && hasAdminAccess && (
         <p>No posts created yet - write one!</p>
       )}

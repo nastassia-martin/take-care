@@ -1,15 +1,22 @@
 import styles from "./styles.module.scss";
 import Form from "react-bootstrap/Form";
 import Button from "../Button/Button";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Post } from "../../types/Posts.types";
+import { ProgressBar } from "react-bootstrap";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  CreateOrEditPostSchema,
+  CreateOrEditPostType,
+} from "../../schemas/Post";
 
 interface ICreatePostFormProps {
-  onCreatePost: SubmitHandler<Post>;
+  onCreatePost: SubmitHandler<CreateOrEditPostType>;
   loading: boolean;
   initialValues?: Post;
   onClick?: () => void;
+  uploadProgress: number | null;
 }
 
 const CreatePostForm: React.FC<ICreatePostFormProps> = ({
@@ -17,16 +24,24 @@ const CreatePostForm: React.FC<ICreatePostFormProps> = ({
   onCreatePost,
   initialValues,
   onClick,
+  uploadProgress,
 }) => {
+  const { title, content } = initialValues || {};
+
   const {
     handleSubmit,
     register,
     reset,
+    watch,
     formState: { errors, isValid, isSubmitSuccessful },
-  } = useForm<Post>({
+  } = useForm<CreateOrEditPostType>({
     mode: "onChange",
-    defaultValues: { ...initialValues },
+    defaultValues: { title, content },
+    resolver: zodResolver(CreateOrEditPostSchema),
   });
+
+  const photoFileRef = useRef<FileList | null | undefined>(null);
+  photoFileRef.current = watch("photo") as FileList;
 
   useEffect(() => {
     if (isSubmitSuccessful) {
@@ -41,7 +56,6 @@ const CreatePostForm: React.FC<ICreatePostFormProps> = ({
         <Form.Control placeholder="Title" type="text" {...register("title")} />
         {errors.title && <p className={styles.Error}>{errors.title.message}</p>}
       </Form.Group>
-
       <Form.Group className="mb-3" controlId="content">
         <Form.Label>Content</Form.Label>
         <Form.Control
@@ -55,6 +69,38 @@ const CreatePostForm: React.FC<ICreatePostFormProps> = ({
           <p className={styles.Error}>{errors.content.message}</p>
         )}
       </Form.Group>
+      <Form.Group controlId="photo" className="mb-3">
+        <Form.Label>Today's Photo</Form.Label>
+        <Form.Control
+          type="file"
+          accept="image/gif,image/jpeg,image/png,image/webp"
+          {...register("photo")}
+        />
+        {errors.photo && (
+          <p className={styles.Error}>
+            {errors.photo.message ?? "Invalid value"}
+          </p>
+        )}
+        <Form.Text>
+          {uploadProgress !== null ? (
+            <ProgressBar
+              now={uploadProgress}
+              label={`${uploadProgress}%`}
+              animated
+              className="mt-1"
+              variant="success"
+            />
+          ) : (
+            photoFileRef.current &&
+            photoFileRef.current.length > 0 && (
+              <span>
+                {photoFileRef.current[0].name} (
+                {Math.round(photoFileRef.current[0].size / 1024)} kB)
+              </span>
+            )
+          )}
+        </Form.Text>
+      </Form.Group>{" "}
       <Button
         ariaLabel="Register user"
         type="submit"
