@@ -137,9 +137,7 @@ const CreatePostPage = () => {
           </div>
         </Col>
       </Row>
-      {(hasAdminAccess || isParent) &&
-        data &&
-        data.map((posts) => <RenderPosts key={posts._id} data={data} />)}
+      {(hasAdminAccess || isParent) && data && <RenderPosts data={data} />}
       {!teacher?.posts && hasAdminAccess && (
         <p>No posts created yet - write one!</p>
       )}

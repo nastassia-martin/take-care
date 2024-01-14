@@ -14,6 +14,7 @@ import {
 import {
   arrayRemove,
   arrayUnion,
+  deleteDoc,
   doc,
   getDoc,
   serverTimestamp,
@@ -85,7 +86,7 @@ type AuthContextType = {
   ) => Promise<void>;
   updateAPost: (data: NewPost, teacherId: string) => Promise<void>;
   deleteAPhoto: (prevPhoto?: string) => Promise<void>;
-  deleteAPost: (postId: string, teacherId: string) => Promise<void>;
+  deleteAPost: (documentId: string) => Promise<void>;
 };
 
 // This creates the context and sets the context's initial/default value
@@ -169,29 +170,13 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
     }
   };
 
-  const deleteAPost = async (postId: string, teacherId: string) => {
+  const deleteAPost = async (documentId: string) => {
     if (!currentUser) {
       throw new Error("Current User is null!");
     }
 
-    const docRef = doc(teachersCol, teacherId);
-
-    const docSnap = await getDoc(docRef);
-    if (!docSnap.exists()) {
-      throw new Error("TeacherProfile not found!");
-    }
-
-    const teacherProfile = docSnap.data() as TeacherProfile;
-
-    // Update the specific post in the array
-    const updatedPosts = teacherProfile.posts.filter(
-      (post) => post._id !== postId
-    );
-
-    // Update the document in Firestore
-    await updateDoc(docRef, {
-      posts: updatedPosts,
-    });
+    const docRef = doc(postsCol, documentId);
+    await deleteDoc(docRef);
   };
 
   const resetPassword = (email: string) => {

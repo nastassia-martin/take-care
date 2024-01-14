@@ -10,9 +10,6 @@ import RenderPost from "./RenderPost";
 import styles from "./styles.module.scss";
 import Button from "../Button/Button";
 import useGetPost from "../../hooks/useGetPost";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { storage } from "../../services/firebase";
-import { v4 as uuidv4 } from "uuid";
 import { uploadPhotoAndGetURL } from "../../helpers";
 
 const EditPost = () => {
@@ -74,7 +71,6 @@ const EditPost = () => {
         ...restFormData,
         photo: isPhotoUpdated ? newPhotoUrl : post?.photo,
       };
-      const authorName = `${teacher.contact.firstName} ${teacher.contact.lastName} `;
 
       if (isPhotoUpdated && post?.photo) {
         await deleteAPhoto(post.photo);
@@ -100,7 +96,10 @@ const EditPost = () => {
     try {
       setLoading(true);
       // send the postId you want to delete, and the teacher who has authored the post
-      await deleteAPost(postId, teacher._id);
+      await deleteAPost(postId);
+      if (post?.photo) {
+        await deleteAPhoto(post.photo);
+      }
 
       //navigate to posts & replace the url history as this id path no longer exists.
       navigate("/posts", {
