@@ -11,12 +11,16 @@ import {
   CreateOrEditPostType,
 } from "../../schemas/Post";
 
+interface InitialValues {
+  title: string;
+  content: string;
+}
 interface ICreatePostFormProps {
   onCreatePost: SubmitHandler<CreateOrEditPostType>;
   loading: boolean;
-  initialValues?: Post;
+  initialValues?: InitialValues;
   onClick?: () => void;
-  uploadProgress: number | null;
+  uploadProgress?: number | null;
 }
 
 const CreatePostForm: React.FC<ICreatePostFormProps> = ({

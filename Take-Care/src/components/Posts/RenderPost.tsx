@@ -4,9 +4,8 @@ import { Post } from "../../types/Posts.types";
 
 interface IPostProps {
   post: Post;
-  teacherName: string;
 }
-const RenderPost: React.FC<IPostProps> = ({ post, teacherName }) => {
+const RenderPost: React.FC<IPostProps> = ({ post }) => {
   return (
     <section className={styles.Section}>
       <h3 className={styles.MainHeader}>Recent posts</h3>
@@ -16,7 +15,7 @@ const RenderPost: React.FC<IPostProps> = ({ post, teacherName }) => {
           <h2 className={styles.Title}>{post.title}</h2>
           <div className={styles.DetailsWrapper}>
             <span>
-              Posted by: <span className={styles.Name}>{teacherName}</span>
+              Posted by: <span className={styles.Name}>{post.authorName}</span>
             </span>
 
             <span>

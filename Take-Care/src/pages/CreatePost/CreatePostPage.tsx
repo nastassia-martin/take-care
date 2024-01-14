@@ -12,21 +12,23 @@ import RenderPosts from "../../components/Posts/Posts";
 import useGetPostsForParentOrTeacher from "../../hooks/useGetPostsForParentsOrTeacher";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../../services/firebase";
+import { v4 as uuidv4 } from "uuid";
 
 const CreatePostPage = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [hasAdminAccess, setHasAdminAccess] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
-  const [photoUrl, setPhotoUrl] = useState<string>("");
 
   const [isParent, setIsParent] = useState(false);
   const { currentUser, createAPost } = useAuth();
   const { data: teacher, loading: teacherLoading } = useGetTeacher(
     currentUser?.uid
   );
-  const { data } = useGetPostsForParentOrTeacher(currentUser?.uid);
-  const isLoading = teacherLoading || loading;
+  const { data, loading: posts } = useGetPostsForParentOrTeacher(
+    currentUser?.uid
+  );
+  const isLoading = teacherLoading || loading || posts;
 
   useEffect(() => {
     // When teacher data is fetched, check if the role is 'admin'
@@ -57,16 +59,18 @@ const CreatePostPage = () => {
       if (!teacher) {
         throw new Error("You do not have permission to create a post.");
       }
-
+      let newPhotoUrl = ""; // workaround to capture photo everytime.
       if (data.photo && data.photo.length) {
+        const uuid = uuidv4();
+
         const todaysPic = data.photo[0];
         // ref for file upload, eg / teachers/miniMouse
         const fileRef = ref(
           storage,
-          `teachers/${teacher._id}/posts/${todaysPic.name}`
+          `posts/${teacher._id}/photos/${uuid}/${todaysPic.name}`
         );
 
-        await new Promise((resolve, reject) => {
+        newPhotoUrl = await new Promise((resolve, reject) => {
           const uploadTask = uploadBytesResumable(fileRef, todaysPic);
           uploadTask.on(
             "state_changed",
@@ -83,7 +87,7 @@ const CreatePostPage = () => {
             },
             async () => {
               const url = await getDownloadURL(fileRef);
-              setPhotoUrl(url);
+              //setPhotoUrl(url);
               resolve(url);
               setUploadProgress(null);
             }
@@ -95,7 +99,7 @@ const CreatePostPage = () => {
 
       const postData = {
         ...restFormData,
-        photo: photoUrl,
+        photo: newPhotoUrl,
       };
       const authorName = `${teacher.contact.firstName} ${teacher.contact.lastName} `;
 

@@ -28,6 +28,7 @@ import {
   teachersCol,
   parentsCol,
   postsCol,
+  storage,
 } from "../services/firebase";
 import { Role } from "../types/GenericTypes.types";
 import {
@@ -38,8 +39,8 @@ import {
   KeyTeacher,
   TeacherProfile,
 } from "../types/Profile.types";
-import { NewPost, Post } from "../types/Posts.types";
-import { v4 as uuidv4 } from "uuid";
+import { NewPost } from "../types/Posts.types";
+import { deleteObject, ref } from "firebase/storage";
 
 type AuthContextType = {
   currentUser: User | null;
@@ -82,7 +83,8 @@ type AuthContextType = {
     parentIds: string[],
     authorName: string
   ) => Promise<void>;
-  updateAPost: (data: Post, teacherId: string) => Promise<void>;
+  updateAPost: (data: NewPost, teacherId: string) => Promise<void>;
+  deleteAPhoto: (prevPhoto?: string) => Promise<void>;
   deleteAPost: (postId: string, teacherId: string) => Promise<void>;
 };
 
@@ -144,32 +146,27 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
     }
   };
 
-  const updateAPost = async (data: Post, teacherId: string) => {
+  const updateAPost = async (data: NewPost, docId: string) => {
     if (!currentUser) {
       throw new Error("Current User is null!");
     }
-    const docRef = doc(teachersCol, teacherId);
-    const timestamp = new Date();
-
-    const docSnap = await getDoc(docRef);
-    if (!docSnap.exists()) {
-      throw new Error("TeacherProfile not found!");
-    }
-
-    const teacherProfile = docSnap.data() as TeacherProfile;
-
-    // Update the specific post in the array
-    const updatedPosts = teacherProfile.posts.map((post) => {
-      if (post._id === data._id) {
-        return { ...post, ...data, updatedAt: timestamp };
-      }
-      return post;
-    });
-
-    // Update the document in Firestore
+    const docRef = doc(postsCol, docId);
     await updateDoc(docRef, {
-      posts: updatedPosts,
+      ...data,
+      updatedAt: serverTimestamp(),
     });
+  };
+
+  const deleteAPhoto = async (prevPhoto?: string) => {
+    if (!currentUser) {
+      throw new Error("Current User is null!");
+    }
+    const prevPhotoRef = ref(storage, prevPhoto);
+    try {
+      await deleteObject(prevPhotoRef);
+    } catch (error) {
+      throw error;
+    }
   };
 
   const deleteAPost = async (postId: string, teacherId: string) => {
@@ -428,6 +425,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
         userEmail,
         updateAPost,
         deleteAPost,
+        deleteAPhoto,
       }}
     >
       {loading ? <div>loading...</div> : <>{children}</>}

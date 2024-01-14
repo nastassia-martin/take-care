@@ -1,7 +1,9 @@
 import { doc, setDoc } from "firebase/firestore";
-import { parentsCol } from "./services/firebase";
+import { parentsCol, storage } from "./services/firebase";
 import { Role } from "./types/GenericTypes.types";
 import { Timestamp } from "firebase/firestore";
+import { v4 as uuidv4 } from "uuid";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 export const updateParentRole = async (
   parentId: string,
@@ -15,6 +17,23 @@ export const updateParentRole = async (
     { merge: true }
   );
 };
+
+export const uploadPhotoAndGetURL = async (
+  photoFile: File,
+  teacherId: string
+) => {
+  const uuid = uuidv4();
+  const fileRef = ref(
+    storage,
+    `posts/${teacherId}/photos/${uuid}/${photoFile.name}`
+  );
+
+  await uploadBytesResumable(fileRef, photoFile); // Await the upload
+
+  const url = await getDownloadURL(fileRef); // Get the download URL after upload is complete
+  return url;
+};
+
 /**
  * Convert a Date to `YYYY-MM-DD HH:mm:ss` string
  * @param date
