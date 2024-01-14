@@ -16,7 +16,6 @@ import {
   arrayUnion,
   deleteDoc,
   doc,
-  getDoc,
   serverTimestamp,
   setDoc,
   updateDoc,
@@ -38,7 +37,6 @@ import {
   NewChildProfile,
   NewParentProfile,
   KeyTeacher,
-  TeacherProfile,
 } from "../types/Profile.types";
 import { NewPost } from "../types/Posts.types";
 import { deleteObject, ref } from "firebase/storage";
