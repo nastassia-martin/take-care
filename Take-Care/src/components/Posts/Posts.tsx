@@ -3,11 +3,13 @@ import { firebaseTimestampToString } from "../../helpers";
 import { Posts } from "../../types/Posts.types";
 import styles from "./styles.module.scss";
 import ProfileImage from "../Profile/ProfileImage";
+import Like from "../Like/Like";
 
 interface IPostProps {
   data: Posts | null;
+  userId: string;
 }
-const RenderPosts: React.FC<IPostProps> = ({ data }) => {
+const RenderPosts: React.FC<IPostProps> = ({ data, userId }) => {
   return (
     <section className={styles.Section}>
       <h3 className={styles.MainHeader}>Recent posts</h3>
@@ -41,6 +43,7 @@ const RenderPosts: React.FC<IPostProps> = ({ data }) => {
                   )}
                   <p>{post.content}</p>
                 </div>
+                <Like postId={post._id} userId={userId} />
               </Link>
             </div>
           ))}
