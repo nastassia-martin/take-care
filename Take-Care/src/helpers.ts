@@ -79,7 +79,9 @@ export const getChildIdForSecondCareGiver = async (
     )
   );
   if (querySnapshot.empty) {
-    throw new Error("no child found!");
+    throw new Error(
+      "We could not find a child that matches your inut. Please double check spelling as it must be exact!"
+    );
   } else if (querySnapshot.docs.length > 1) {
     throw new Error("We found too many matches");
   } else {

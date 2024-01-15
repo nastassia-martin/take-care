@@ -3,7 +3,6 @@ import Form from "react-bootstrap/Form";
 import Button from "../Button/Button";
 import { useEffect, useRef } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Post } from "../../types/Posts.types";
 import { ProgressBar } from "react-bootstrap";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {

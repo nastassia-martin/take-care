@@ -56,6 +56,12 @@ type AuthContextType = {
     newParentProfile: BasicParentProfile,
     newChildProfile: BasicChildProfile
   ) => Promise<UserCredential>;
+  signUpSecondCareProvider: (
+    email: string,
+    password: string,
+    newParentProfile: BasicParentProfile,
+    childID: string
+  ) => Promise<UserCredential>;
   userEmail: string | null;
   userPhotoUrl: string | null;
   updateKeyTeacher: (
@@ -246,6 +252,61 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
     }
   };
 
+  const signUpSecondCareProvider = async (
+    email: string,
+    password: string,
+    newParentProfile: BasicParentProfile,
+    childID: string
+  ) => {
+    // try to sign up user using email & password
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      // if user is verified assign ids
+      if (userCredential.user) {
+        // exttract id from auth and give parent doc the same id
+        const parentUID = userCredential.user.uid;
+        // new parent doc
+        const parentdocRef = doc(newParentCol, parentUID);
+        const childDocRef = doc(childrenCol, childID);
+        // if there is a child update the child doc with parent id
+        if (childID) {
+          const defaultParentProfile: NewParentProfile = {
+            _id: "",
+            contact: { firstName: "", lastName: "", email: "", photoURL: "" },
+            role: Role.NotApproved,
+            children: [""],
+            childrenContact: {
+              firstName: "",
+              lastName: "",
+              date_of_birth: new Date(),
+            },
+            isAuthorizedForPickUp: false,
+          };
+          // update child doc
+          // assign the auth id to the parent id to connect the user colleciton
+          const newParent: NewParentProfile = {
+            ...defaultParentProfile,
+            ...newParentProfile,
+            _id: parentUID,
+            children: [childID],
+          };
+
+          // assign the parent id inside the children doc to connect the collections
+          await updateDoc(childDocRef, { parents: arrayUnion(parentUID) });
+          await setDoc(parentdocRef, newParent);
+        }
+      }
+      return userCredential;
+    } catch (error) {
+      throw new Error("Server error");
+    }
+  };
+
   const setEmail = (email: string) => {
     if (!currentUser) {
       throw new Error("Current User is null!");
@@ -399,6 +460,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
         userPhotoUrl,
         setPassword,
         signUp,
+        signUpSecondCareProvider,
         updateKeyTeacher,
         updateChildPhotoUrl,
         updateParentPhotoUrl,
