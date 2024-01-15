@@ -124,7 +124,7 @@ const EditPost = () => {
     navigate(-1);
   };
   return (
-    <>
+    <main className={styles.PageWrapper}>
       {isLoading && <p>loading</p>}
       {errorMessage && <p className={styles.ErrorMessage}>{errorMessage}</p>}
       {post && hasAdminAccess && (
@@ -145,7 +145,7 @@ const EditPost = () => {
       {!hasAdminAccess && isParent && post && (
         <RenderPost key={post?._id} post={post} />
       )}
-    </>
+    </main>
   );
 };
 

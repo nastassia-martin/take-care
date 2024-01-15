@@ -14,6 +14,7 @@
   margin-bottom: 1.5em;
   transition: transform 0.3s ease;
   // min-width: 80%;
+  background-color: var(--primary-pink);
 
   &:hover {
     transform: scale(1.05);
@@ -36,6 +37,16 @@
   .Name {
     font-weight: bold;
   }
+  .PhotoWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1em auto;
+
+    .PostImage {
+      max-width: 50%;
+    }
+  }
 }
 
 .Link {
@@ -53,4 +64,59 @@
 
 .Container {
   padding: 2em;
+}
+
+.PageWrapper {
+  display: flex;
+  flex-direction: column;
+  padding: 1em;
+  font-family: var(--primary-font);
+  //background-color: var(--primary-pink);
+
+  .CardWrapper {
+    padding: 1em;
+  }
+
+  .Header {
+    margin-bottom: 2em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+}
+
+.SinglePostWrapper {
+  display: flex;
+  flex-direction: column;
+  border: 0.1em dashed var(--primary-blue);
+  padding: 1em;
+  margin-bottom: 1.5em;
+  background-color: var(--primary-pink);
+
+  .Title {
+    text-transform: capitalize;
+    font-size: 1.125em;
+    font-weight: bold;
+    line-height: 2;
+  }
+
+  .DetailsWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 0.625em;
+    margin-bottom: 0.5em;
+  }
+
+  .Name {
+    font-weight: bold;
+  }
+  .PhotoWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1em auto;
+
+    .PostImage {
+      max-width: 50%;
+    }
+  }
 }

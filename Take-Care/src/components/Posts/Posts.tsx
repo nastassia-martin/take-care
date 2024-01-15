@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { firebaseTimestampToString } from "../../helpers";
 import { Posts } from "../../types/Posts.types";
 import styles from "./styles.module.scss";
+import ProfileImage from "../Profile/ProfileImage";
 
 interface IPostProps {
   data: Posts | null;
@@ -30,6 +31,14 @@ const RenderPosts: React.FC<IPostProps> = ({ data }) => {
                         : "loading"}
                     </span>
                   </div>
+                  {post.photo && (
+                    <div className={styles.PhotoWrapper}>
+                      <ProfileImage
+                        src={post.photo}
+                        className={styles.PostImage}
+                      />
+                    </div>
+                  )}
                   <p>{post.content}</p>
                 </div>
               </Link>
