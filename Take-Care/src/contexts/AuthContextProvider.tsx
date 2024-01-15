@@ -16,6 +16,7 @@ import {
   arrayUnion,
   deleteDoc,
   doc,
+  getDoc,
   serverTimestamp,
   setDoc,
   updateDoc,
@@ -91,6 +92,7 @@ type AuthContextType = {
   updateAPost: (data: NewPost, teacherId: string) => Promise<void>;
   deleteAPhoto: (prevPhoto?: string) => Promise<void>;
   deleteAPost: (documentId: string) => Promise<void>;
+  toggleLike: (postId: string, userId: string) => Promise<void>;
 };
 
 // This creates the context and sets the context's initial/default value
@@ -379,6 +381,29 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
     });
   };
 
+  const toggleLike = async (userId: string, postId: string) => {
+    if (!auth.currentUser) {
+      throw new Error("There is no current user");
+    }
+    const postDocRef = doc(postsCol, postId);
+    const postDoc = await getDoc(postDocRef);
+
+    if (!postDoc.exists()) {
+      throw new Error("this post doesn't exist!");
+    }
+    // grab the user ids  in the likes arr
+
+    const userLikes = postDoc.data().likes || [];
+
+    // user likes the post so userID remove from arr
+    if (userLikes.includes(userId)) {
+      await updateDoc(postDocRef, { likes: arrayRemove(userId) });
+    } else {
+      //user id not in arr, so add it
+      await updateDoc(postDocRef, { likes: arrayUnion(userId) });
+    }
+  };
+
   const setPhotoUrl = (photoURL: string) => {
     if (!currentUser) {
       throw new Error("There is no current user");
@@ -471,6 +496,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
         updateAPost,
         deleteAPost,
         deleteAPhoto,
+        toggleLike,
       }}
     >
       {loading ? <div>loading...</div> : <>{children}</>}

@@ -19,6 +19,7 @@ export interface Post extends NewPost {
   authorId: string; // will be teacher id
   parents: string[];
   authorName: string;
+  likes?: string[];
 }
 
 export type Posts = Post[];
