@@ -43,7 +43,12 @@ const RenderPosts: React.FC<IPostProps> = ({ data, userId }) => {
                   )}
                   <p>{post.content}</p>
                 </div>
-                <Like postId={post._id} userId={userId} />
+                <div>
+                  <Like postId={post._id} userId={userId} likes={post.likes} />
+                  {post.likes && post.likes.length > 0 && (
+                    <p>likes: {post.likes.length}</p>
+                  )}
+                </div>
               </Link>
             </div>
           ))}
