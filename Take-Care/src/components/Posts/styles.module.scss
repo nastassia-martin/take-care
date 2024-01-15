@@ -6,6 +6,12 @@
     text-align: center;
     text-transform: uppercase;
   }
+
+  .LikesWrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 }
 
 .PostWrapper {
@@ -13,7 +19,6 @@
   padding: 1em;
   margin-bottom: 1.5em;
   transition: transform 0.3s ease;
-  // min-width: 80%;
   background-color: var(--primary-pink);
 
   &:hover {

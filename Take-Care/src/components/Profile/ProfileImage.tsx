@@ -5,12 +5,21 @@ import classNames from "classnames";
 type ImageAttribute = ImgHTMLAttributes<HTMLImageElement>;
 
 interface ImageProps {
+  alt: ImageAttribute["alt"];
   src: string;
   className?: ImageAttribute["className"];
 }
-const ProfileImage = ({ src, className }: ImageProps): React.ReactElement => {
+const ProfileImage = ({
+  src,
+  className,
+  alt,
+}: ImageProps): React.ReactElement => {
   return (
-    <img className={classNames(styles.ProfileImage, className)} src={src} />
+    <img
+      className={classNames(styles.ProfileImage, className)}
+      src={src}
+      alt={alt}
+    />
   );
 };
 

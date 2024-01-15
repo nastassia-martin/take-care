@@ -3,7 +3,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as clearHeart } from "@fortawesome/free-regular-svg-icons";
 import { useEffect, useState } from "react";
+import styles from "./style.module.scss";
 
+/**
+ * on hover show a mouse or hand or whatever
+ */
 type PostLike = {
   postId: string;
   userId: string;
@@ -15,7 +19,7 @@ const Like: React.FC<PostLike> = ({ postId, userId, likes }) => {
   const [isLiked, setIsLiked] = useState(false);
 
   useEffect(() => {
-    // if there are no likes then isLikes remains false
+    // if there are no likes then isLiked remains false
     if (!likes) {
       return;
     }
@@ -27,10 +31,14 @@ const Like: React.FC<PostLike> = ({ postId, userId, likes }) => {
     setIsLiked(!isLiked);
   };
   return (
-    <FontAwesomeIcon
-      icon={isLiked ? faHeart : clearHeart}
-      onClick={handleLike}
-    />
+    <div className={styles.IconWrapper}>
+      <FontAwesomeIcon
+        icon={isLiked ? faHeart : clearHeart}
+        size="lg"
+        onClick={handleLike}
+        className={styles.Icon}
+      />
+    </div>
   );
 };
 

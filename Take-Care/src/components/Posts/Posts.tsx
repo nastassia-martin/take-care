@@ -17,8 +17,8 @@ const RenderPosts: React.FC<IPostProps> = ({ data, userId }) => {
         {data &&
           data.map((post) => (
             <div key={post._id}>
-              <Link to={post._id} className={styles.Link}>
-                <div className={styles.PostWrapper}>
+              <div className={styles.PostWrapper}>
+                <Link to={post._id} className={styles.Link}>
                   <h2 className={styles.Title}>{post.title}</h2>
                   <div className={styles.DetailsWrapper}>
                     <span>
@@ -36,20 +36,22 @@ const RenderPosts: React.FC<IPostProps> = ({ data, userId }) => {
                   {post.photo && (
                     <div className={styles.PhotoWrapper}>
                       <ProfileImage
+                        alt={`image of ${post.title}`}
                         src={post.photo}
                         className={styles.PostImage}
                       />
                     </div>
                   )}
                   <p>{post.content}</p>
-                </div>
-                <div>
+                </Link>
+
+                <div className={styles.LikesWrapper}>
                   <Like postId={post._id} userId={userId} likes={post.likes} />
                   {post.likes && post.likes.length > 0 && (
                     <p>likes: {post.likes.length}</p>
                   )}
                 </div>
-              </Link>
+              </div>
             </div>
           ))}
       </div>
