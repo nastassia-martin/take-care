@@ -17,8 +17,9 @@ const ChildProfilePage = () => {
     return <div>We could not find a profile.</div>;
   }
 
-  const { data: child } = useGetChild(childId);
-  const { data: parents } = useGetParents(childId); // get all parents who have the the child in their document
+  const { data: child, loading: childLoading } = useGetChild(childId);
+  const { data: parents, loading: parentsLoading } = useGetParents(childId); // get all parents who have the the child in their document
+  const isLoading = childLoading || parentsLoading;
 
   if (!currentUser || !parents) {
     return;
@@ -32,6 +33,10 @@ const ChildProfilePage = () => {
   const isKeyTeacher = child?.keyTeacher?._id === currentUser.uid;
 
   const isAuthorised = isParent || (child?.keyTeacher && isKeyTeacher);
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
 
   if (!isAuthorised) {
     // assert that email exists because user cannot log in without an email

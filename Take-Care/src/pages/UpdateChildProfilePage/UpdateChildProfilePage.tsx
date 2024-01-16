@@ -29,13 +29,19 @@ const UpdateChildProfilePage = () => {
   if (!currentUser) {
     return <AccessDenied email="no email" />;
   }
-  const { data: parent } = useGetParent(currentUser.uid);
+  const { data: parent, loading: parentLoading } = useGetParent(
+    currentUser.uid
+  );
 
   const isParentViewingChildProfile = currentUser.uid === parent?._id;
-
+  const isLoading = parentLoading;
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
   if (!isParentViewingChildProfile) {
     return <AccessDenied customMessage="You cannot edit this profile" />;
   }
+
   const handleUpdateChildProfile = async (data: UpdateProfile) => {
     setErrorMessage(null);
 

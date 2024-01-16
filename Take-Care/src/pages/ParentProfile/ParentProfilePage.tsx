@@ -16,14 +16,22 @@ const ParentProfilePage = () => {
   if (!currentUser) {
     return <div>Internal server error.</div>;
   }
-  const { data: parent } = useGetParent(parentId);
+  const { data: parent, loading: parentLoading } = useGetParent(parentId);
   // call on the children collection as parent can have more than one child
-  const { data: children } = useGetChildren(parentId);
-  const { data: teacher } = useGetTeacher(currentUser.uid);
+  const { data: children, loading: childrenLoading } = useGetChildren(parentId);
+  const { data: teacher, loading: teacherLoading } = useGetTeacher(
+    currentUser.uid
+  );
+
+  const isLoading = teacherLoading || childrenLoading || parentLoading;
 
   const isParentViewingOwnProfile = currentUser.uid === parentId;
   // const isCoParentViewingProfile = currentUser.uid === parent.coParentId // coParent in parent profile can view
   const isTeacher = teacher && teacher.role === "Admin";
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
 
   //parent not approved
   if (parent && parent.role === "Not approved" && isTeacher) {
