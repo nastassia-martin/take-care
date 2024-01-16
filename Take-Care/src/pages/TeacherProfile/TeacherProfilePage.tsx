@@ -48,6 +48,7 @@ const TeacherProfilePage = () => {
             image={teacher.contact.photoURL}
             firstName={teacher.contact.firstName}
             lastName={teacher.contact.lastName}
+            alt={`image of ${teacher.contact.firstName}`}
           />
           <div className={styles.AddressWrapper}>
             <Link
@@ -97,6 +98,7 @@ const TeacherProfilePage = () => {
                       image={child.contact.photoURL}
                       firstName={child.contact.firstName}
                       lastName={child.contact.lastName}
+                      alt={`image of ${child.contact.firstName}`}
                       children={goToProfile} // Ensure this prop is correctly named and used
                     />
                   </Link>

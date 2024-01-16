@@ -30,7 +30,11 @@ const RenderPost: React.FC<IPostProps> = ({ post }) => {
             </div>
             {post.photo && (
               <div className={styles.PhotoWrapper}>
-                <ProfileImage src={post.photo} className={styles.PostImage} />
+                <ProfileImage
+                  src={post.photo}
+                  className={styles.PostImage}
+                  alt={`image of ${post.title}`}
+                />
               </div>
             )}
 

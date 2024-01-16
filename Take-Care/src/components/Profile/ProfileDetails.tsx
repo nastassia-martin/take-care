@@ -10,6 +10,7 @@ interface DetailsProps {
   image?: string;
   children?: React.ReactNode;
   className?: string;
+  alt: string;
 }
 const ProfileDetails = ({
   firstName,
@@ -17,11 +18,12 @@ const ProfileDetails = ({
   image,
   children,
   className,
+  alt,
 }: DetailsProps): React.ReactElement => {
   return (
     <div className={classNames(styles.ProfileWrapper, className)}>
       <>
-        {image && <ProfileImage src={image} />}
+        {image && <ProfileImage src={image} alt={alt} />}
         <div className={styles.NameWrapper}>
           <span>{firstName}</span>&nbsp;
           <span>{lastName}</span>

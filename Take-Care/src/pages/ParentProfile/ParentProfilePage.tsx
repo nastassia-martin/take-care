@@ -56,6 +56,7 @@ const ParentProfilePage = () => {
             image={parent.contact.photoURL}
             firstName={parent.contact.firstName}
             lastName={parent.contact.lastName}
+            alt={`image of ${parent.contact.firstName}`}
           />
           <div className={styles.AddressWrapper}>
             {/* only the person that owns the profile should be able to edit */}
@@ -101,6 +102,7 @@ const ParentProfilePage = () => {
                   firstName={child.contact.firstName}
                   lastName={child.contact.lastName}
                   children={goToProfile}
+                  alt={`image of ${child.contact.firstName}`}
                 />
               </Link>
             ))}

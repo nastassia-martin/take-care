@@ -53,6 +53,7 @@ const ChildProfilePage = () => {
             image={child.contact.photoURL}
             firstName={child.contact.firstName}
             lastName={child.contact.lastName}
+            alt={`image of ${child.contact.firstName}`}
           >
             {isParent && (
               <Link to={`/children/${child._id}/update`}>
@@ -79,6 +80,7 @@ const ChildProfilePage = () => {
               firstName={parent.contact.firstName}
               lastName={parent.contact.lastName}
               children={goToProfile}
+              alt={`image of ${parent.contact.firstName}`}
             />
           </Link>
         ))}
