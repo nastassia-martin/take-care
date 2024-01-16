@@ -6,17 +6,23 @@ import AccessDenied from "../../components/AccessDenied/AccessDenied";
 import useGetTeacher from "../../hooks/useGetTeacher";
 import useGetChildrenForAdmin from "../../hooks/useGetChildrenForAdmin";
 
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import useGetParent from "../../hooks/useGetParent";
 
 const TeacherProfilePage = () => {
   const { currentUser } = useAuth();
+  const { id } = useParams();
+  const teacherId = id as string;
 
   if (!currentUser) {
     return <div>We could not find a profile.</div>;
   }
-  console.log(currentUser.email);
-  const { data: teacher } = useGetTeacher(currentUser.uid);
-  const { data: children } = useGetChildrenForAdmin();
+  const { data: teacher, loading: teacherLoading } = useGetTeacher(teacherId);
+  const { data: children, loading: childrenLoading } = useGetChildrenForAdmin();
+  const { data: parent, loading: parentLoading } = useGetParent(
+    currentUser.uid
+  );
+  const isLoading = teacherLoading || childrenLoading || parentLoading;
 
   const goToProfile = (
     <Button ariaLabel="go to profile" type="button">
@@ -36,12 +42,24 @@ const TeacherProfilePage = () => {
     </main>
   );
 
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+
+  const isParentViewingTeacherProfile =
+    teacher && parent && teacher.parents.includes(parent._id);
+
   // If teacher does not exist, limit access
-  return teacher && !teacher.role ? (
-    <AccessDenied email={teacher.contact.email} />
-  ) : (
+  const isTeacher = teacher && teacher.role === "Admin";
+
+  // viewer is neither parent nor teacher
+  if (!isParentViewingTeacherProfile && !isTeacher) {
+    return <AccessDenied />;
+  }
+
+  return (
     <div className={styles.PageWrapper}>
-      {teacher && teacher.role === "Admin" && (
+      {isParentViewingTeacherProfile ?? isTeacher ? (
         <section className={styles.ProfileDetails}>
           <ProfileDetails
             className={styles.CardWrapper}
@@ -49,16 +67,19 @@ const TeacherProfilePage = () => {
             firstName={teacher.contact.firstName}
             lastName={teacher.contact.lastName}
             alt={`image of ${teacher.contact.firstName}`}
-          />
+          >
+            {teacher.role === "Admin" && (
+              <Link
+                className={styles.Link}
+                to={`/teachers/${teacher._id}/update`}
+              >
+                <Button ariaLabel="Edit profile" type="button">
+                  Edit profile
+                </Button>
+              </Link>
+            )}
+          </ProfileDetails>
           <div className={styles.AddressWrapper}>
-            <Link
-              className={styles.Link}
-              to={`/teachers/${teacher._id}/update`}
-            >
-              <Button ariaLabel="Edit profile" type="button">
-                Edit profile
-              </Button>
-            </Link>
             <p className={styles.AddressDetails}>
               <span className={styles.AddressField}>Telephone: </span>
               <span className={styles.AddressValue}>012345678</span>
@@ -75,13 +96,18 @@ const TeacherProfilePage = () => {
             </p>
           </div>
         </section>
+      ) : (
+        <AccessDenied />
       )}
+
       {/* Conditional rendering for child profile if there are children assigned to the teacher */}
-      {teacher && teacher.role === "Admin" ? (
-        children && children.length > 0 ? (
+      {teacher &&
+        teacher.role === "Admin" &&
+        teacher._id === currentUser.uid &&
+        (children && children.length > 0 ? (
           <section className={styles.ChildProfileWrapper}>
             <h3>Child's profile - Quick View</h3>
-            <div className={styles.ChilProfileContainer}>
+            <div className={styles.ChildProfileContainer}>
               {children
                 .filter(
                   (child) =>
@@ -107,8 +133,7 @@ const TeacherProfilePage = () => {
           </section>
         ) : (
           noChildrenFound
-        )
-      ) : null}
+        ))}
     </div>
   );
 };

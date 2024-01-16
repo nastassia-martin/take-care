@@ -57,9 +57,7 @@ const ParentProfilePage = () => {
             firstName={parent.contact.firstName}
             lastName={parent.contact.lastName}
             alt={`image of ${parent.contact.firstName}`}
-          />
-          <div className={styles.AddressWrapper}>
-            {/* only the person that owns the profile should be able to edit */}
+          >
             {isParentViewingOwnProfile && (
               <Link to={`/parents/${parent._id}/update`}>
                 <Button ariaLabel="Edit profile" type="button">
@@ -67,7 +65,8 @@ const ParentProfilePage = () => {
                 </Button>
               </Link>
             )}
-
+          </ProfileDetails>
+          <div className={styles.AddressWrapper}>
             <p className={styles.AddressDetails}>
               <span className={styles.AddressField}>Telephone: </span>
               <span className={styles.AddressValue}>012345678</span>
