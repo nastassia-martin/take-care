@@ -28,6 +28,7 @@ const Navigation = () => {
   const openLogoutModal = () => {
     setShowLogoutModal(true);
   };
+
   const handleClick = () => {
     if (currentUser) {
       // Check if the current user is a parent and navigate to their profile
@@ -49,20 +50,16 @@ const Navigation = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className={styles.NavItems}>
-            {/* user is signed in? show the profile, menu, etc */}
-            <Nav.Link className={styles.NavItem} onClick={handleClick}>
-              Profile
-            </Nav.Link>
-            <Nav.Link as={NavLink} to="/" className={styles.NavItem}>
-              Menu
-            </Nav.Link>
-            <Nav.Link as={NavLink} to="/posts" className={styles.NavItem}>
-              Activity Feed
-            </Nav.Link>
-            <Nav.Link as={NavLink} to="/" className={styles.NavItem}>
-              FAQ
-            </Nav.Link>
-            {/* user is NOT signed in? only show logo */}
+            {currentUser && (
+              <>
+                <Nav.Link className={styles.NavItem} onClick={handleClick}>
+                  Profile
+                </Nav.Link>
+                <Nav.Link as={NavLink} to="/posts" className={styles.NavItem}>
+                  Activity Feed
+                </Nav.Link>
+              </>
+            )}
           </Nav>
           {currentUser && (
             <Button
