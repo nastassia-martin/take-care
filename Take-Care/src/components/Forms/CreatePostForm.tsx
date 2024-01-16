@@ -85,7 +85,7 @@ const CreatePostForm: React.FC<ICreatePostFormProps> = ({
           </p>
         )}
         <Form.Text>
-          {uploadProgress !== null ? (
+          {uploadProgress && uploadProgress !== null ? (
             <ProgressBar
               now={uploadProgress}
               label={`${uploadProgress}%`}

@@ -17,7 +17,6 @@ const EditPost = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [isParent, setIsParent] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -134,7 +133,6 @@ const EditPost = () => {
             loading={teacherLoading}
             initialValues={{ title, content }}
             onClick={handleNavigate}
-            uploadProgress={uploadProgress}
           />
           <Button
             className={styles.DeleteButton}

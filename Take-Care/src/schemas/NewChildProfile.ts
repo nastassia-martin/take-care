@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { Role } from "../types/GenericTypes.types";
 
 // generic validation schema
 const genericName = z.object({
