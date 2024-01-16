@@ -15,6 +15,7 @@ import UpdateChildProfilePage from "./pages/UpdateChildProfilePage/UpdateChildPr
 import CreatePostPage from "./pages/CreatePost/CreatePostPage";
 import EditPost from "./components/Posts/EditPosts";
 import RequireAuth from "./components/RequireAuth";
+import NotFoundPage from "./pages/NotFoundPage";
 
 /**
  * @todo - set up routing for dashboard (teacher)
@@ -26,7 +27,7 @@ const App = () => {
       <Navigation />
       <Routes>
         {/* Guest Routes */}
-        <Route path="*" />
+        <Route path="*" element={<NotFoundPage />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/register" element={<RegisterUserPage />} />
         <Route path="/login" element={<LoginUserPage />} />
