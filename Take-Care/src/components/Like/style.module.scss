@@ -1,6 +1,10 @@
 .IconWrapper {
   display: flex;
 
+  &:hover {
+    cursor: pointer;
+  }
+
   .Icon {
     color: var(--primary-blue);
   }

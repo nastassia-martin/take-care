@@ -5,9 +5,6 @@ import { faHeart as clearHeart } from "@fortawesome/free-regular-svg-icons";
 import { useEffect, useState } from "react";
 import styles from "./style.module.scss";
 
-/**
- * on hover show a mouse or hand or whatever
- */
 type PostLike = {
   postId: string;
   userId: string;
