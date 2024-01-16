@@ -14,12 +14,12 @@
       max-width: 5.25em;
     }
   }
-
-  .NavItems {
-    margin-left: auto;
-    font-family: var(--primary-font);
-    color: var(--primary-black);
-  }
+}
+.NavItems {
+  margin-left: auto;
+  font-family: var(--primary-font);
+  color: var(--primary-black);
+  text-align: end;
 
   .NavButton {
     margin-left: 1em;
@@ -27,6 +27,8 @@
     background-color: transparent;
     font-family: var(--primary-font);
     border: 2px solid black;
+    max-width: max-content;
+    align-self: end;
   }
 }
 

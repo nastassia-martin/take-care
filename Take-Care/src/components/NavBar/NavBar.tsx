@@ -3,6 +3,7 @@ import logo from "../../assets/images/TakeCare-logos_black.png";
 import Image from "react-bootstrap/Image";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
+import Container from "react-bootstrap/Container";
 import { NavLink } from "react-router-dom";
 import LogoutModal from "../Logout/Logout";
 import { useNavigate } from "react-router-dom";
@@ -42,41 +43,40 @@ const Navigation = () => {
     }
   };
   return (
-    <Navbar expand="sm">
-      <div className={styles.NavWrapper}>
-        <Navbar.Brand>
+    <Navbar expand="lg" collapseOnSelect>
+      <Container className={styles.NavWrapper}>
+        <Navbar.Brand as={NavLink} to="/">
           <Image src={logo} alt="logo" className={styles.Logo} />
         </Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className={styles.NavItems}>
-            {currentUser && (
-              <>
+        {currentUser && (
+          <>
+            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+            <Navbar.Collapse id="responsive-navbar-nav">
+              <Nav className={styles.NavItems}>
                 <Nav.Link className={styles.NavItem} onClick={handleClick}>
                   Profile
                 </Nav.Link>
                 <Nav.Link as={NavLink} to="/posts" className={styles.NavItem}>
                   Activity Feed
                 </Nav.Link>
-              </>
-            )}
-          </Nav>
-          {currentUser && (
-            <Button
-              className={styles.NavButton}
-              ariaLabel="open logout modal"
-              onClick={openLogoutModal}
-            >
-              Logout
-            </Button>
-          )}
-        </Navbar.Collapse>
-        <LogoutModal
-          show={showLogoutModal}
-          onCancel={() => setShowLogoutModal(false)}
-          onConfirm={onLogout}
-        />
-      </div>
+                <Button
+                  className={styles.NavButton}
+                  ariaLabel="open logout modal"
+                  onClick={openLogoutModal}
+                >
+                  Logout
+                </Button>
+              </Nav>
+              <Nav className={styles.ButtonWrapper}></Nav>
+            </Navbar.Collapse>
+            <LogoutModal
+              show={showLogoutModal}
+              onCancel={() => setShowLogoutModal(false)}
+              onConfirm={onLogout}
+            />
+          </>
+        )}
+      </Container>
     </Navbar>
   );
 };

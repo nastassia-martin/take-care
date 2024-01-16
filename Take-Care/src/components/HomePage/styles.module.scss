@@ -4,12 +4,14 @@
   flex-direction: column;
   margin-top: 3rem;
   height: 100vh;
-  max-width: 1200px;
+  // max-width: 100%;
   margin: auto;
+  justify-content: center;
+  align-items: center;
 
-  @media screen and (min-width: 750px) {
-    flex-direction: row-reverse;
-  }
+  // @media screen and (min-width: 750px) {
+  //   flex-direction: row-reverse;
+  // }
 
   .Tagline {
     font-family: var(--primary-font);
@@ -17,6 +19,7 @@
     display: flex;
     flex-direction: column;
     row-gap: 4rem;
+    text-align: center;
 
     justify-content: space-between;
 
@@ -40,17 +43,18 @@
     justify-content: space-evenly;
   }
 }
-.Image {
-  max-width: 100%;
-  margin: 0 auto;
-}
+// .Image {
+//   max-width: 500px;
+//   margin: 0 auto;
+//   margin-top: 3em;
+// }
+
 .ImageWrapper {
   //max-height: 300px;
-  max-width: 100%;
-  display: flex;
+  max-width: 500px;
 
   .Image {
-    max-width: 100%;
+    height: auto;
     margin: 0 auto;
   }
 }

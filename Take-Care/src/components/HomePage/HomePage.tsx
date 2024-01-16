@@ -1,6 +1,6 @@
 import styles from "./styles.module.scss";
 import Image from "react-bootstrap/Image";
-import HomePageImage from "../../assets/images/HomePage.png";
+import HomePageImage from "../../assets/images/KidsPlaying.png";
 import Button from "../Button/Button";
 import { Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
@@ -58,7 +58,9 @@ const HomePage = () => {
             </div>
           )}
         </div>
-        <Image src={HomePageImage} fluid className={styles.Image} />
+        <div className={styles.ImageWrapper}>
+          <Image src={HomePageImage} fluid className={styles.Image} />
+        </div>
       </main>
     </>
   );
