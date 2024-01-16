@@ -136,14 +136,18 @@ const EditPost = () => {
             onClick={handleNavigate}
             uploadProgress={uploadProgress}
           />
-          <Button ariaLabel="delete post" onClick={handleDelete}>
+          <Button
+            className={styles.DeleteButton}
+            ariaLabel="delete post"
+            onClick={handleDelete}
+          >
             delete
           </Button>
         </>
       )}
       {/* no need for admin to see post */}
       {!hasAdminAccess && isParent && post && (
-        <RenderPost key={post?._id} post={post} />
+        <RenderPost key={post?._id} post={post} userId={currentUser.uid} />
       )}
     </main>
   );

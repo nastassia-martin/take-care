@@ -69,6 +69,8 @@
 
 .Container {
   padding: 2em;
+  display: grid;
+  justify-content: center;
 }
 
 .PageWrapper {
@@ -124,4 +126,13 @@
       max-width: 50%;
     }
   }
+}
+
+.DeleteButton {
+  margin-top: 1em;
+  width: max-content;
+}
+
+.PostContainer {
+  max-width: 800px;
 }

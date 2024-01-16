@@ -45,8 +45,13 @@ const CreatePostPage = () => {
     }
   }, [teacher, data]);
 
-  if (!currentUser) {
-    return <AccessDenied />;
+  if (isLoading) {
+    <p>loading...</p>;
+  }
+  if (!currentUser || !isParent) {
+    return (
+      <AccessDenied customMessage="You are not approved to view this page." />
+    );
   }
 
   // create post
@@ -140,9 +145,7 @@ const CreatePostPage = () => {
       {(hasAdminAccess || isParent) && data && (
         <RenderPosts data={data} userId={currentUser.uid} />
       )}
-      {!teacher?.posts && hasAdminAccess && (
-        <p>No posts created yet - write one!</p>
-      )}
+      {!data && hasAdminAccess && <p>No posts created yet - write one!</p>}
     </main>
   );
 };

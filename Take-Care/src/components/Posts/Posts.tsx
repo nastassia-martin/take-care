@@ -16,7 +16,7 @@ const RenderPosts: React.FC<IPostProps> = ({ data, userId }) => {
       <div className={styles.Container}>
         {data &&
           data.map((post) => (
-            <div key={post._id}>
+            <div key={post._id} className={styles.PostContainer}>
               <div className={styles.PostWrapper}>
                 <Link to={post._id} className={styles.Link}>
                   <h2 className={styles.Title}>{post.title}</h2>

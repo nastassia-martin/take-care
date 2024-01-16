@@ -2,11 +2,13 @@ import { firebaseTimestampToString } from "../../helpers";
 import styles from "./styles.module.scss";
 import { Post } from "../../types/Posts.types";
 import ProfileImage from "../Profile/ProfileImage";
+import Like from "../Like/Like";
 
 interface IPostProps {
   post: Post;
+  userId: string;
 }
-const RenderPost: React.FC<IPostProps> = ({ post }) => {
+const RenderPost: React.FC<IPostProps> = ({ post, userId }) => {
   return (
     <section className={styles.Section}>
       {post && (
@@ -39,6 +41,12 @@ const RenderPost: React.FC<IPostProps> = ({ post }) => {
             )}
 
             <p>{post.content}</p>
+            <div className={styles.LikesWrapper}>
+              <Like postId={post._id} userId={userId} likes={post.likes} />
+              {post.likes && post.likes.length > 0 && (
+                <p>likes: {post.likes.length}</p>
+              )}
+            </div>
           </div>
         </>
       )}
