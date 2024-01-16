@@ -19,7 +19,6 @@ const Navigation = () => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const isParentProfile = useGetParent(currentUser?.uid);
   const isTeacherProfile = useGetTeacher(currentUser?.uid);
-
   const onLogout = async () => {
     await logout();
     navigate("/");
@@ -59,6 +58,25 @@ const Navigation = () => {
                 <Nav.Link as={NavLink} to="/posts" className={styles.NavItem}>
                   Activity Feed
                 </Nav.Link>
+                {isTeacherProfile.data?._id === currentUser?.uid && (
+                  <>
+                    <Nav.Link
+                      as={NavLink}
+                      to="/children"
+                      className={styles.NavItem}
+                    >
+                      Children
+                    </Nav.Link>
+                    <Nav.Link
+                      as={NavLink}
+                      to="/parents"
+                      className={styles.NavItem}
+                    >
+                      Parents
+                    </Nav.Link>
+                  </>
+                )}
+
                 <Button
                   className={styles.NavButton}
                   ariaLabel="open logout modal"
