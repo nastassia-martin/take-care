@@ -76,7 +76,7 @@ const CreatePostForm: React.FC<ICreatePostFormProps> = ({
         <Form.Label>Today's Photo</Form.Label>
         <Form.Control
           type="file"
-          accept="image/gif,image/jpeg,image/png,image/webp, application/pdf"
+          accept="image/gif,image/jpeg,image/png,image/webp"
           {...register("photo")}
         />
         {errors.photo && (

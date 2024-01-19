@@ -54,7 +54,10 @@ const CreatePostPage = () => {
         : setHasAdminAccess(false);
     }
     //ensure current user should have access to this page
-    if (data && currentUser) {
+    if (data) {
+      if (!currentUser) {
+        return;
+      }
       data.map((parent) => parent.parents.includes(currentUser.uid))
         ? setIsParent(true)
         : setIsParent(false);

@@ -58,10 +58,7 @@ const ChildrenListPage = () => {
           lastName: selectedTeacher.contact.lastName,
         };
 
-        const parentId = selectedChildData.parents
-          .map((parent) => parent)
-          .toString();
-
+        const parentId = selectedChildData.parents.map((parent) => parent);
         await updateKeyTeacher(selectedChildData._id, keyTeacherData, parentId);
         await updateResponsibleForChildren(
           keyTeacherData._id,
@@ -76,9 +73,8 @@ const ChildrenListPage = () => {
         previousTeacher &&
         previousTeacher._id !== (selectedTeacher && selectedTeacher._id)
       ) {
-        const parentId = selectedChildData.parents
-          .map((parent) => parent)
-          .toString();
+        const parentId = selectedChildData.parents.map((parent) => parent);
+        //.toString();
         // Remove child from the previous teacher's responsibilities
         await removeResponsibleForChild(
           previousTeacher,

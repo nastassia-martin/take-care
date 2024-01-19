@@ -20,6 +20,7 @@ import {
   serverTimestamp,
   setDoc,
   updateDoc,
+  writeBatch,
 } from "firebase/firestore";
 import {
   auth,
@@ -30,6 +31,7 @@ import {
   parentsCol,
   postsCol,
   storage,
+  db,
 } from "../services/firebase";
 import { Role } from "../types/GenericTypes.types";
 import {
@@ -69,12 +71,12 @@ type AuthContextType = {
   updateKeyTeacher: (
     childId: string,
     keyTeacher: KeyTeacher,
-    parentId: string
+    parentIds: string[]
   ) => Promise<void>;
   updateResponsibleForChildren: (
     teacherId: string,
     childId: string,
-    parentId: string
+    parentId: string[]
   ) => Promise<void>;
   updateParentPhotoUrl: (parentId: string, photoURL: string) => Promise<void>;
   updateTeacherPhotoUrl: (teacherId: string, photoURL: string) => Promise<void>;
@@ -82,7 +84,7 @@ type AuthContextType = {
   removeResponsibleForChild: (
     keyTeacher: KeyTeacher,
     childId: string,
-    parentId: string
+    parentIds: string[]
   ) => Promise<void>;
   createAPost: (
     data: NewPost,
@@ -327,59 +329,88 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
   const updateKeyTeacher = async (
     childId: string,
     keyTeacher: KeyTeacher,
-    parentId: string
+    parentIds: string[]
   ) => {
-    // only teachers who have admin status are authorised to do this operation
     if (!auth.currentUser) {
       throw new Error("There is no current user");
     }
+    // invoke batch as multiple docs are being updated
+    //call on db
+    const batch = writeBatch(db);
+    // ref to childdoc & the key teacher that has been allocated to child
     const childDocRef = doc(childrenCol, childId);
-    const parentDocRef = doc(parentsCol, parentId);
-
     const keyTeacherWithChildId = { ...keyTeacher, childId };
 
-    await updateDoc(parentDocRef, {
-      keyTeacher: arrayUnion(keyTeacherWithChildId),
+    // batch update the child document with key Teacher obj
+    batch.update(childDocRef, { keyTeacher: keyTeacher });
+
+    // Update each parent document.
+    // safer to use batch
+    parentIds.map((parentId) => {
+      const parentDocRef = doc(parentsCol, parentId);
+      // update each parent in arr
+      batch.update(parentDocRef, {
+        keyTeacher: arrayUnion(keyTeacherWithChildId),
+      });
     });
-    return await updateDoc(childDocRef, { keyTeacher: keyTeacher });
+
+    return await batch.commit();
   };
 
   const updateResponsibleForChildren = async (
     teacherId: string,
     childId: string,
-    parentId: string
+    parentIds: string[]
   ) => {
     if (!auth.currentUser) {
       throw new Error("There is no current user");
     }
     const teacherDocRef = doc(teachersCol, teacherId);
 
-    return await updateDoc(teacherDocRef, {
+    // invoke batch as multiple docs are affected!
+    const batch = writeBatch(db);
+
+    // Update key teacher doc with childId
+    batch.update(teacherDocRef, {
       responsibileForChildren: arrayUnion(childId),
-      parents: arrayUnion(parentId),
     });
+
+    // Update for each parentId in arr
+    parentIds.map((parentId) => {
+      batch.update(teacherDocRef, {
+        parents: arrayUnion(parentId),
+      });
+    });
+    // will create all updates atomically - ie all update or none
+    return await batch.commit();
   };
 
   const removeResponsibleForChild = async (
     keyTeacher: KeyTeacher,
     childId: string,
-    parentId: string
+    parentIds: string[]
   ) => {
     if (!auth.currentUser) {
       throw new Error("There is no current user");
     }
     const teacherDocRef = doc(teachersCol, keyTeacher._id);
-    const parentDocRef = doc(parentsCol, parentId);
 
-    const keyTeacherWithChildId = { ...keyTeacher, childId };
+    // invoke batch as multiple docs are affected
+    const batch = writeBatch(db);
 
-    await updateDoc(parentDocRef, {
-      keyTeacher: arrayRemove(keyTeacherWithChildId),
-    });
-    return await updateDoc(teacherDocRef, {
+    // Update for adding childId
+    batch.update(teacherDocRef, {
       responsibileForChildren: arrayRemove(childId),
-      parents: arrayRemove(parentId),
     });
+
+    // Update for each parentId
+    parentIds.map((parentId) => {
+      batch.update(teacherDocRef, {
+        parents: arrayRemove(parentId),
+      });
+    });
+    // will create all updates atomically - ie all update or none
+    return await batch.commit();
   };
 
   const toggleLike = async (userId: string, postId: string) => {
@@ -393,7 +424,6 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
       throw new Error("this post doesn't exist!");
     }
     // grab the user ids  in the likes arr
-
     const userLikes = postDoc.data().likes || [];
 
     // user likes the post so userID remove from arr
