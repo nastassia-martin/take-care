@@ -52,8 +52,10 @@ const UpdateChildProfilePage = () => {
       if (data.photoFile && data.photoFile.length) {
         const childProfilePic = data.photoFile[0];
         // ref for file upload, eg / children/miniMouse
-        const fileRef = ref(storage, `children/${childProfilePic.name}`);
-        // upload photo to fileRef
+        const fileRef = ref(
+          storage,
+          `children/${childId}/${childProfilePic.name}`
+        ); // upload photo to fileRef
         const uploadTask = uploadBytesResumable(fileRef, childProfilePic);
 
         // attach upload observer so that it can catch err and show progress of upload
