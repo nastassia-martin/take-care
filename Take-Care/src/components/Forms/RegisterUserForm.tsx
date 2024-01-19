@@ -20,8 +20,9 @@ import { NewParentCredential } from "../../types/Profile.types";
 interface IFormProps {
   onSignup: SubmitHandler<NewParentCredential>;
   loading: boolean;
+  tab: string;
 }
-const RegisterUserForm: React.FC<IFormProps> = ({ onSignup, loading }) => {
+const RegisterUserForm: React.FC<IFormProps> = ({ onSignup, loading, tab }) => {
   const {
     handleSubmit,
     register,
@@ -39,7 +40,7 @@ const RegisterUserForm: React.FC<IFormProps> = ({ onSignup, loading }) => {
   }, [isSubmitSuccessful]);
   return (
     <Form onSubmit={handleSubmit(onSignup)}>
-      <Form.Group controlId="parent_first_name" className="mb-3">
+      <Form.Group controlId={`${tab}parent_first_name-`} className="mb-3">
         <Form.Label>First Name</Form.Label>
         <Form.Control
           placeholder="your first name"
@@ -52,7 +53,7 @@ const RegisterUserForm: React.FC<IFormProps> = ({ onSignup, loading }) => {
           </p>
         )}
       </Form.Group>
-      <Form.Group controlId="parent_first_name" className="mb-3">
+      <Form.Group controlId={`${tab}parent_last_name-`} className="mb-3">
         <Form.Label>Last Name</Form.Label>
         <Form.Control
           placeholder="your last name"
@@ -65,7 +66,7 @@ const RegisterUserForm: React.FC<IFormProps> = ({ onSignup, loading }) => {
           </p>
         )}
       </Form.Group>
-      <Form.Group controlId="child_first_name" className="mb-3">
+      <Form.Group controlId={`${tab}child_first_name-`} className="mb-3">
         {/* user's child's information */}
         <Form.Label className="mb-3">Child's First Name</Form.Label>
         <Form.Control
@@ -79,7 +80,7 @@ const RegisterUserForm: React.FC<IFormProps> = ({ onSignup, loading }) => {
           </p>
         )}
       </Form.Group>
-      <Form.Group controlId="child_last_name" className="mb-3">
+      <Form.Group controlId={`${tab}child_last_name-`} className="mb-3">
         <Form.Label>Child's Last Name</Form.Label>
         <Form.Control
           placeholder="your last name"
@@ -92,7 +93,7 @@ const RegisterUserForm: React.FC<IFormProps> = ({ onSignup, loading }) => {
           </p>
         )}
       </Form.Group>
-      <Form.Group controlId="child_date_of_birth" className="mb-3">
+      <Form.Group controlId={`${tab}child_date_of_birth-`} className="mb-3">
         <Form.Label>Child's date of birth</Form.Label>
         <Form.Control
           placeholder="01-08-2021"
@@ -108,7 +109,7 @@ const RegisterUserForm: React.FC<IFormProps> = ({ onSignup, loading }) => {
         )}
       </Form.Group>
       {/* user's credential information */}
-      <Form.Group controlId="parent_email" className="mb-3">
+      <Form.Group controlId={`${tab}parent_email-`} className="mb-3">
         <Form.Label>Email</Form.Label>
         <Form.Control
           placeholder="example@example.com"
@@ -121,7 +122,7 @@ const RegisterUserForm: React.FC<IFormProps> = ({ onSignup, loading }) => {
           </p>
         )}
       </Form.Group>
-      <Form.Group controlId="parent_password" className="mb-3">
+      <Form.Group controlId={`${tab}parent_password-`} className="mb-3">
         <Form.Label>Password</Form.Label>
         <Form.Control
           autoComplete="new-password"
@@ -134,7 +135,7 @@ const RegisterUserForm: React.FC<IFormProps> = ({ onSignup, loading }) => {
           </p>
         )}
       </Form.Group>
-      <Form.Group controlId="parent_password_confirm" className="mb-3">
+      <Form.Group controlId={`${tab}parent_password_confirm-`} className="mb-3">
         <Form.Label>Confirm password</Form.Label>
         <Form.Control
           type="password"

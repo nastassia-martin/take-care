@@ -78,7 +78,11 @@ const ParentProfilePage = () => {
           <div className={styles.AddressWrapper}>
             <p className={styles.AddressDetails}>
               <span className={styles.AddressField}>Telephone: </span>
-              <span className={styles.AddressValue}>012345678</span>
+              <span className={styles.AddressValue}>
+                {parent.address.phoneNumber
+                  ? parent.address.phoneNumber
+                  : "no number provided"}
+              </span>
             </p>
             <p className={styles.AddressDetails}>
               <span className={styles.AddressField}>Email: </span>
@@ -88,8 +92,22 @@ const ParentProfilePage = () => {
             </p>
             <p className={styles.AddressDetails}>
               <span className={styles.AddressField}>Address:</span>
-              <span className={styles.AddressValue}>123 la la lane</span>
+              <span className={styles.AddressValue}>
+                {parent.address.address
+                  ? parent.address.address
+                  : "no address provided"}
+              </span>
             </p>
+            {isParentViewingOwnProfile && (
+              <Link
+                to={`/parents/${parent._id}/updateContact`}
+                className={styles.EditAddressButton}
+              >
+                <Button ariaLabel="Edit Address Button" type="button">
+                  Edit contact details
+                </Button>
+              </Link>
+            )}
           </div>
         </section>
       )}

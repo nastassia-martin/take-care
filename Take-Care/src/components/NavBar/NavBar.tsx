@@ -3,6 +3,7 @@ import logo from "../../assets/images/TakeCare-logos_black.png";
 import Image from "react-bootstrap/Image";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
+import NavDropdown from "react-bootstrap/NavDropdown";
 import Container from "react-bootstrap/Container";
 import { NavLink } from "react-router-dom";
 import LogoutModal from "../Logout/Logout";
@@ -15,7 +16,7 @@ import useGetParent from "../../hooks/useGetParent";
 
 const Navigation = () => {
   const navigate = useNavigate();
-  const { logout, currentUser } = useAuth();
+  const { logout, currentUser, userEmail, userPhotoUrl } = useAuth();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const isParentProfile = useGetParent(currentUser?.uid);
   const isTeacherProfile = useGetTeacher(currentUser?.uid);
@@ -52,9 +53,22 @@ const Navigation = () => {
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
               <Nav className={styles.NavItems}>
+                <Nav.Item>
+                  {userPhotoUrl && (
+                    <Image
+                      src={userPhotoUrl}
+                      height={40}
+                      width={40}
+                      title={userEmail ?? ""}
+                      roundedCircle
+                      className="img-square"
+                    />
+                  )}
+                </Nav.Item>
                 <Nav.Link className={styles.NavItem} onClick={handleClick}>
                   Profile
                 </Nav.Link>
+
                 <Nav.Link as={NavLink} to="/posts" className={styles.NavItem}>
                   Activity Feed
                 </Nav.Link>

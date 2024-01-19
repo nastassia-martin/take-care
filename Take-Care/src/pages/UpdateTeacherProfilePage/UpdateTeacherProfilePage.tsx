@@ -24,6 +24,7 @@ const UpdateTeacherProfilePage = () => {
     setEmail,
     reloadUser,
     setPassword,
+    updateTeacherEmail,
   } = useAuth();
 
   if (!currentUser) {
@@ -38,6 +39,7 @@ const UpdateTeacherProfilePage = () => {
 
       if (data.email && data.email !== (currentUser.email ?? "")) {
         await setEmail(data.email);
+        await updateTeacherEmail(currentUser.uid, data.email);
       }
 
       if (data.photoFile && data.photoFile.length) {

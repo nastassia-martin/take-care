@@ -22,6 +22,7 @@ const RegisterUserPage = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { signUp, signUpSecondCareProvider } = useAuth();
+
   const handleSignUp = async (data: NewParentCredential) => {
     setErrorMessage(null);
 
@@ -77,7 +78,6 @@ const RegisterUserPage = () => {
 
   const handleSignUpSecondCareGiver = async (data: NewParentCredential) => {
     setErrorMessage(null);
-
     // try to register the second careGiver the user using form
     try {
       setLoading(true);
@@ -102,7 +102,8 @@ const RegisterUserPage = () => {
 
       const id = await getChildIdForSecondCareGiver(
         data.child.firstName,
-        data.child.lastName
+        data.child.lastName,
+        data.child.date_of_birth
       );
       if (id) {
         await signUpSecondCareProvider(
@@ -136,7 +137,11 @@ const RegisterUserPage = () => {
                   <p className={styles.ErrorMessage}>{errorMessage}</p>
                 )}
 
-                <RegisterUserForm onSignup={handleSignUp} loading={loading} />
+                <RegisterUserForm
+                  onSignup={handleSignUp}
+                  loading={loading}
+                  tab="first-parent"
+                />
               </div>
             </Col>
           </Row>
@@ -156,6 +161,7 @@ const RegisterUserPage = () => {
                 <RegisterUserForm
                   onSignup={handleSignUpSecondCareGiver}
                   loading={loading}
+                  tab="second-parent"
                 />
               </div>
             </Col>

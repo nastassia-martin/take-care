@@ -16,10 +16,7 @@ import CreatePostPage from "./pages/CreatePost/CreatePostPage";
 import EditPost from "./components/Posts/EditPosts";
 import RequireAuth from "./components/RequireAuth";
 import NotFoundPage from "./pages/NotFoundPage";
-
-/**
- * @todo - set up routing for dashboard (teacher)
- */
+import UpdateUserContactPage from "./pages/UpdateContact/UpdateContactPage";
 
 const App = () => {
   return (
@@ -51,6 +48,15 @@ const App = () => {
             element={
               <RequireAuth>
                 <UpdateUserProfilePage />
+              </RequireAuth>
+            }
+          />
+          {/* /parents/:id/updateContact */}
+          <Route
+            path=":id/updateContact"
+            element={
+              <RequireAuth>
+                <UpdateUserContactPage />
               </RequireAuth>
             }
           />

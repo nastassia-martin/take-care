@@ -69,13 +69,15 @@ export const firebaseTimestampToString = (firebaseTimestamp: Timestamp) => {
 
 export const getChildIdForSecondCareGiver = async (
   firstName: string,
-  lastName: string
+  lastName: string,
+  date_of_birth: Date
 ) => {
   const querySnapshot = await getDocs(
     query(
       childrenCol,
       where("contact.firstName", "==", firstName),
-      where("contact.lastName", "==", lastName)
+      where("contact.lastName", "==", lastName),
+      where("date_of_birth", "==", date_of_birth)
     )
   );
   if (querySnapshot.empty) {

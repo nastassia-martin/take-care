@@ -79,7 +79,14 @@ type AuthContextType = {
     parentId: string[]
   ) => Promise<void>;
   updateParentPhotoUrl: (parentId: string, photoURL: string) => Promise<void>;
+  updateParentEmail: (parentId: string, email: string) => Promise<void>;
+  updateParentAddress: (parentId: string, address: string) => Promise<void>;
+  updateParentTelephone: (
+    parentId: string,
+    phoneNumber: string
+  ) => Promise<void>;
   updateTeacherPhotoUrl: (teacherId: string, photoURL: string) => Promise<void>;
+  updateTeacherEmail: (teacherId: string, email: string) => Promise<void>;
   updateChildPhotoUrl: (childId: string, photoURL: string) => Promise<void>;
   removeResponsibleForChild: (
     keyTeacher: KeyTeacher,
@@ -345,7 +352,6 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
     batch.update(childDocRef, { keyTeacher: keyTeacher });
 
     // Update each parent document.
-    // safer to use batch
     parentIds.map((parentId) => {
       const parentDocRef = doc(parentsCol, parentId);
       // update each parent in arr
@@ -456,6 +462,47 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
     }
   };
 
+  const updateParentEmail = async (parentId: string, email: string) => {
+    if (!currentUser) {
+      throw new Error("There is no current user");
+    }
+    try {
+      const parentdoc = doc(parentsCol, parentId);
+      const updatedProfile = { "contact.email": email };
+      return await updateDoc(parentdoc, updatedProfile);
+    } catch (error) {
+      throw new Error("Server error");
+    }
+  };
+
+  const updateParentAddress = async (parentId: string, address: string) => {
+    if (!currentUser) {
+      throw new Error("There is no current user");
+    }
+    try {
+      const parentdoc = doc(parentsCol, parentId);
+      const updatedProfile = { "address.address": address };
+      return await updateDoc(parentdoc, updatedProfile);
+    } catch (error) {
+      throw new Error("Server error");
+    }
+  };
+
+  const updateParentTelephone = async (
+    parentId: string,
+    phoneNumber: string
+  ) => {
+    if (!currentUser) {
+      throw new Error("There is no current user");
+    }
+    try {
+      const parentdoc = doc(parentsCol, parentId);
+      const updatedProfile = { "address.phoneNumber": phoneNumber };
+      return await updateDoc(parentdoc, updatedProfile);
+    } catch (error) {
+      throw new Error("Server error");
+    }
+  };
   const updateTeacherPhotoUrl = async (teacherId: string, photoURL: string) => {
     if (!currentUser) {
       throw new Error("There is no current user");
@@ -469,6 +516,18 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
     }
   };
 
+  const updateTeacherEmail = async (teacherId: string, email: string) => {
+    if (!currentUser) {
+      throw new Error("There is no current user");
+    }
+    try {
+      const teacherDoc = doc(teachersCol, teacherId);
+      const updatedProfile = { "contact.email": email };
+      return await updateDoc(teacherDoc, updatedProfile);
+    } catch (error) {
+      throw new Error("Server error");
+    }
+  };
   const updateChildPhotoUrl = async (childId: string, photoURL: string) => {
     if (!currentUser) {
       throw new Error("There is no current user");
@@ -520,7 +579,11 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
         updateKeyTeacher,
         updateChildPhotoUrl,
         updateParentPhotoUrl,
+        updateParentEmail,
+        updateParentAddress,
+        updateParentTelephone,
         updateTeacherPhotoUrl,
+        updateTeacherEmail,
         updateResponsibleForChildren,
         removeResponsibleForChild,
         userEmail,

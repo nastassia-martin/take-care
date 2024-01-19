@@ -20,6 +20,7 @@ const UpdateUserProfilePage = () => {
   const {
     currentUser,
     updateParentPhotoUrl,
+    updateParentEmail,
     setPhotoUrl,
     setEmail,
     reloadUser,
@@ -38,6 +39,7 @@ const UpdateUserProfilePage = () => {
 
       if (data.email && data.email !== (currentUser.email ?? "")) {
         await setEmail(data.email);
+        await updateParentEmail(currentUser.uid, data.email);
       }
 
       if (data.photoFile && data.photoFile.length) {

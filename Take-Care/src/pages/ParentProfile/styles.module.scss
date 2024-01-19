@@ -29,9 +29,15 @@
 
   .AddressDetails {
     display: flex;
-    padding: 1em 1em 0;
+    flex-direction: column;
+    padding: 1em 1em 1em;
     gap: 0.5em;
-    align-items: center;
+    align-items: flex-start;
+
+    @media screen and (min-width: 750px) {
+      flex-direction: row;
+      align-items: center;
+    }
   }
 
   .AddressField {

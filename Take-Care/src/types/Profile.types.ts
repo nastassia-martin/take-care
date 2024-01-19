@@ -58,7 +58,6 @@ export interface ChildProfile {
   _id: string;
   contact: Omit<Contact, "email">;
   department: string;
-  //gender: Gender;
   date_of_birth: Date;
   keyTeacher: {
     _id: string;
@@ -88,12 +87,18 @@ export type ParentProfile = {
   };
   isAuthorizedForPickUp: boolean;
   keyTeacher: KeyTeacher[];
+  address: Address;
 };
 
 export type UpdateProfile = {
   email?: string;
   password?: string;
   photoFile?: FileList;
+};
+
+export type Address = {
+  address?: string;
+  phoneNumber?: string;
 };
 
 export interface FamilyProfile {

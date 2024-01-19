@@ -75,7 +75,6 @@ const CreatePostPage = () => {
   const handleCreatePost = async (data: NewPostWithPhotoFile) => {
     try {
       setLoading(true);
-      console.log(data);
 
       //only a teacher can create a post
       if (!teacher) {
@@ -129,7 +128,6 @@ const CreatePostPage = () => {
     } catch (error: any) {
       if (error instanceof FirebaseError) {
         setErrorMessage(error.message);
-        console.log(error.message);
       } else {
         setErrorMessage(error.message);
       }

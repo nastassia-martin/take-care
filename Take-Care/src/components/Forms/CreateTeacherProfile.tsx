@@ -50,8 +50,6 @@ const CreateTeacherProfile = () => {
     };
 
     await setDoc(teacherDocRef, newTeacherProfile);
-
-    console.log("here is the data: ", data);
   };
 
   useEffect(() => {
