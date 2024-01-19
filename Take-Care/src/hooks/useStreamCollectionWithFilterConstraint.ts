@@ -62,42 +62,4 @@ const useStreamWithFilterConstraintCollection = <T>(
   };
 };
 
-// const useStreamWithFilterConstraintCollection = <T>(
-//   colRef: CollectionReference<T>,
-//   queryFilterConstraints: QueryConstraint[], // Array of QueryConstraint for filters
-//   queryOrderConstraint?: QueryConstraint // Optional QueryConstraint for ordering
-// ) => {
-//   const [data, setData] = useState<T[] | null>(null);
-//   const [loading, setLoading] = useState(true);
-
-//   useEffect(() => {
-//     // Construct a query reference with filter and optional order constraints
-//     const queryRef = queryOrderConstraint
-//       ? query(colRef, ...queryFilterConstraints, queryOrderConstraint)
-//       : query(colRef, ...queryFilterConstraints);
-
-//     // Subscribe to changes in the collection in realtime
-//     const unsubscribe = onSnapshot(queryRef, (snapshot) => {
-//       if (snapshot.empty) {
-//         return;
-//       }
-//       // loop over all docs
-//       const data: T[] = snapshot.docs.map((doc) => ({
-//         ...doc.data(),
-//         _id: doc.id,
-//       }));
-
-//       setData(data);
-//       setLoading(false);
-//     });
-
-//     // Return unsubscribe function as cleanup
-//     return unsubscribe;
-//   }, [colRef, queryFilterConstraints, queryOrderConstraint]);
-
-//   return {
-//     data,
-//     loading,
-//   };
-// };
 export default useStreamWithFilterConstraintCollection;

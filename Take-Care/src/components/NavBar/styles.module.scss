@@ -1,9 +1,24 @@
+.Nav {
+  background: #79aa82;
+  background: linear-gradient(315deg, #79aa82, #bacbda);
+  background-image: linear-gradient(
+    to right bottom,
+    #5e9fc2,
+    #80b2cd,
+    #a0c4d8,
+    #bfd7e4,
+    #deeaf0
+  );
+  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
+}
+
 .NavWrapper {
   padding: 1em;
   display: flex;
   align-items: center;
   width: 100%;
   justify-content: space-between;
+  box-shadow: #79aa82;
 
   .Logo {
     max-width: 3.25em;
@@ -15,6 +30,7 @@
     }
   }
 }
+
 .NavItems {
   margin-left: auto;
   font-family: var(--primary-font);
@@ -24,9 +40,9 @@
   .NavButton {
     margin-left: 1em;
     color: var(--primary-white);
-    background-color: transparent;
+    background-color: white;
     font-family: var(--primary-font);
-    border: 2px solid black;
+    border: 2px solid #5e9fc2;
     max-width: max-content;
     align-self: end;
   }

@@ -8,6 +8,7 @@ import useGetChildrenForAdmin from "../../hooks/useGetChildrenForAdmin";
 
 import { Link, useParams } from "react-router-dom";
 import useGetParent from "../../hooks/useGetParent";
+import { BounceLoader } from "react-spinners";
 
 const TeacherProfilePage = () => {
   const { currentUser } = useAuth();
@@ -43,7 +44,7 @@ const TeacherProfilePage = () => {
   );
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <BounceLoader color={"#8989ff"} size={60} />;
   }
 
   const isParentViewingTeacherProfile =
@@ -89,10 +90,6 @@ const TeacherProfilePage = () => {
               <span className={styles.AddressValue}>
                 {teacher.contact.email}
               </span>
-            </p>
-            <p className={styles.AddressDetails}>
-              <span className={styles.AddressField}>Address:</span>
-              <span className={styles.AddressValue}>123 la la lane</span>
             </p>
           </div>
         </section>

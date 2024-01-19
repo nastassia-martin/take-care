@@ -9,13 +9,13 @@
 }
 
 .ProfileDetails {
-  display: flex;
-  flex-direction: column;
+  display: grid;
   gap: 2em;
   margin-bottom: 5em;
+  grid-template-columns: repeat(1, 1fr);
 
   @media screen and (min-width: 750px) {
-    flex-direction: row;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -24,7 +24,7 @@
   background-color: var(--white);
   flex-grow: 1;
   border-radius: 10px;
-  padding: 2em;
+  padding: 1em 1em 1em 0;
   box-shadow: 0 16px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
 
   .AddressDetails {
@@ -46,6 +46,11 @@
     padding: 6px;
     word-break: break-all;
   }
+}
+
+.CardWrapper {
+  grid-column: 1 / span 1;
+  padding: 2em;
 }
 
 .ChildProfileWrapper {
@@ -78,9 +83,9 @@
   }
 }
 
-.ChilProfileContainer {
+.ChildProfileContainer {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(1, 1fr);
   grid-column-gap: 1em;
   grid-row-gap: 2em;
 

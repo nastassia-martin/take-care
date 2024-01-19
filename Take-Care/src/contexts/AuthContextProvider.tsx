@@ -41,6 +41,7 @@ import {
 } from "../types/Profile.types";
 import { NewPost } from "../types/Posts.types";
 import { deleteObject, ref } from "firebase/storage";
+import { BounceLoader } from "react-spinners";
 
 type AuthContextType = {
   currentUser: User | null;
@@ -499,7 +500,13 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
         toggleLike,
       }}
     >
-      {loading ? <div>loading...</div> : <>{children}</>}
+      {loading ? (
+        <div id="initial-loader">
+          <BounceLoader color={"#8989ff"} size={60} />
+        </div>
+      ) : (
+        <>{children}</>
+      )}
     </AuthContext.Provider>
   );
 };

@@ -7,6 +7,7 @@ import AccessDenied from "../../components/AccessDenied/AccessDenied";
 import useGetChildren from "../../hooks/useGetChildren";
 import { Link, useParams } from "react-router-dom";
 import useGetTeacher from "../../hooks/useGetTeacher";
+import { BounceLoader } from "react-spinners";
 
 const ParentProfilePage = () => {
   const { currentUser } = useAuth();
@@ -30,7 +31,7 @@ const ParentProfilePage = () => {
   const isTeacher = teacher && teacher.role === "Admin";
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <BounceLoader color={"#8989ff"} size={60} />;
   }
 
   //parent not approved
@@ -96,23 +97,25 @@ const ParentProfilePage = () => {
       {parent && parent.role === "User" && (
         <section className={styles.ChildProfileWrapper}>
           <h3>Child's profile - Quick View</h3>
-          {children &&
-            children.map((child) => (
-              <Link
-                className={styles.Link}
-                to={`/children/${child._id}`}
-                key={child._id}
-              >
-                <ProfileDetails
-                  className={styles.CardWrapper}
-                  image={child.contact.photoURL}
-                  firstName={child.contact.firstName}
-                  lastName={child.contact.lastName}
-                  children={goToProfile}
-                  alt={`image of ${child.contact.firstName}`}
-                />
-              </Link>
-            ))}
+          <div className={styles.ChildProfileContainer}>
+            {children &&
+              children.map((child) => (
+                <Link
+                  className={styles.Link}
+                  to={`/children/${child._id}`}
+                  key={child._id}
+                >
+                  <ProfileDetails
+                    className={styles.CardWrapper}
+                    image={child.contact.photoURL}
+                    firstName={child.contact.firstName}
+                    lastName={child.contact.lastName}
+                    children={goToProfile}
+                    alt={`image of ${child.contact.firstName}`}
+                  />
+                </Link>
+              ))}
+          </div>
         </section>
       )}
     </div>

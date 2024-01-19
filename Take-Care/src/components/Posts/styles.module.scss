@@ -19,7 +19,7 @@
   padding: 1em;
   margin-bottom: 1.5em;
   transition: transform 0.3s ease;
-  background-color: var(--primary-pink);
+  background-color: var(--white);
 
   &:hover {
     transform: scale(1.05);
@@ -78,7 +78,6 @@
   flex-direction: column;
   padding: 1em;
   font-family: var(--primary-font);
-  //background-color: var(--primary-pink);
 
   .CardWrapper {
     padding: 1em;
@@ -97,7 +96,7 @@
   border: 0.1em dashed var(--primary-blue);
   padding: 1em;
   margin-bottom: 1.5em;
-  background-color: var(--primary-pink);
+  background-color: var(--white);
 
   .Title {
     text-transform: capitalize;
@@ -135,4 +134,18 @@
 
 .PostContainer {
   max-width: 800px;
+}
+
+.PostType {
+  margin-left: auto;
+  border-radius: 5px;
+  padding: 0.5em;
+
+  &.isSocial {
+    background-color: var(--primary-purple);
+    color: var(--white);
+  }
+  &.isMenu {
+    background-color: var(--primary-yellow);
+  }
 }

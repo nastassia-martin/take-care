@@ -4,6 +4,7 @@ import { Posts } from "../../types/Posts.types";
 import styles from "./styles.module.scss";
 import ProfileImage from "../Profile/ProfileImage";
 import Like from "../Like/Like";
+import classNames from "classnames";
 
 interface IPostProps {
   data: Posts | null;
@@ -25,12 +26,19 @@ const RenderPosts: React.FC<IPostProps> = ({ data, userId }) => {
                       Posted by:{" "}
                       <span className={styles.Name}>{post.authorName}</span>
                     </span>
-
                     <span>
                       Posted:{" "}
                       {post.createdAt
                         ? firebaseTimestampToString(post.createdAt)
                         : "loading"}
+                    </span>
+                    <span
+                      className={classNames(styles.PostType, {
+                        [styles.isSocial]: post?.typeOfPost === "social",
+                        [styles.isMenu]: post?.typeOfPost === "menu",
+                      })}
+                    >
+                      {post.typeOfPost}
                     </span>
                   </div>
                   {post.photo && (

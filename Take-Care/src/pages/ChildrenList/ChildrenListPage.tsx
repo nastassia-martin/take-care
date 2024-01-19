@@ -15,6 +15,7 @@ import EditKeyTeacherForm from "../../components/Forms/EditKeyTeacher";
 import useGetTeachers from "../../hooks/useGetTeachers";
 import { FirebaseError } from "firebase/app";
 import { KeyTeacher } from "../../types/Profile.types";
+import { BounceLoader } from "react-spinners";
 
 const ChildrenListPage = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -190,7 +191,7 @@ const ChildrenListPage = () => {
   }, [teacher]);
 
   if (isLoading || loading) {
-    return <div>Loading...</div>;
+    return <BounceLoader color={"#8989ff"} size={60} />;
   }
 
   if (!currentUser) {

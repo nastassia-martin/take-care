@@ -11,6 +11,7 @@ import styles from "./styles.module.scss";
 import Button from "../Button/Button";
 import useGetPost from "../../hooks/useGetPost";
 import { uploadPhotoAndGetURL } from "../../helpers";
+import { BounceLoader } from "react-spinners";
 
 const EditPost = () => {
   const [hasAdminAccess, setHasAdminAccess] = useState(false);
@@ -124,10 +125,10 @@ const EditPost = () => {
   };
   return (
     <main className={styles.PageWrapper}>
-      {isLoading && <p>loading</p>}
+      {isLoading && <BounceLoader color={"#8989ff"} size={60} />}
       {errorMessage && <p className={styles.ErrorMessage}>{errorMessage}</p>}
       {post && hasAdminAccess && (
-        <>
+        <div className={styles.Container}>
           <CreatePostForm
             onCreatePost={handleUpdatePost}
             loading={teacherLoading}
@@ -141,7 +142,7 @@ const EditPost = () => {
           >
             delete
           </Button>
-        </>
+        </div>
       )}
       {/* no need for admin to see post */}
       {!hasAdminAccess && isParent && post && (

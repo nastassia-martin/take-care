@@ -14,6 +14,7 @@ import Button from "../../components/Button/Button";
 import { updateParentRole } from "../../helpers";
 import { Role } from "../../types/GenericTypes.types";
 import { useNavigate } from "react-router-dom";
+import { BounceLoader } from "react-spinners";
 
 const UserListPage = () => {
   const { currentUser } = useAuth();
@@ -38,7 +39,7 @@ const UserListPage = () => {
   }, [teacher]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <BounceLoader color={"#8989ff"} size={60} />;
   }
 
   if (!currentUser) {

@@ -6,6 +6,7 @@ import useGetParents from "../../hooks/useGetParents";
 import AccessDenied from "../../components/AccessDenied/AccessDenied";
 import useGetChild from "../../hooks/useGetChild";
 import { Link, useParams } from "react-router-dom";
+import { BounceLoader } from "react-spinners";
 
 const ChildProfilePage = () => {
   const { id } = useParams();
@@ -35,7 +36,7 @@ const ChildProfilePage = () => {
   const isAuthorised = isParent || (child?.keyTeacher && isKeyTeacher);
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <BounceLoader color={"#8989ff"} size={10} />;
   }
 
   if (!isAuthorised) {
@@ -52,7 +53,7 @@ const ChildProfilePage = () => {
   return (
     <div className={styles.PageWrapper}>
       {child && isAuthorised && (
-        <section className={styles.ProfileDetails}>
+        <section className={styles.ChildProfileDetails}>
           <ProfileDetails
             className={styles.CardWrapper}
             image={child.contact.photoURL}
@@ -71,24 +72,26 @@ const ChildProfilePage = () => {
         </section>
       )}
       {/* Conditional rendering for parents profile */}
-      <section>
+      <section className={styles.ChildProfileWrapper}>
         <h3>Parents profile - Quick View</h3>
-        {parents.map((parent) => (
-          <Link
-            className={styles.Link}
-            to={`/parents/${parent._id}`}
-            key={parent._id}
-          >
-            <ProfileDetails
-              className={styles.CardWrapper}
-              image={parent.contact.photoURL}
-              firstName={parent.contact.firstName}
-              lastName={parent.contact.lastName}
-              children={goToProfile}
-              alt={`image of ${parent.contact.firstName}`}
-            />
-          </Link>
-        ))}
+        <div className={styles.ChildProfileContainer}>
+          {parents.map((parent) => (
+            <Link
+              className={styles.Link}
+              to={`/parents/${parent._id}`}
+              key={parent._id}
+            >
+              <ProfileDetails
+                className={styles.CardWrapper}
+                image={parent.contact.photoURL}
+                firstName={parent.contact.firstName}
+                lastName={parent.contact.lastName}
+                children={goToProfile}
+                alt={`image of ${parent.contact.firstName}`}
+              />
+            </Link>
+          ))}
+        </div>
       </section>
     </div>
   );

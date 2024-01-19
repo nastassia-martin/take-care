@@ -28,38 +28,40 @@ const HomePage = () => {
   };
   return (
     <>
-      <main className={styles.MainWrapper}>
-        <div className={styles.Tagline}>
-          <h4>Tagline Lorem, vero sint omnis alias ut ratione hic fugit.</h4>
-          {currentUser && (
-            <div className={styles.ButtonWrapper}>
-              <Button
-                ariaLabel="Go to profile"
-                type="button"
-                onClick={handleClick}
-                disabled={!currentUser}
-              >
-                Go to profile
-              </Button>
-            </div>
-          )}
-          {!currentUser && (
-            <div className={styles.ButtonWrapper}>
-              <Link to="/login">
-                <Button ariaLabel="Log in user" type="button">
-                  Log in
+      <main className={styles.Main}>
+        <div className={styles.MainWrapper}>
+          <div className={styles.Tagline}>
+            <h4>Tagline Lorem, vero sint omnis alias ut ratione hic fugit.</h4>
+            {currentUser && (
+              <div className={styles.ButtonWrapper}>
+                <Button
+                  ariaLabel="Go to profile"
+                  type="button"
+                  onClick={handleClick}
+                  disabled={!currentUser}
+                >
+                  Go to profile
                 </Button>
-              </Link>
-              <Link to="/register">
-                <Button ariaLabel="Register new user" type="button">
-                  Register
-                </Button>
-              </Link>
-            </div>
-          )}
-        </div>
-        <div className={styles.ImageWrapper}>
-          <Image src={HomePageImage} fluid className={styles.Image} />
+              </div>
+            )}
+            {!currentUser && (
+              <div className={styles.ButtonWrapper}>
+                <Link to="/login">
+                  <Button ariaLabel="Log in user" type="button">
+                    Log in
+                  </Button>
+                </Link>
+                <Link to="/register">
+                  <Button ariaLabel="Register new user" type="button">
+                    Register
+                  </Button>
+                </Link>
+              </div>
+            )}
+          </div>
+          <div className={styles.ImageWrapper}>
+            <Image src={HomePageImage} fluid className={styles.Image} />
+          </div>
         </div>
       </main>
     </>

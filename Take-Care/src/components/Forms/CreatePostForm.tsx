@@ -60,7 +60,7 @@ const CreatePostForm: React.FC<ICreatePostFormProps> = ({
         {errors.title && <p className={styles.Error}>{errors.title.message}</p>}
       </Form.Group>
       <Form.Group className="mb-3" controlId="content">
-        <Form.Label>Content</Form.Label>
+        <Form.Label>Content*</Form.Label>
         <Form.Control
           as="textarea"
           placeholder="What happened today?"
@@ -76,7 +76,7 @@ const CreatePostForm: React.FC<ICreatePostFormProps> = ({
         <Form.Label>Today's Photo</Form.Label>
         <Form.Control
           type="file"
-          accept="image/gif,image/jpeg,image/png,image/webp"
+          accept="image/gif,image/jpeg,image/png,image/webp, application/pdf"
           {...register("photo")}
         />
         {errors.photo && (
@@ -103,7 +103,34 @@ const CreatePostForm: React.FC<ICreatePostFormProps> = ({
             )
           )}
         </Form.Text>
-      </Form.Group>{" "}
+      </Form.Group>
+      <Form.Group controlId="type" className="mb-3">
+        <Form.Text className="h6">Type of post*</Form.Text>
+        <Form.Check
+          label="Social"
+          type="radio"
+          id="social"
+          value="social"
+          {...register("typeOfPost")}
+        />
+        {errors.typeOfPost && (
+          <p className={styles.Error}>
+            {errors.typeOfPost.message ?? "Invalid value"}
+          </p>
+        )}
+        <Form.Check
+          label="Menu"
+          type="radio"
+          id="menu"
+          value="menu"
+          {...register("typeOfPost")}
+        />
+        {errors.typeOfPost && (
+          <p className={styles.Error}>
+            {errors.typeOfPost.message ?? "Invalid value"}
+          </p>
+        )}
+      </Form.Group>
       <Button
         ariaLabel="Register user"
         type="submit"

@@ -13,6 +13,7 @@ import useGetPostsForParentOrTeacher from "../../hooks/useGetPostsForParentsOrTe
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../../services/firebase";
 import { v4 as uuidv4 } from "uuid";
+import { BounceLoader } from "react-spinners";
 
 const CreatePostPage = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -56,6 +57,7 @@ const CreatePostPage = () => {
   const handleCreatePost = async (data: NewPostWithPhotoFile) => {
     try {
       setLoading(true);
+      console.log(data);
 
       //only a teacher can create a post
       if (!teacher) {
@@ -124,7 +126,7 @@ const CreatePostPage = () => {
           <div className={styles.CardWrapper}>
             {hasAdminAccess ? (
               <>
-                {isLoading && <div>loading...</div>}
+                {isLoading && <BounceLoader color={"#8989ff"} size={60} />}
                 <h3 className={styles.Header}>Send a post</h3>
                 {errorMessage && (
                   <p className={styles.ErrorMessage}>{errorMessage}</p>

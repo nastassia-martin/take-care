@@ -42,7 +42,7 @@ const Navigation = () => {
     }
   };
   return (
-    <Navbar expand="lg" collapseOnSelect>
+    <Navbar expand="lg" collapseOnSelect className={styles.Nav}>
       <Container className={styles.NavWrapper}>
         <Navbar.Brand as={NavLink} to="/">
           <Image src={logo} alt="logo" className={styles.Logo} />

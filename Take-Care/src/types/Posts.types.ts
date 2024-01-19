@@ -4,12 +4,14 @@ export interface NewPostWithPhotoFile {
   title: string;
   content: string;
   photo?: FileList;
+  typeOfPost: "menu" | "social";
 }
 
 export interface NewPost {
   title: string;
   content: string;
   photo?: string;
+  typeOfPost: "menu" | "social";
 }
 
 export interface Post extends NewPost {

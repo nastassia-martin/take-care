@@ -12,6 +12,7 @@ import { Link, useParams } from "react-router-dom";
 import UpdateChildForm from "../../components/Forms/UpdateChildForm";
 import { UpdateProfile } from "../../types/Profile.types";
 import useGetParent from "../../hooks/useGetParent";
+import { BounceLoader } from "react-spinners";
 
 const UpdateChildProfilePage = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -36,7 +37,7 @@ const UpdateChildProfilePage = () => {
   const isParentViewingChildProfile = currentUser.uid === parent?._id;
   const isLoading = parentLoading;
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <BounceLoader color={"#8989ff"} size={60} />;
   }
   if (!isParentViewingChildProfile) {
     return <AccessDenied customMessage="You cannot edit this profile" />;

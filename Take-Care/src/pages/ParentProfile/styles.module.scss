@@ -9,13 +9,13 @@
 }
 
 .ProfileDetails {
-  display: flex;
-  flex-direction: column;
+  display: grid;
   gap: 2em;
   margin-bottom: 5em;
+  grid-template-columns: repeat(1, 1fr);
 
   @media screen and (min-width: 750px) {
-    flex-direction: row;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -54,6 +54,21 @@
   }
 }
 
+.ChildProfileContainer {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  grid-column-gap: 1em;
+  grid-row-gap: 2em;
+
+  @media screen and (min-width: 750px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.CardWrapper {
+  grid-column: 1 / span 1;
+  padding: 2em;
+}
+
 .Link {
   text-decoration: none;
   color: var(--black);
@@ -64,5 +79,15 @@
   &:link,
   &:active {
     text-decoration: none;
+  }
+}
+
+.ChildProfileDetails {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  margin-bottom: 3em;
+
+  @media screen and (min-width: 750px) {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
