@@ -48,19 +48,6 @@ const UpdateUserProfileForm: React.FC<IUpdateUserProfileProps> = ({
   }, [isSubmitSuccessful]);
   return (
     <Form onSubmit={handleSubmit(onUpdateUserProfile)}>
-      <Form.Group className="mb-3" controlId="email">
-        <Form.Label>Email</Form.Label>
-        <Form.Control
-          placeholder="example@example.com"
-          type="email"
-          {...register("email")}
-        />
-        {errors.email && (
-          <p className={styles.Error}>
-            {errors.email.message ?? "Invalid value"}
-          </p>
-        )}
-      </Form.Group>
       <Form.Group className="mb-3" controlId="password">
         <Form.Label>Password</Form.Label>
         <Form.Control

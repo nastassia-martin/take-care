@@ -79,7 +79,7 @@ const ParentProfilePage = () => {
             <p className={styles.AddressDetails}>
               <span className={styles.AddressField}>Telephone: </span>
               <span className={styles.AddressValue}>
-                {parent.address.phoneNumber
+                {parent.address?.phoneNumber
                   ? parent.address.phoneNumber
                   : "no number provided"}
               </span>
@@ -93,7 +93,7 @@ const ParentProfilePage = () => {
             <p className={styles.AddressDetails}>
               <span className={styles.AddressField}>Address:</span>
               <span className={styles.AddressValue}>
-                {parent.address.address
+                {parent.address?.address
                   ? parent.address.address
                   : "no address provided"}
               </span>

@@ -528,6 +528,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
       throw new Error("Server error");
     }
   };
+
   const updateChildPhotoUrl = async (childId: string, photoURL: string) => {
     if (!currentUser) {
       throw new Error("There is no current user");

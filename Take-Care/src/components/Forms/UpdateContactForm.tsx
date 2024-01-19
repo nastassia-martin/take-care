@@ -4,7 +4,6 @@ import Button from "../Button/Button";
 import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Address } from "../../types/Profile.types";
-import useAuth from "../../hooks/useAuth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   UpdateAddressSchema,
