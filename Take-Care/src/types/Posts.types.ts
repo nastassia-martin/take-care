@@ -11,7 +11,7 @@ export interface NewPost {
   title: string;
   content: string;
   photo?: string;
-  typeOfPost: "menu" | "social";
+  typeOfPost: "menu" | "social" | "all";
 }
 
 export interface Post extends NewPost {

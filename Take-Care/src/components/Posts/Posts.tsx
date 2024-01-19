@@ -1,20 +1,40 @@
 import { Link } from "react-router-dom";
 import { firebaseTimestampToString } from "../../helpers";
-import { Posts } from "../../types/Posts.types";
+import { Post } from "../../types/Posts.types";
 import styles from "./styles.module.scss";
 import ProfileImage from "../Profile/ProfileImage";
 import Like from "../Like/Like";
 import classNames from "classnames";
+import Dropdown from "react-bootstrap/Dropdown";
 
 interface IPostProps {
-  data: Posts | null;
+  data: Post[] | null;
   userId: string;
+  handleFilterChange: (newFilter: Post["typeOfPost"]) => void;
 }
-const RenderPosts: React.FC<IPostProps> = ({ data, userId }) => {
+const RenderPosts: React.FC<IPostProps> = ({
+  data,
+  userId,
+  handleFilterChange,
+}) => {
   return (
     <section className={styles.Section}>
       <h3 className={styles.MainHeader}>Recent posts</h3>
       <div className={styles.Container}>
+        <Dropdown className={styles.FilterButton}>
+          <Dropdown.Toggle id="dropdown-menu">Filter posts</Dropdown.Toggle>
+          <Dropdown.Menu>
+            <Dropdown.Item onClick={() => handleFilterChange("all")}>
+              None
+            </Dropdown.Item>
+            <Dropdown.Item onClick={() => handleFilterChange("social")}>
+              Social
+            </Dropdown.Item>
+            <Dropdown.Item onClick={() => handleFilterChange("menu")}>
+              Menu
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
         {data &&
           data.map((post) => (
             <div key={post._id} className={styles.PostContainer}>

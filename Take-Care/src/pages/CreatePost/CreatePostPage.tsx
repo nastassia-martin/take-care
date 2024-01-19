@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import AccessDenied from "../../components/AccessDenied/AccessDenied";
 import CreatePostForm from "../../components/Forms/CreatePostForm";
 import useAuth from "../../hooks/useAuth";
-import { NewPostWithPhotoFile } from "../../types/Posts.types";
+import { NewPostWithPhotoFile, Post } from "../../types/Posts.types";
 import { FirebaseError } from "firebase/app";
 import styles from "./styles.module.scss";
 import Col from "react-bootstrap/Col";
@@ -20,6 +20,7 @@ const CreatePostPage = () => {
   const [loading, setLoading] = useState(false);
   const [hasAdminAccess, setHasAdminAccess] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
+  const [filter, setFilter] = useState("all");
 
   const [isParent, setIsParent] = useState(false);
   const { currentUser, createAPost } = useAuth();
@@ -29,7 +30,21 @@ const CreatePostPage = () => {
   const { data, loading: posts } = useGetPostsForParentOrTeacher(
     currentUser?.uid
   );
+
   const isLoading = teacherLoading || loading || posts;
+
+  const handleFilterChange = (newFilter: Post["typeOfPost"]) => {
+    setFilter(newFilter);
+  };
+
+  // filter function to filter posts by type of posts. if no filter is applied, all posts returned,
+  // else if the user applies a filter, posts of that type is returned
+  const filteredData =
+    data &&
+    data?.filter((post) => {
+      if (filter === "all") return true;
+      return post.typeOfPost === filter;
+    });
 
   useEffect(() => {
     // When teacher data is fetched, check if the role is 'admin'
@@ -143,9 +158,13 @@ const CreatePostPage = () => {
       </Row>
       {/* {!isParent && <AccessDenied />} */}
       {(hasAdminAccess || isParent) && currentUser && data ? (
-        <RenderPosts data={data} userId={currentUser.uid} />
+        <RenderPosts
+          data={filteredData}
+          userId={currentUser.uid}
+          handleFilterChange={handleFilterChange}
+        />
       ) : (
-        currentUser && <AccessDenied />
+        <AccessDenied />
       )}
       {!data && hasAdminAccess && <p>No posts created yet - write one!</p>}
     </main>

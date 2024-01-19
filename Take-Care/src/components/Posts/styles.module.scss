@@ -71,6 +71,14 @@
   padding: 2em;
   display: grid;
   justify-content: center;
+
+  .FilterButton {
+    margin-bottom: 10px;
+    > Button {
+      background-color: var(--primary-blue);
+      border: var(--primary-blue);
+    }
+  }
 }
 
 .PageWrapper {
