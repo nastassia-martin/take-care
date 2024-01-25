@@ -1,30 +1,48 @@
-# React + TypeScript + Vite
+# TakeCare Project
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Introduction
 
-Currently, two official plugins are available:
+TakeCare is a web application designed to streamline and enhance communication between families and childcare providers. Developed with a personal touch for my sister, a childminder, this project not only addresses her specific needs but also serves as a foundational step in my professional development journey. It aims to provide a centralized, intuitive platform for managing childcare communications, distinguishing itself in its simplicity and user-focused design.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+- **User Profile Management**: Allows both parents and childcare providers to create and manage their profiles, ensuring accurate and up-to-date information.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- **Authentication**: Secure login system using Firebase Auth to protect user data and ensure privacy.
 
-- Configure the top-level `parserOptions` property like this:
+- **Social Feed**: A specialized feed where childcare providers can post updates and parents can stay informed about their child's day, fostering a connected community.
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
+## Tech stack
+
+- React
+- Typescript
+- Firebase Auth
+- Firebase Firestore
+- Firebase Storage
+- Tanstack Table
+- ZOD
+- React Hook Forms
+- SASS
+
+## Installation
+
+1.  clone the repo
+2.  run `npm install`
+3.  configure a new project in firebase
+4.  replace the `.env.example` file with an `.env` file with the relevant informaiton from the firebase config.
+5.  Manually create a teachers email and password in firebase Auth.
+6.  You will need to create the `teachers` collection, ensure that you use the `User UID` for the `documentID`. You will need the following information in this exact structure:
+
+```
+{
+  _id: UUID,
+  contact: {
+    email: string, // authemail
+    firstName: string,
+    lastName: string,
+  }
 }
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+7. run `npm dev` to run a developement server
+8. You can now create new users, and with the teacher's log in can approve the new users.
